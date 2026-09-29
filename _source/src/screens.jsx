@@ -1,55 +1,26 @@
-/* ══════════════════ CALENDAR ══════════════════ */
+/* ══════════════════ SCHEDULE (week strip) ══════════════════
+   Any published session can be opened on any date. Today is a shortcut, not an access rule. */
 
-function Calendar({ sched, month, today, current, onPick, compact }){
-  const days = sched.dates.filter(iso => iso.startsWith(month));
-  if (!days.length) return null;
-  const lead = weekdayIdx(days[0]);
-  const cells = [];
-  let prev = null;
-  for (const iso of days){
-    if (prev){ let gap = addDays(prev,1); while (gap < iso){ cells.push({blank:gap}); gap = addDays(gap,1); } }
-    cells.push({ iso }); prev = iso;
-  }
-  const h = compact ? 36 : 40;
-  return (
-    <div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:5,marginBottom:6}} aria-hidden="true">
-        {DAY_ABBR.map(d=><div key={d} style={{textAlign:"center",fontSize:10.5,fontWeight:700,color:T.faint,letterSpacing:".06em"}}>{d[0]}</div>)}
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:5}}>
-        {Array.from({length:lead}).map((_,i)=><div key={"l"+i}/>)}
-        {cells.map(c=>{
-          if (c.blank) return <div key={c.blank}/>;
-          const d = sched.byIso[c.iso];
-          const isToday = c.iso===today, isCur = c.iso===current;
-          const bg = isCur ? T.ink : isToday ? T.ember : T.tint;
-          const fg = (isCur||isToday) ? "#fff" : T.body;
-          return (
-            <Pressable key={c.iso} onClick={()=>onPick(c.iso)}
-              ariaLabel={`${fmtLong(c.iso)} — ${d.title}${d.optional?" (optional)":""}`}
-              ariaCurrent={isToday?"date":undefined}
-              style={{height:h,borderRadius:6,background:bg,color:fg,fontFamily:MONO,fontSize:14,
-                fontWeight:(isCur||isToday)?700:500,display:"flex",alignItems:"center",justifyContent:"center",
-                boxShadow:isToday?`0 0 0 2px ${T.paper}, 0 0 0 3.5px ${T.ember}`:"none"}}>
-              {dateOf(c.iso).getDate()}
-            </Pressable>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+function weekOf(iso){ const mon = addDays(iso, -weekdayIdx(iso)); return Array.from({length:7}, (_, i) => addDays(mon, i)); }
 
-function MonthTabs({ months, month, setMonth }){
+function WeekStrip({ sched, selected, today, done, onSelect }){
   return (
-    <div role="tablist" aria-label="Select month" style={{display:"flex",gap:20,marginBottom:14,flexWrap:"wrap"}}>
-      {months.map(m=>{
-        const on = month===m;
+    <div role="group" aria-label="Training week"
+      style={{ display:"grid", gridTemplateColumns:"repeat(7,minmax(44px,1fr))", gap:4, overflowX:"auto", padding:"3px 0" }}>
+      {weekOf(selected).map(iso=>{
+        const d = sched.byIso[iso], isSel = iso===selected, isToday = iso===today, isDone = !!(done && done[iso]);
+        const label = `${fmtLong(iso)} — ${d ? d.title : "no session published"}${isToday ? ", today" : ""}${isDone ? ", complete" : ""}`;
         return (
-          <Pressable key={m} role="tab" aria-selected={on} onClick={()=>setMonth(m)}
-            style={{fontSize:14.5,fontWeight:on?700:500,color:on?T.ink:T.muted,paddingBottom:5,
-              borderBottom:on?`2px solid ${T.ember}`:"2px solid transparent",borderRadius:2}}>
-            {MONTH_FULL[Number(m.slice(5,7))-1]}
+          <Pressable key={iso} onClick={()=>onSelect(iso)} ariaLabel={label} aria-pressed={isSel}
+            ariaCurrent={isToday ? "date" : undefined}
+            style={{ minWidth:44, minHeight:68, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+              gap:2, padding:"4px 0", borderRadius:8, fontVariantNumeric:"tabular-nums",
+              background: isSel ? T.action : "transparent", color: isSel ? T.onAction : T.ink,
+              outline: isToday ? `2px solid ${T.emberDeep}` : "none", outlineOffset:2,
+              opacity: d ? 1 : .75 }}>
+            <span aria-hidden="true" style={{ fontSize:14, lineHeight:"18px", color: isSel ? T.onAction : T.muted }}>{DAY_ABBR[weekdayIdx(iso)][0]}</span>
+            <span aria-hidden="true" style={{ fontSize:18, lineHeight:"24px", fontWeight:700 }}>{dateOf(iso).getDate()}</span>
+            <span aria-hidden="true" style={{ fontSize:14, lineHeight:"14px", height:14, fontWeight:700 }}>{isDone ? "✓" : (d ? "" : "–")}</span>
           </Pressable>
         );
       })}
@@ -57,100 +28,210 @@ function MonthTabs({ months, month, setMonth }){
   );
 }
 
-/* ══════════════════ HOME ══════════════════ */
-
-function Home({ program, sched, index, today, month, setMonth, onOpen, onTravel, hasTravel }){
-  const sum = summaryFor(sched, program, today);
-  const d = sched.byIso[sum.iso];
-  const archived = program.status==="archived";
-  const archive = (index.programs||[]).filter(p => p.status==="archived" && p.id!==program.id);
+/* Searchable "Jump to date": each result pairs the planned date with the session's own title. */
+function SessionPicker({ sched, current, onPick, label="Jump to date" }){
+  const [open, setOpen] = React.useState(false);
+  const [q, setQ] = React.useState("");
+  const [msg, setMsg] = React.useState("");
+  const btnRef = React.useRef(null), listRef = React.useRef(null);
+  const uid = React.useId().replace(/:/g,"");
+  const cur = sched.byIso[current];
+  const norm = s => String(s).toLowerCase();
+  const results = sched.dates.filter(iso => {
+    if (!q.trim()) return true;
+    const d = dateOf(iso), t = norm(q.trim());
+    const hay = [sched.byIso[iso].title, fmtPick(iso), fmtLong(iso), iso, `${d.getMonth()+1}/${d.getDate()}`,
+      MONTH_FULL[d.getMonth()] + " " + d.getDate()].map(norm).join(" | ");
+    return hay.includes(t);
+  });
+  const close = () => { setOpen(false); setQ(""); setMsg(""); requestAnimationFrame(()=>btnRef.current && btnRef.current.focus()); };
+  const choose = iso => { onPick(iso); setOpen(false); setQ(""); setMsg(""); };
+  const onKey = e => {
+    if (e.key==="Escape"){ e.stopPropagation(); close(); return; }
+    if (e.key==="ArrowDown" || e.key==="ArrowUp"){
+      const items = [...(listRef.current ? listRef.current.querySelectorAll("button") : [])];
+      if (!items.length) return;
+      e.preventDefault();
+      const i = items.indexOf(document.activeElement);
+      items[e.key==="ArrowDown" ? Math.min(items.length-1, i+1) : Math.max(0, i-1)].focus();
+    }
+  };
+  const onDate = e => {
+    const v = e.target.value;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
+    if (sched.byIso[v]) choose(v);
+    else setMsg(`No session is published for ${fmtPick(v)}.`);
+  };
   return (
     <div>
-      <header style={{position:"relative",overflow:"hidden",background:T.ink,
-        padding:"22px 16px 24px",borderBottom:`3px solid ${T.ember}`}}>
-        <Topo opacity={0.30} color={T.ember}/>
-        <div style={{position:"absolute",inset:0,
-          background:"linear-gradient(180deg, rgba(27,36,38,.55) 0%, rgba(27,36,38,.80) 62%, rgba(27,36,38,.94) 100%)"}}/>
-        <div style={{position:"relative"}}>
-          <Wordmark height={32}/>
-          <div style={{fontSize:11.5,color:"rgba(255,255,255,.55)",marginTop:10,letterSpacing:".13em",
-            textTransform:"uppercase",fontWeight:600}}>
-            {program.name} <span style={{color:"rgba(255,255,255,.3)"}}>·</span>{" "}
-            {archived ? "Archived" : `From ${fmtShort(sched.start)}`}
+      <p style={{ margin:"0 0 6px", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.muted }}>{label}</p>
+      <button ref={btnRef} type="button" aria-expanded={open} aria-controls={uid} onClick={()=>setOpen(o=>!o)}
+        style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, width:"100%", minHeight:48,
+          textAlign:"left", border:`1px solid ${T.ruleStrong}`, borderRadius: open ? "8px 8px 0 0" : 8, padding:"10px 12px",
+          background:T.surface, color:T.ink, fontSize:16, lineHeight:"24px", fontWeight:600, fontFamily:"inherit", cursor:"pointer" }}>
+        <span style={{ minWidth:0, overflowWrap:"anywhere" }}>{fmtPick(current)}{cur ? ` · ${cur.title}` : " · no session published"}</span>
+        <span aria-hidden="true" style={{ flex:"0 0 auto" }}>{open ? "▴" : "▾"}</span>
+      </button>
+      {open && (
+        <div id={uid} onKeyDown={onKey}
+          style={{ padding:12, background:T.surface, border:`1px solid ${T.ruleStrong}`, borderTop:0, borderRadius:"0 0 8px 8px" }}>
+          <label style={fieldLabel}>Search dates or session titles
+            <input type="search" autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Try easy run or Oct 21"
+              style={{ ...fieldInput, fontWeight:400 }}/>
+          </label>
+          <div ref={listRef} role="group" aria-label="Matching sessions"
+            style={{ margin:"12px 0", display:"grid", gap:4, maxHeight:320, overflowY:"auto" }}>
+            {results.map(iso=>{
+              const on = iso===current;
+              return (
+                <button key={iso} type="button" aria-pressed={on} onClick={()=>choose(iso)}
+                  style={{ display:"grid", gridTemplateColumns:"112px minmax(0,1fr)", gap:8, alignItems:"start", textAlign:"left",
+                    border:0, borderRadius:6, padding:"12px 8px", minHeight:48, fontSize:14, lineHeight:"20px", fontFamily:"inherit",
+                    cursor:"pointer", background: on ? T.tealWash : "transparent", color: on ? T.tealDeep : T.ink }}>
+                  <span style={{ fontVariantNumeric:"tabular-nums" }}>{fmtPick(iso)}</span>
+                  <span style={{ fontWeight:600, overflowWrap:"anywhere" }}>{on ? "✓ " : ""}{sched.byIso[iso].title}</span>
+                </button>
+              );
+            })}
           </div>
+          <p role="status" style={{ margin:"0 0 12px", fontSize:14, lineHeight:"20px", color:T.muted }}>
+            {results.length ? `${results.length} ${results.length===1?"session":"sessions"} shown.` : "No sessions match. Try a different date or title."}
+          </p>
+          <label style={fieldLabel}>Go directly to a date
+            <input type="date" defaultValue={current} onChange={onDate} style={fieldInput}/>
+          </label>
+          {msg && <p role="alert" style={{ margin:"8px 0 0", fontSize:14, color:T.alert, fontWeight:600 }}>⚠ {msg}</p>}
+          <Pressable onClick={close} style={{ ...textBtn, marginTop:8 }}>Close</Pressable>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════ HOME ══════════════════ */
+
+function gymMinutes(d){
+  if (d.type !== "gym" || !d.sections) return 0;
+  return d.sections.reduce((a, s) => a + (parseInt(String(s.budget || "").match(/^\d+/), 10) || 0), 0);
+}
+function sessionMeta(d){
+  if (!d) return "";
+  if (d.type==="rest") return "Rest day";
+  if (d.type==="race") return "Race day";
+  if (d.type==="run") return d.trt ? `Total run time ${d.trt}` : "Run";
+  const m = gymMinutes(d);
+  return m ? `${m} min planned` : "Strength and conditioning";
+}
+
+function Home({ program, sched, index, today, sel, setSel, onOpen, onTravel, hasTravel, resolve, onSetup, done }){
+  const archived = program.status==="archived";
+  const archive = (index.programs||[]).filter(p => p.status==="archived" && p.id!==program.id);
+  const raw = sched.byIso[sel], d = resolve(raw);
+  const selDone = !!(done && done[sel]);
+  const sum = summaryFor(sched, program, today);
+  const d0 = dateOf(sel);
+  const shift = n => setSel(addDays(sel, n));
+  return (
+    <div>
+      <header className="on-dark" style={{ position:"relative", overflow:"hidden", background:T.night, color:T.onNight, padding:"28px var(--gutter, 20px) 24px" }}>
+        <TopoField opacity={.55}/>
+        <div style={{ position:"relative" }}>
+          <Lockup tone="dark" width={232}/>
+          <p style={{ margin:"14px 0 0", fontSize:14, lineHeight:"20px", color:T.onNightMuted }}>Strength for mountain athletes</p>
+          <p style={{ margin:"20px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.nightInfo }}>
+            {program.name} · {archived ? "Archived" : `From ${fmtShort(sched.start)}`}
+          </p>
         </div>
       </header>
 
-      <main style={{padding:"18px 16px 28px"}}>
+      <main style={{ padding:"24px var(--gutter, 20px) 40px" }}>
         {archived && (
-          <a href="./" style={{display:"block",background:T.flagWash,borderLeft:`3px solid ${T.flag}`,
-            borderRadius:6,padding:"10px 12px",marginBottom:16,fontSize:13.5,color:T.body,textDecoration:"none"}}>
-            You're viewing an archived program. <b style={{color:T.ink}}>Back to the current program →</b>
+          <a href="./" style={{ display:"block", background:T.flagWash, color:T.flag, borderRadius:8, padding:12, marginBottom:24,
+            fontSize:14, lineHeight:"20px", textDecoration:"underline", fontWeight:600 }}>
+            You're viewing an archived program. Back to the current program →
           </a>
         )}
 
-        {sum.mode==="unpublished" || sum.mode==="gap" ? (
-          <div style={{border:`2px solid ${T.ruleStrong}`,borderRadius:12,padding:"16px",marginBottom:24,background:T.surface}}>
-            <div style={{fontSize:11,fontWeight:700,letterSpacing:".14em",textTransform:"uppercase",color:T.muted,marginBottom:6}}>Today</div>
-            <div style={{fontSize:19,fontWeight:650,color:T.ink}}>The next block isn't loaded yet</div>
-            <div style={{fontSize:14,color:T.body,marginTop:5,lineHeight:1.45}}>
-              This program is published through {fmtLong(sched.last)}. New sessions appear here as soon as they're added.
-            </div>
+        <section aria-label="Session calendar">
+          <SectionLabel>{MONTH_FULL[d0.getMonth()]} {d0.getFullYear()}</SectionLabel>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:12 }}>
+            <Pressable onClick={()=>shift(-7)} ariaLabel="Previous week" style={textBtn}>← Previous</Pressable>
+            <Pressable onClick={()=>setSel(today)} style={textBtn}>Go to today</Pressable>
+            <Pressable onClick={()=>shift(7)} ariaLabel="Next week" style={textBtn}>Next →</Pressable>
           </div>
-        ) : (
-          <Pressable onClick={()=>onOpen(sum.iso)}
-            ariaLabel={sum.mode==="end" ? program.endCard : `Open ${fmtLong(sum.iso)} — ${d.title}`}
-            style={{display:"block",width:"100%",textAlign:"left",background:T.surface,
-              border:`2px solid ${T.ink}`,borderRadius:12,padding:"16px 16px 14px",marginBottom:24}}>
-            {sum.mode==="end" ? (
-              <div style={{fontSize:30,fontWeight:600,color:T.ink,letterSpacing:"-.02em"}}>{program.endCard}</div>
-            ) : (
-              <>
-                <div style={{fontSize:11,fontWeight:700,letterSpacing:".14em",textTransform:"uppercase",color:T.ember,marginBottom:6}}>
-                  {sum.mode==="before" ? "Program begins" : "Today"}
-                </div>
-                <div style={{fontSize:21,fontWeight:650,color:T.ink,letterSpacing:"-.015em"}}>{fmtLong(sum.iso)}</div>
-                <div style={{fontSize:15,color:T.body,marginTop:5,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                  <span style={{fontWeight:600,color:T.ink}}>{d.title}</span>
-                  {d.trt && <span style={{fontFamily:MONO,color:T.tealDeep,fontWeight:800,fontSize:13.5,
-                    background:T.tealWash,padding:"2px 8px",borderRadius:5}}>TRT {d.trt}</span>}
-                  {d.deload && <Badge tone="ink">Deload</Badge>}
-                  {d.optional && <Badge>Optional</Badge>}
-                </div>
-              </>
-            )}
-            <div style={{fontSize:12.5,color:T.muted,marginTop:12}}>Open routine <span aria-hidden="true">→</span></div>
-          </Pressable>
-        )}
+          <WeekStrip sched={sched} selected={sel} today={today} done={done} onSelect={setSel}/>
+          <div style={{ marginTop:16 }}><SessionPicker sched={sched} current={sel} onPick={setSel}/></div>
+          <p aria-live="polite" style={{ margin:"16px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
+            Today: {fmtPick(today)}. You can open any published session, regardless of its planned date.
+          </p>
+        </section>
 
-        <MonthTabs months={sched.months} month={month} setMonth={setMonth}/>
-        <Calendar sched={sched} month={month} today={today} current={null} onPick={onOpen}/>
-        <p style={{fontSize:12,color:T.faint,marginTop:12,lineHeight:1.5}}>
-          {archived
+        <section aria-label="Selected session" style={{ marginTop:24, padding:20, background:T.surface, border:`1px solid ${T.rule}`, borderRadius:12 }}>
+          <p style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600 }}>
+            Planned · {fmtPick(sel)}{sel===today ? " · Today" : ""}
+          </p>
+          {d ? (
+            <>
+              <h2 style={{ margin:"12px 0 0", fontSize:24, lineHeight:"30px", fontWeight:700, letterSpacing:"-.015em" }}>{d.title}</h2>
+              <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
+                {sessionMeta(d)}{d.deload ? " · Deload" : ""}
+              </p>
+              {selDone && <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.success }}>✓ Complete</p>}
+              <Pressable onClick={()=>onOpen(sel)} ariaLabel={`Open ${fmtLong(sel)} — ${d.title}`} className="rl-btn rl-primary"
+                style={{ ...btnPrimary, width:"100%", marginTop:24 }}>
+                Open this session <span aria-hidden="true">→</span>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <h2 style={{ margin:"12px 0 0", fontSize:24, lineHeight:"30px", fontWeight:700 }}>No session published</h2>
+              <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
+                {sel < sched.first ? `This program starts ${fmtLong(sched.first)}.` :
+                 sel > sched.last ? (program.endCard ? `${program.endCard}. The last session is ${fmtLong(sched.last)}.` : `The program is published through ${fmtLong(sched.last)}. The next block isn't loaded yet.`) :
+                 "Nothing is scheduled on this date."}
+              </p>
+              <Pressable onClick={()=>setSel(sel < sched.first ? sched.first : sched.last)} style={{ ...btnSecondary, width:"100%", marginTop:24 }}>
+                {sel < sched.first ? "Go to the first session" : "Go to the last session"}
+              </Pressable>
+            </>
+          )}
+        </section>
+
+        <p style={{ margin:"16px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
+          {(archived || program.engine)
             ? `${fmtLong(sched.first)} – ${fmtLong(sched.last)}.`
             : `Published through ${fmtLong(sched.last)}. The next block appears here once it's written.`}
         </p>
 
-        {hasTravel && (
-          <Pressable onClick={onTravel}
-            style={{display:"block",width:"100%",textAlign:"left",marginTop:22,background:T.tint,borderRadius:10,padding:"14px"}}>
-            <div style={{fontSize:14.5,fontWeight:600,color:T.ink}}>Travel workouts</div>
-            <div style={{fontSize:12.5,color:T.muted,marginTop:2}}>Seven sessions · on demand, any day</div>
-          </Pressable>
+        {(hasTravel || program.engine) && (
+          <div style={{ marginTop:32, display:"grid", gap:12 }}>
+            {hasTravel && (
+              <Pressable onClick={onTravel} style={{ ...btnSecondary, display:"block", textAlign:"left", width:"100%", borderRadius:12, padding:16 }}>
+                <span style={{ display:"block", fontSize:16, fontWeight:650 }}>Travel workouts</span>
+                <span style={{ display:"block", fontSize:14, fontWeight:400, color:T.muted, marginTop:2 }}>Seven sessions · on demand, any day</span>
+              </Pressable>
+            )}
+            {program.engine && (
+              <Pressable onClick={onSetup} ariaLabel="Program setup" style={{ ...btnSecondary, display:"block", textAlign:"left", width:"100%", borderRadius:12, padding:16 }}>
+                <span style={{ display:"block", fontSize:16, fontWeight:650 }}>Program setup</span>
+                <span style={{ display:"block", fontSize:14, fontWeight:400, color:T.muted, marginTop:2 }}>Start date · run lengths · zones · equipment · options</span>
+              </Pressable>
+            )}
+          </div>
         )}
 
         <LogPanel/>
 
         {archive.length>0 && (
-          <div style={{marginTop:22,paddingTop:14,borderTop:`1px solid ${T.rule}`,fontSize:12.5,color:T.muted}}>
-            <span style={{fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",fontSize:10.5}}>Archive</span>
+          <section style={{ marginTop:32 }}>
+            <SectionLabel>Archive</SectionLabel>
             {archive.map(p=>(
               <a key={p.id} href={`?p=${encodeURIComponent(p.id)}`}
-                style={{display:"block",marginTop:6,color:T.body,fontWeight:600,textDecoration:"none"}}>
-                {p.name} <span style={{color:T.faint,fontWeight:500}}>· {p.dates}</span> →
+                style={{ display:"block", padding:"12px 0", minHeight:44, boxSizing:"border-box", color:T.ink, fontWeight:600, textDecoration:"underline", textUnderlineOffset:4 }}>
+                {p.name} <span style={{ color:T.muted, fontWeight:400 }}>· {p.dates}</span> →
               </a>
             ))}
-          </div>
+          </section>
         )}
       </main>
     </div>
@@ -158,7 +239,8 @@ function Home({ program, sched, index, today, month, setMonth, onOpen, onTravel,
 }
 
 /* ══════════════════ LOG BACKUP ══════════════════
-   The log lives on this phone only. Export is the safety net. */
+   The log lives on this phone only. Export is the safety net. It contains the log and nothing else:
+   no setup, zone profile or personal overrides. */
 
 function LogPanel(){
   const { log, replaceLog } = React.useContext(LogContext);
@@ -191,7 +273,7 @@ function LogPanel(){
       const data = JSON.parse(await f.text());
       const incoming = data.log || data;
       if (!incoming || !incoming.entries) throw new Error("not a Ridgeline log");
-      const merged = { v:1, entries:{ ...log.entries } };
+      const merged = { ...log, v:1, entries:{ ...log.entries }, done:{ ...(log.done||{}) } };
       let added = 0;
       for (const [k, byDate] of Object.entries(incoming.entries)){
         merged.entries[k] = { ...(merged.entries[k]||{}) };
@@ -200,60 +282,53 @@ function LogPanel(){
           if (!mine || (entry.t||0) > (mine.t||0)){ merged.entries[k][d] = entry; added++; }
         }
       }
-      replaceLog(merged);
+      for (const [d, c] of Object.entries(incoming.done || {})) if (!merged.done[d] || (c.at||0) > (merged.done[d].at||0)) merged.done[d] = c;
+      if (!replaceLog(merged)) throw new Error("save failed");
       setMsg(`Restored ${added} ${added===1?"entry":"entries"}.`);
-    } catch { setMsg("That file isn't a Ridgeline backup."); }
+    } catch { setMsg("That file isn't a Ridgeline backup, or it couldn't be saved."); }
   };
 
-  const btn = { fontSize:13,fontWeight:600,color:T.ink,background:T.surface,border:`1px solid ${T.ruleStrong}`,
-    borderRadius:8,padding:"9px 12px",minHeight:40 };
   return (
-    <div style={{marginTop:22,paddingTop:14,borderTop:`1px solid ${T.rule}`}}>
-      <div style={{fontSize:14,fontWeight:600,color:T.ink}}>Training log</div>
-      <div style={{fontSize:12.5,color:T.muted,marginTop:2,lineHeight:1.45}}>
+    <section style={{ marginTop:32 }}>
+      <SectionLabel>Training log</SectionLabel>
+      <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>
         {n ? `${n} ${n===1?"entry":"entries"} saved on this phone.` : "Nothing logged yet."} Back it up now and then — deleting the app icon deletes the log.
-      </div>
-      <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
-        <Pressable onClick={doExport} disabled={!n} style={{...btn,opacity:n?1:.5}}>Export backup</Pressable>
-        <Pressable onClick={()=>fileRef.current && fileRef.current.click()} style={btn}>Restore</Pressable>
+      </p>
+      <div style={{ display:"flex", gap:8, marginTop:12, flexWrap:"wrap" }}>
+        <Pressable onClick={doExport} disabled={!n} className="rl-btn" style={{ ...btnSecondary, opacity:n?1:.5 }}>Export backup</Pressable>
+        <Pressable onClick={()=>fileRef.current && fileRef.current.click()} className="rl-btn" style={btnSecondary}>Restore</Pressable>
         <input ref={fileRef} type="file" accept="application/json,.json" onChange={doImport}
-          style={{display:"none"}} aria-hidden="true" tabIndex={-1}/>
+          style={{ display:"none" }} aria-hidden="true" tabIndex={-1}/>
       </div>
-      {msg && <div aria-live="polite" style={{fontSize:12.5,color:T.body,marginTop:8}}>{msg}</div>}
-    </div>
+      {msg && <p role="status" aria-live="polite" style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px" }}>{msg}</p>}
+    </section>
   );
 }
 
-/* ══════════════════ DAY VIEWS ══════════════════ */
+/* ══════════════════ SESSION VIEWS ══════════════════ */
 
-function StickyHeader({ left, center, right, sub }){
+function StickyBar({ left, right }){
   return (
-    <header style={{position:"sticky",top:0,zIndex:10,background:T.surface,borderBottom:`2px solid ${T.ink}`,padding:"10px 12px 11px"}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-        {left}<div style={{fontSize:14.5,fontWeight:700,color:T.ink,textAlign:"center"}}>{center}</div>{right}
-      </div>
-      {sub && <div style={{textAlign:"center",fontSize:13.5,marginTop:3,display:"flex",justifyContent:"center",
-        alignItems:"center",gap:8,flexWrap:"wrap"}}>{sub}</div>}
+    <header style={{ position:"sticky", top:0, zIndex:10, background:T.surface, borderBottom:`1px solid ${T.rule}`,
+      padding:"4px 12px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:8 }}>
+      {left}{right}
     </header>
   );
 }
-const navBtn = { fontSize:13,fontWeight:600,color:T.body,padding:"8px",borderRadius:6,minHeight:40,
-  display:"flex",alignItems:"center",gap:4 };
 
-function DayHeader({ d, today, onHome, onPicker }){
-  const bare = d.type==="rest" || d.type==="race";
+function SessionHeading({ d, sched, today, onPick, extra }){
   return (
-    <StickyHeader
-      left={<Pressable onClick={onHome} ariaLabel="Back to calendar" style={navBtn}><span aria-hidden="true">◀</span> Home</Pressable>}
-      center={fmtLong(d.iso)}
-      right={<Pressable onClick={onPicker} ariaLabel="Choose a different date" style={navBtn}>Date <span aria-hidden="true">▾</span></Pressable>}
-      sub={bare ? null : <>
-        {d.iso===today && <span style={{fontWeight:700,color:T.ember,fontSize:11,letterSpacing:".1em",textTransform:"uppercase"}}>Today</span>}
-        <span style={{fontWeight:600,color:T.ink}}>{d.title}</span>
-        {d.trt && <span style={{fontFamily:MONO,color:T.tealDeep,fontWeight:800,fontSize:14,background:T.tealWash,
-          padding:"2px 8px",borderRadius:5}}>TRT {d.trt}</span>}
-      </>}
-    />
+    <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
+      <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>
+        Planned · {fmtPick(d.iso)}{d.iso===today ? " · Today" : ""}
+      </p>
+      <h1 style={{ margin:"8px 0 0", fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em", color:T.ink }}>{d.title}</h1>
+      <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.tealDeep }}>
+        {sessionMeta(d)}{d.type==="gym" ? " · intervals and rest are instructions, not timers" : ""}
+      </p>
+      {extra}
+      <div style={{ marginTop:16 }}><SessionPicker sched={sched} current={d.iso} onPick={onPick}/></div>
+    </div>
   );
 }
 
@@ -261,74 +336,61 @@ function DayBadges({ d }){
   const any = d.deload || d.optional || d.bonus || d.hotel || d.calibration;
   if (!any) return null;
   return (
-    <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:14}}>
-      {d.calibration && <Badge tone="flag">📝 Calibration</Badge>}
-      {d.deload && <Badge tone="ink">Deload</Badge>}
-      {(d.optional || d.bonus) && <Badge>Optional</Badge>}
-      {d.hotel && <Badge>Hotel-Adapted</Badge>}
+    <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginTop:12 }}>
+      {d.calibration && <Badge tone="info">Record your loads today</Badge>}
+      {d.deload && <Badge tone="info">Deload</Badge>}
+      {(d.optional || d.bonus) && <Badge tone="ink">Optional</Badge>}
+      {d.hotel && <Badge tone="ink">Hotel-adapted</Badge>}
     </div>
   );
 }
 
+const pagePad = { padding:"24px var(--gutter, 20px) 40px" };
+
 function GymDay({ d }){
   return (
-    <main style={{padding:"16px 16px 32px"}}>
-      <DayBadges d={d}/>
+    <main style={pagePad}>
       {d.hotel && (
-        <div style={{background:T.flagWash,borderLeft:`3px solid ${T.flag}`,borderRadius:6,padding:"9px 11px",
-          marginBottom:16,fontSize:13.5,color:T.body,lineHeight:1.45}}>
+        <p role="note" style={{ background:T.flagWash, color:T.flag, borderRadius:8, padding:12, margin:"0 0 24px", fontSize:14, lineHeight:"20px" }}>
           Hotel-gym equipment only. The anchor lift is deferred to its next home session, not skipped.
-        </div>
+        </p>
       )}
-      {d.note && <p style={{fontSize:13.5,color:T.muted,fontStyle:"italic",margin:"0 0 18px",lineHeight:1.5}}>{d.note}</p>}
+      {d.note && <p style={{ ...noteStyle, margin:"0 0 32px" }}>{d.note}</p>}
       {d.sections.map((s,i)=><Section key={i} s={s} date={d.iso}/>)}
+      <CompleteBar iso={d.iso}/>
       <EndOfSession/>
     </main>
   );
 }
 
 function RunDay({ d, warmup }){
-  const [open,setOpen] = React.useState(false);
   return (
-    <main style={{padding:"16px 16px 32px"}}>
-      <DayBadges d={d}/>
+    <main style={pagePad}>
       {d.note && (
-        <div style={{background:T.flagWash,borderLeft:`3px solid ${T.flag}`,borderRadius:6,padding:"9px 11px",
-          marginBottom:16,fontSize:13.5,color:T.body}}>{d.note}</div>
+        <p role="note" style={{ background:T.flagWash, color:T.flag, borderRadius:8, padding:12, margin:"0 0 24px", fontSize:14, lineHeight:"20px" }}>{d.note}</p>
       )}
-      <section style={{marginBottom:22}}>
-        <Pressable onClick={()=>setOpen(o=>!o)} aria-expanded={open}
-          style={{display:"block",width:"100%",textAlign:"left",background:T.tealWash,borderRadius:8,padding:"11px 13px"}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
-            <div>
-              <div style={{fontSize:11,letterSpacing:".14em",textTransform:"uppercase",fontWeight:700,color:T.tealDeep}}>Running Mobility Warm-Up</div>
-              <div style={{fontSize:12.5,color:T.tealDeep,opacity:.85,marginTop:2}}>~5 min · not counted in TRT</div>
-            </div>
-            <span aria-hidden="true" style={{color:T.tealDeep,fontSize:13,fontWeight:700}}>{open ? "Hide ▲" : "Show ▼"}</span>
-          </div>
-        </Pressable>
-        {open && (
-          <div style={{padding:"10px 13px 2px",borderLeft:`3px solid ${T.teal}`,marginTop:8}}>
-            {warmup.map((it,i)=><Item key={i} it={it} date={d.iso}/>)}
-          </div>
-        )}
-      </section>
+      <details style={{ background:T.tealWash, color:T.tealDeep, borderRadius:12, padding:"0 16px", marginBottom:32 }}>
+        <summary style={{ minHeight:48, display:"flex", alignItems:"center", cursor:"pointer", fontWeight:600, fontSize:16 }}>
+          Running mobility warm-up · about 5 min, not counted in total run time
+        </summary>
+        <div style={{ paddingBottom:16, color:T.ink }}><ItemList items={warmup} date={d.iso} gap={16}/></div>
+      </details>
       {d.parts.map((part,i)=>(
-        <Section key={i} s={{ title: part.label || "Workout", items: part.items }} date={d.iso} tone="teal"/>
+        <Section key={i} s={{ title: part.label || "Workout", items: part.items, meta: part.meta }} date={d.iso}/>
       ))}
+      <ZoneKey zk={d.zoneKey}/>
+      <CompleteBar iso={d.iso}/>
       <EndOfSession/>
     </main>
   );
 }
 
 function BareDay({ d }){
-  const race = d.type==="race";
   return (
-    <main style={{padding:"70px 16px 120px",textAlign:"center"}}>
-      <div style={{fontSize:30,fontWeight:600,letterSpacing:"-.02em",color:race?T.ember:T.ink}}>{d.title}</div>
-      <div style={{marginTop:18,display:"flex",justifyContent:"center"}}>
-        <TopoMark color={race?T.ember:T.ruleStrong} opacity={race?0.4:0.45}/>
-      </div>
+    <main style={pagePad}>
+      <p style={{ margin:0, fontSize:16, lineHeight:"24px", color:T.muted }}>
+        {d.type==="race" ? "Race day." : "No training is scheduled. You can still open any other published session from the schedule."}
+      </p>
     </main>
   );
 }
@@ -339,24 +401,27 @@ function TravelList({ travel, onHome, onOpen }){
   const groups = ["Full Body","Lower Body","Upper Body"];
   return (
     <div>
-      <StickyHeader
-        left={<Pressable onClick={onHome} ariaLabel="Back to calendar" style={navBtn}><span aria-hidden="true">◀</span> Home</Pressable>}
-        center="Travel Workouts" right={<div style={{width:64}}/>}
-        sub={<span style={{fontSize:12.5,color:T.muted}}>On demand · not tied to a date</span>}/>
-      <main style={{padding:"16px 16px 32px"}}>
+      <StickyBar left={<Pressable onClick={onHome} ariaLabel="Back to schedule" style={textBtn}>← Schedule</Pressable>}/>
+      <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
+        <h1 style={{ margin:0, fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>Travel workouts</h1>
+        <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.tealDeep }}>On demand · not tied to a date</p>
+      </div>
+      <main style={pagePad}>
         {groups.map(g=>(
-          <section key={g} style={{marginBottom:24}}>
+          <section key={g} style={{ marginBottom:32 }}>
             <SectionLabel>{g}</SectionLabel>
-            {travel.filter(w=>w.focus===g).map(w=>(
-              <Pressable key={w.id} onClick={()=>onOpen(w.id)} ariaLabel={`Open ${w.name}, ${w.total}`}
-                style={{display:"block",width:"100%",textAlign:"left",background:T.tint,borderRadius:9,padding:"12px 13px",marginBottom:8}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",gap:10}}>
-                  <span style={{fontSize:15,fontWeight:650,color:T.ink}}>{w.name}</span>
-                  <span style={{fontFamily:MONO,fontSize:12.5,color:T.muted}}>{w.total}</span>
-                </div>
-                <div style={{fontSize:13,color:T.muted,marginTop:3,lineHeight:1.4}}>{w.blurb}</div>
-              </Pressable>
-            ))}
+            <div style={{ display:"grid", gap:12 }}>
+              {travel.filter(w=>w.focus===g).map(w=>(
+                <Pressable key={w.id} onClick={()=>onOpen(w.id)} ariaLabel={`Open ${w.name}, ${w.total}`}
+                  style={{ ...btnSecondary, display:"block", textAlign:"left", width:"100%", borderRadius:12, padding:16 }}>
+                  <span style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", gap:12 }}>
+                    <span style={{ fontSize:18, lineHeight:"24px", fontWeight:600 }}>{w.name}</span>
+                    <span style={{ fontSize:14, fontWeight:600, color:T.tealDeep, fontVariantNumeric:"tabular-nums" }}>{w.total}</span>
+                  </span>
+                  <span style={{ display:"block", fontSize:14, lineHeight:"20px", fontWeight:400, color:T.muted, marginTop:4 }}>{w.blurb}</span>
+                </Pressable>
+              ))}
+            </div>
           </section>
         ))}
       </main>
@@ -367,12 +432,13 @@ function TravelList({ travel, onHome, onOpen }){
 function TravelDetail({ w, onBack, onHome }){
   return (
     <div>
-      <StickyHeader
-        left={<Pressable onClick={onBack} ariaLabel="Back to travel workouts" style={navBtn}><span aria-hidden="true">◀</span> Travel</Pressable>}
-        center={w.name}
-        right={<Pressable onClick={onHome} ariaLabel="Back to calendar" style={navBtn}>Home</Pressable>}
-        sub={<><span style={{color:T.muted}}>{w.focus}</span><span style={{fontFamily:MONO,color:T.body,fontWeight:600}}>{w.total}</span></>}/>
-      <main style={{padding:"16px 16px 32px"}}>
+      <StickyBar left={<Pressable onClick={onBack} ariaLabel="Back to travel workouts" style={textBtn}>← Travel</Pressable>}
+        right={<Pressable onClick={onHome} ariaLabel="Back to schedule" style={textBtn}>Schedule</Pressable>}/>
+      <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
+        <h1 style={{ margin:0, fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>{w.name}</h1>
+        <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.tealDeep }}>{w.focus} · {w.total}</p>
+      </div>
+      <main style={pagePad}>
         {w.sections.map((s,i)=><Section key={i} s={s}/>)}
         <EndOfSession/>
       </main>
@@ -380,32 +446,181 @@ function TravelDetail({ w, onBack, onHome }){
   );
 }
 
-/* ══════════════════ DATE OVERLAY ══════════════════ */
+/* ══════════════════ SETUP ══════════════════
+   The athlete's own choices for a program: start date, run lengths, heart-rate zones, equipment,
+   options and personal overrides. Kept on this device only (ridgeline.personal.v1) — never in a
+   program file and never in a log backup. */
 
-function DatePicker({ sched, current, today, onPick, onClose }){
-  const [month,setMonth] = React.useState(current.slice(0,7));
-  const ref = React.useRef(null);
-  React.useEffect(()=>{
-    ref.current && ref.current.focus();
-    const esc = e => { if (e.key==="Escape") onClose(); };
-    window.addEventListener("keydown", esc);
-    return ()=>window.removeEventListener("keydown", esc);
-  },[onClose]);
+function Field({ label, hint, children, error }){
   return (
-    <div role="dialog" aria-modal="true" aria-label="Select date" onClick={onClose}
-      style={{position:"absolute",inset:0,zIndex:30,background:"rgba(27,36,38,.5)",display:"flex",
-        alignItems:"flex-start",justifyContent:"center",padding:"56px 12px 12px",animation:"rlFade 160ms ease"}}>
-      <div onClick={e=>e.stopPropagation()}
-        style={{background:T.surface,borderRadius:14,border:`2px solid ${T.ink}`,padding:16,width:"100%",maxWidth:400,
-          boxShadow:"0 16px 40px rgba(27,36,38,.28)"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
-          <div style={{fontSize:15,fontWeight:700,color:T.ink}}>Select date</div>
-          <Pressable ref={ref} onClick={onClose} ariaLabel="Close date selector"
-            style={{fontSize:16,fontWeight:700,color:T.body,padding:"8px 10px",borderRadius:6,minHeight:40,minWidth:40}}>✕</Pressable>
-        </div>
-        <MonthTabs months={sched.months} month={month} setMonth={setMonth}/>
-        <Calendar sched={sched} month={month} today={today} current={current} onPick={onPick} compact/>
+    <label style={{ ...fieldLabel, marginBottom:16, gap:4 }}>
+      <span style={{ fontSize:16, lineHeight:"24px", fontWeight:600 }}>{label}</span>
+      {hint && <span style={{ fontSize:14, lineHeight:"20px", fontWeight:400, color:T.muted }}>{hint}</span>}
+      {children}
+      {error && <span role="alert" style={{ fontSize:14, lineHeight:"20px", fontWeight:600, color:T.alert }}>⚠ {error}</span>}
+    </label>
+  );
+}
+function Choice({ type="checkbox", name, checked, onChange, children, disabled }){
+  return (
+    <label style={{ display:"flex", gap:12, alignItems:"flex-start", padding:"10px 0", minHeight:44,
+      cursor:disabled?"not-allowed":"pointer", opacity:disabled?.55:1 }}>
+      <input type={type} name={name} checked={checked} disabled={disabled}
+        onChange={e=>onChange(type==="checkbox" ? e.target.checked : true)}
+        style={{ width:24, height:24, margin:"0", accentColor:T.tealDeep, flexShrink:0 }}/>
+      <span style={{ fontSize:16, lineHeight:"24px", fontWeight:400 }}>{children}</span>
+    </label>
+  );
+}
+function SetupBlock({ title, children }){
+  return <section style={{ marginBottom:32 }}><SectionLabel>{title}</SectionLabel>{children}</section>;
+}
+const helpText = { margin:"0 0 16px", fontSize:14, lineHeight:"20px", color:T.muted };
+
+function Setup({ program, sched, personal, setup, update, onHome }){
+  const id = program.id;
+  const raw = (personal.setup && personal.setup[id]) || {};
+  const put = patch => update(p => ({ ...p, setup:{ ...(p.setup||{}), [id]:{ ...((p.setup||{})[id]||{}), ...patch } } }));
+  const zp = personal.zoneProfile || {};
+  const putZone = patch => update(p => ({ ...p, zoneProfile:{ ...(p.zoneProfile||{}), ...patch } }));
+  const putBound = (z, i, v) => update(p => {
+    const cur = p.zoneProfile || {}, b = { ...(cur.bounds||{}) }, pair = [...(b[z]||["",""])];
+    pair[i] = v.replace(/[^0-9]/g,"").slice(0,3); b[z] = pair;
+    return { ...p, zoneProfile:{ ...cur, bounds:b } };
+  });
+
+  const [dateMsg, setDateMsg] = React.useState("");
+  const startIso = startDateFor(program, personal);
+  const onDate = e => {
+    const v = e.target.value;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
+    if (weekdayIdx(v) !== 0){ setDateMsg("Pick a Monday so each week lines up with the program."); return; }
+    setDateMsg("");
+    update(p => ({ ...p, startDates:{ ...(p.startDates||{}), [id]:v } }));
+  };
+  const resetDate = () => { setDateMsg(""); update(p => { const sd = { ...(p.startDates||{}) }; delete sd[id]; return { ...p, startDates:sd }; }); };
+
+  const rb = raw.runBaselines || {};
+  const setRb = (d, v) => put({ runBaselines:{ ...rb, [d]: v.replace(/[^0-9]/g,"").slice(0,3) } });
+  const rbErr = d => (rb[d] && cleanInt(rb[d], RUN_MIN, RUN_MAX) === null) ? `Enter ${RUN_MIN}–${RUN_MAX} minutes, or clear it to use the example.` : "";
+  const weekly = setup.runBaselines.tue + setup.runBaselines.thu + setup.runBaselines.sat;
+  const anyExample = RUN_DAYS.some(d => !setup.runIsSet[d]);
+
+  const bounds = zp.bounds || {};
+  const zErr = z => { const b = bounds[z]; if (!b || b[0]==="" || b[1]==="") return ""; const lo = Number(b[0]), hi = Number(b[1]);
+    return (lo < 30 || hi > 230 || lo > hi) ? "Low must be 30 or more, high 230 or less, and low no higher than high." : ""; };
+
+  const lbWeeks = legBlasterWeeks(program).filter(w => legBlasterAvailable(program, w));
+  const toggleLb = (w, on) => put({ lbWeeks: on ? [...new Set([...setup.lbWeeks, w])] : setup.lbWeeks.filter(x => x !== w) });
+  const reset = () => update(p => { const s = { ...(p.setup||{}) }; delete s[id]; return { ...p, setup:s }; });
+  const wedOf = w => fmtPick(addDays(sched.start, (w-1)*7 + 2));
+
+  return (
+    <div>
+      <StickyBar left={<Pressable onClick={onHome} ariaLabel="Back to schedule" style={textBtn}>← Schedule</Pressable>}/>
+      <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
+        <h1 style={{ margin:0, fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>Program setup</h1>
+        <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.tealDeep }}>{program.name}</p>
       </div>
+      <main style={pagePad}>
+        <p style={{ ...helpText, marginBottom:32 }}>
+          These choices stay on this device. They aren't part of the program and aren't included when you export your training log.
+        </p>
+
+        <SetupBlock title="Start date">
+          <Field label="First Monday" hint="Changing it moves every date. The workouts don't change." error={dateMsg}>
+            <input type="date" value={startIso} onChange={onDate} style={fieldInput}/>
+          </Field>
+          {startIso !== program.startDate &&
+            <Pressable onClick={resetDate} className="rl-btn" style={btnSecondary}>Use the program's default date</Pressable>}
+        </SetupBlock>
+
+        <SetupBlock title="Running">
+          <p style={helpText}>
+            Set the length of each run from a typical, sustainable training week (leave out race, taper and recovery weeks).
+            Warm-up, intervals, recoveries and cooldown are all counted inside each run's total time.
+          </p>
+          {[["tue","Tuesday · quality run (minutes)"],["thu","Thursday · easy run (minutes)"],["sat","Saturday · long run (minutes)"]].map(([dd,label])=>(
+            <Field key={dd} label={label} error={rbErr(dd)}>
+              <input inputMode="numeric" value={rb[dd]||""} placeholder={`${(program.options.runBaselines||{})[dd]} (example)`}
+                aria-invalid={rbErr(dd) ? "true" : undefined} onChange={e=>setRb(dd, e.target.value)} style={fieldInput}/>
+            </Field>
+          ))}
+          <p aria-live="polite" style={{ margin:0, fontSize:16, lineHeight:"24px" }}>
+            Weekly running: <b>{weekly} min</b>{anyExample ? " (includes example lengths)" : ""}
+          </p>
+        </SetupBlock>
+
+        <SetupBlock title="Heart-rate zones">
+          <p style={helpText}>
+            Use one consistent five-zone profile and record where it comes from. Ridgeline never estimates boundaries for you —
+            anything left blank shows as not set.
+          </p>
+          <Field label="Profile or method"><input value={zp.method||""} maxLength={60} onChange={e=>putZone({ method:e.target.value })}
+            placeholder="e.g. the five-zone profile on my watch" style={fieldInput}/></Field>
+          <Field label="Where the boundaries come from"><input value={zp.source||""} maxLength={60} onChange={e=>putZone({ source:e.target.value })}
+            placeholder="e.g. lab test, field test, watch default" style={fieldInput}/></Field>
+          {["Z1","Z2","Z3","Z4","Z5"].map(z=>{
+            const b = bounds[z] || ["",""], name = (program.zones||[]).find(t=>t.z===z);
+            return (
+              <div key={z} style={{ marginBottom:16 }}>
+                <p style={{ margin:"0 0 6px", fontSize:16, lineHeight:"24px", fontWeight:600 }}>{z}{name ? ` · ${name.name}` : ""}</p>
+                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+                  <input aria-label={`${z} low, beats per minute`} inputMode="numeric" value={b[0]} placeholder="low bpm" onChange={e=>putBound(z,0,e.target.value)} style={fieldInput}/>
+                  <input aria-label={`${z} high, beats per minute`} inputMode="numeric" value={b[1]} placeholder="high bpm" onChange={e=>putBound(z,1,e.target.value)} style={fieldInput}/>
+                </div>
+                {zErr(z) && <p role="alert" style={{ margin:"6px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.alert }}>⚠ {zErr(z)}</p>}
+              </div>
+            );
+          })}
+        </SetupBlock>
+
+        <SetupBlock title="Equipment and options">
+          <Choice checked={setup.wall} onChange={v=>put({ wall:v })}>
+            I have a gym-approved wall and a wall-throw-rated medicine ball. Turn this off to use fast incline push-ups in place of wall chest passes.
+          </Choice>
+          <p style={{ margin:"16px 0 0", fontSize:16, lineHeight:"24px", fontWeight:600 }}>Friday power</p>
+          <Choice type="radio" name="power" checked={setup.powerMode==="jumps"} onChange={()=>put({ powerMode:"jumps" })}>
+            Jumps and bounds (default)
+          </Choice>
+          <Choice type="radio" name="power" checked={setup.powerMode==="clean"} onChange={()=>put({ powerMode:"clean" })}>
+            Hang power cleans instead — only if you're already technically proficient and cleared for them. This replaces the jumps and bounds; it never adds to them.
+          </Choice>
+        </SetupBlock>
+
+        <SetupBlock title="Leg Blasters">
+          {lbWeeks.length ? (
+            <>
+              <p style={helpText}>
+                An optional swap for the Wednesday WOD in the later block. Choose it only if you're comfortable with controlled squats and lunges,
+                you're currently cleared for and tolerating jumping lunges and squat jumps, and you've recovered from Monday and Tuesday.
+                Otherwise keep the normal WOD. The last week of the cycle never includes Leg Blasters.
+              </p>
+              <p style={{ ...helpText, color:T.ink }}>
+                Choosing a week changes all of this together: that Wednesday's WOD becomes a Mini Leg Blaster; that Friday's jumps, bounds or cleans become
+                3 × 3 chest passes; and that Friday's accessory circuit drops to two rounds.
+              </p>
+              {lbWeeks.map(w=>(
+                <Choice key={w} checked={setup.lbWeeks.includes(w)} onChange={on=>toggleLb(w,on)}>
+                  {wedOf(w)} and the Friday after it
+                </Choice>
+              ))}
+            </>
+          ) : <p style={{ ...helpText, marginBottom:0 }}>This program doesn't offer Leg Blasters.</p>}
+        </SetupBlock>
+
+        <SetupBlock title="Personal override">
+          <Field label="Rounds for both single-leg exercises"
+            hint="Use this if you follow individual guidance that sets your own dose. It applies on Mondays and Wednesdays in every week, deloads included, and takes precedence over the program's numbers.">
+            <select value={raw.uniOverride||""} onChange={e=>put({ uniOverride:e.target.value })} style={{ ...fieldInput, padding:"8px" }}>
+              <option value="">Use the program's numbers</option>
+              {[1,2,3,4,5,6].map(n=><option key={n} value={String(n)}>{n} {n===1?"round":"rounds"}, every week</option>)}
+            </select>
+          </Field>
+        </SetupBlock>
+
+        <Pressable onClick={reset} className="rl-btn" style={btnSecondary}>Reset these choices</Pressable>
+      </main>
     </div>
   );
 }
@@ -414,22 +629,22 @@ function DatePicker({ sched, current, today, onPick, onClose }){
 
 function BootScreen({ error, onRetry }){
   return (
-    <div style={{minHeight:"100%",background:T.ink,color:"#fff",display:"flex",flexDirection:"column",
-      alignItems:"center",justifyContent:"center",padding:"40px 24px",textAlign:"center",position:"relative",overflow:"hidden"}}>
-      <Topo opacity={0.18} color={T.ember}/>
-      <div style={{position:"relative"}}>
-        <div style={{display:"flex",justifyContent:"center"}}><Wordmark height={34}/></div>
+    <div className="on-dark" style={{ minHeight:"100%", background:T.night, color:T.onNight, display:"flex", flexDirection:"column",
+      alignItems:"center", justifyContent:"center", padding:"40px 24px", textAlign:"center", position:"relative", overflow:"hidden" }}>
+      <TopoField opacity={.5}/>
+      <div style={{ position:"relative", display:"flex", flexDirection:"column", alignItems:"center" }}>
+        <Lockup tone="dark" width={240}/>
+        <p style={{ margin:"14px 0 0", fontSize:14, lineHeight:"20px", color:T.onNightMuted }}>Strength for mountain athletes</p>
         {error ? (
-          <div role="alert" style={{marginTop:22,maxWidth:320}}>
-            <div style={{fontSize:16,fontWeight:650}}>Couldn't load the program</div>
-            <div style={{fontSize:13.5,color:"rgba(255,255,255,.7)",marginTop:6,lineHeight:1.5}}>
+          <div role="alert" style={{ marginTop:32, maxWidth:320 }}>
+            <p style={{ margin:0, fontSize:18, lineHeight:"24px", fontWeight:600 }}>Couldn't load the program</p>
+            <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", color:T.onNightMuted }}>
               Check your connection and try again. Once it loads, it works offline.
-            </div>
-            <Pressable onClick={onRetry} style={{marginTop:16,fontSize:14,fontWeight:700,color:T.ink,
-              background:"#fff",borderRadius:8,padding:"11px 18px",minHeight:44}}>Try again</Pressable>
+            </p>
+            <Pressable onClick={onRetry} className="rl-btn rl-primary" style={{ ...btnPrimary, marginTop:16 }}>Try again</Pressable>
           </div>
         ) : (
-          <div style={{marginTop:18,fontSize:13,color:"rgba(255,255,255,.6)",letterSpacing:".08em"}}>Loading program…</div>
+          <p role="status" style={{ margin:"32px 0 0", fontSize:14, lineHeight:"20px", color:T.onNightMuted }}>Loading program…</p>
         )}
       </div>
     </div>
@@ -452,13 +667,15 @@ function App(){
   const [boot, setBoot]   = React.useState({ status:"loading" });
   const [today, setToday] = React.useState(todayIso());
   const [log, setLog]     = React.useState(loadLog);
+  const [personal, setPersonal] = React.useState(loadPersonal);
+  const [drafts, setDrafts] = React.useState(loadDrafts);
   const [screen, setScreen] = React.useState("home");
-  const [sel, setSel]     = React.useState(null);
+  const [sel, setSel]     = React.useState(null);          /* session being viewed */
+  const [homeSel, setHomeSel] = React.useState(null);      /* date chosen on the schedule */
   const [travelId, setTid]= React.useState(null);
-  const [picker, setPicker] = React.useState(false);
-  const [month, setMonth] = React.useState(null);
   const scrollRef = React.useRef(null);
-  const lastTrigger = React.useRef(null);
+  const logRef = React.useRef(log);
+  logRef.current = log;
 
   const load = React.useCallback(async ()=>{
     setBoot({ status:"loading" });
@@ -469,10 +686,9 @@ function App(){
       const program = await getJSON(meta.file);
       let travel = null;
       if (index.travel){ try { travel = await getJSON(index.travel); } catch { travel = null; } }
-      const sched = buildSchedule(program);
-      const t = todayIso();
-      setMonth(summaryFor(sched, program, t).iso.slice(0,7));
-      setBoot({ status:"ready", index, program, sched, travel });
+      const first = buildSchedule(program, loadPersonal());
+      setHomeSel(summaryFor(first, program, todayIso()).iso);
+      setBoot({ status:"ready", index, program, travel });
     } catch (e) {
       setBoot({ status:"error", error:String(e && e.message || e) });
     }
@@ -486,52 +702,80 @@ function App(){
     return ()=>document.removeEventListener("visibilitychange", f);
   },[]);
 
-  const setEntry = React.useCallback((name, iso, entry)=>{
-    setLog(prev=>{
-      const k = mkey(name);
-      const next = { v:1, entries:{ ...prev.entries, [k]: { ...(prev.entries[k]||{}) } } };
-      if (entry) next.entries[k][iso] = entry; else delete next.entries[k][iso];
-      if (!Object.keys(next.entries[k]).length) delete next.entries[k];
-      persistLog(next);
-      return next;
-    });
+  /* Log changes are computed from the latest log and only shown once they are saved. */
+  const commitLog = React.useCallback(next=>{
+    if (!persistLog(next)) return false;
+    logRef.current = next; setLog(next); return true;
   },[]);
-  const replaceLog = React.useCallback(next=>{ persistLog(next); setLog(next); },[]);
+  const addSet    = React.useCallback((name, iso, set, cal)=> commitLog(withSet(logRef.current, name, iso, set, cal)),[commitLog]);
+  const removeSet = React.useCallback((name, iso, i)=> commitLog(withoutSet(logRef.current, name, iso, i)),[commitLog]);
+  const setDone   = React.useCallback((iso, on)=> commitLog(withDone(logRef.current, iso, on)),[commitLog]);
+  const replaceLog= React.useCallback(next=> commitLog(next),[commitLog]);
+
+  const updatePersonal = React.useCallback(fn=>{
+    setPersonal(prev=>{ const next = fn(prev); savePersonal(next); return next; });
+  },[]);
+  const setDraft = React.useCallback((key, value)=>{
+    setDrafts(prev=>{ const next = { ...prev, [key]: value }; saveDrafts(next); return next; });
+  },[]);
+  const unit = personal.unit === "kg" ? "kg" : "lb";
+  const setUnit = React.useCallback(u=> updatePersonal(p=>({ ...p, unit:u })),[updatePersonal]);
 
   React.useEffect(()=>{
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(()=>{});
   },[]);
 
+  /* The schedule and each day's variants depend on the athlete's private setup. */
+  const ready = boot.status==="ready";
+  const sched = React.useMemo(()=> ready ? buildSchedule(boot.program, personal) : null, [ready, boot, personal]);
+  const setup = React.useMemo(()=> ready ? normalizeSetup(boot.program, personal) : null, [ready, boot, personal]);
+  const resolve = React.useCallback(day=>{
+    if (!ready || !day) return day;
+    return resolveDay(day, { program:boot.program, setup, zoneProfile:personal.zoneProfile,
+      lbDone: w => setsOf(entryOn(log, "Mini Leg Blaster", addDays(sched.start, (w-1)*7 + 2))).length > 0 });
+  },[ready, boot, setup, personal, log, sched]);
+
   const scrollTop = ()=>{ const el = scrollRef.current; if (el){ if (el.scrollTo) el.scrollTo(0,0); else el.scrollTop = 0; } };
 
   if (boot.status!=="ready") return <BootScreen error={boot.status==="error"} onRetry={load}/>;
 
-  const { index, program, sched, travel } = boot;
-  const goHome = ()=>{ setScreen("home"); setSel(null); setPicker(false);
-    setMonth(summaryFor(sched, program, today).iso.slice(0,7)); scrollTop(); };
-  const openDay = iso=>{ setSel(iso); setScreen("day"); setPicker(false); scrollTop(); };
-  const openPicker = ()=>{ lastTrigger.current = document.activeElement; setPicker(true); };
-  const closePicker = ()=>{ setPicker(false); requestAnimationFrame(()=>lastTrigger.current && lastTrigger.current.focus && lastTrigger.current.focus()); };
-  const d = sel ? sched.byIso[sel] : null;
+  const { index, program, travel } = boot;
+  const goHome = ()=>{ setScreen("home"); setSel(null); scrollTop(); };
+  const openDay = iso=>{ setSel(iso); setHomeSel(iso); setScreen("day"); scrollTop(); };
+  const d = sel ? resolve(sched.byIso[sel]) : null;
   const w = travelId && travel ? travel.find(x=>x.id===travelId) : null;
+  const idx = sel ? sched.dates.indexOf(sel) : -1;
+  const prevIso = idx > 0 ? sched.dates[idx-1] : null, nextIso = idx >= 0 && idx < sched.dates.length-1 ? sched.dates[idx+1] : null;
 
   return (
-    <LogContext.Provider value={{ log, setEntry, replaceLog, today }}>
+    <LogContext.Provider value={{ log, addSet, removeSet, setDone, replaceLog, drafts, setDraft, unit, setUnit, today }}>
       <div className="rl-shell">
         <div className="rl-scroll" ref={scrollRef}>
-          <div key={screen+String(sel)+String(travelId)} style={{animation:"rlRise 140ms ease"}}>
-            {screen==="home" && month && (
-              <Home program={program} sched={sched} index={index} today={today} month={month} setMonth={setMonth}
-                onOpen={openDay} hasTravel={!!(travel && travel.length)}
+          <div key={screen+String(sel)+String(travelId)} style={{ animation:"rlRise 180ms cubic-bezier(.2,0,0,1)" }}>
+            {screen==="home" && homeSel && (
+              <Home program={program} sched={sched} index={index} today={today} sel={homeSel} setSel={setHomeSel}
+                onOpen={openDay} hasTravel={!!(travel && travel.length)} resolve={resolve} done={log.done}
+                onSetup={()=>{ setScreen("setup"); scrollTop(); }}
                 onTravel={()=>{ setScreen("travel"); scrollTop(); }}/>
             )}
             {screen==="day" && d && (
               <>
-                <DayHeader d={d} today={today} onHome={goHome} onPicker={openPicker}/>
+                <StickyBar
+                  left={<Pressable onClick={goHome} ariaLabel="Back to schedule" style={textBtn}>← Schedule</Pressable>}
+                  right={<div style={{ display:"flex", gap:4 }}>
+                    <Pressable onClick={()=>prevIso && openDay(prevIso)} disabled={!prevIso} ariaLabel="Previous session"
+                      style={{ ...textBtn, textDecoration:"none", fontSize:20, justifyContent:"center", opacity:prevIso?1:.35 }}>‹</Pressable>
+                    <Pressable onClick={()=>nextIso && openDay(nextIso)} disabled={!nextIso} ariaLabel="Next session"
+                      style={{ ...textBtn, textDecoration:"none", fontSize:20, justifyContent:"center", opacity:nextIso?1:.35 }}>›</Pressable>
+                  </div>}/>
+                <SessionHeading d={d} sched={sched} today={today} onPick={openDay} extra={<DayBadges d={d}/>}/>
                 {d.type==="gym"  && <GymDay d={d}/>}
                 {d.type==="run"  && <RunDay d={d} warmup={program.runWarmup||[]}/>}
                 {(d.type==="rest"||d.type==="race") && <BareDay d={d}/>}
               </>
+            )}
+            {screen==="setup" && program.engine && (
+              <Setup program={program} sched={sched} personal={personal} setup={setup} update={updatePersonal} onHome={goHome}/>
             )}
             {screen==="travel" && travel && (
               <TravelList travel={travel} onHome={goHome} onOpen={id=>{ setTid(id); setScreen("travelDetail"); scrollTop(); }}/>
@@ -541,7 +785,6 @@ function App(){
             )}
           </div>
         </div>
-        {picker && sel && <DatePicker sched={sched} current={sel} today={today} onPick={openDay} onClose={closePicker}/>}
       </div>
     </LogContext.Provider>
   );

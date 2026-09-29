@@ -1,12 +1,19 @@
 {
- "active": "ski-2026",
+ "active": "mountain-athlete-v3",
  "travel": "programs/travel.json",
  "programs": [
+  {
+   "id": "mountain-athlete-v3",
+   "name": "Mountain Athlete Strength",
+   "file": "programs/mountain-athlete-v3.json",
+   "status": "active",
+   "dates": "12 weeks · you choose the start date"
+  },
   {
    "id": "ski-2026",
    "name": "Mountain Athlete Hybrid",
    "file": "programs/ski-2026.json",
-   "status": "active",
+   "status": "archived",
    "dates": "from Oct 5, 2026"
   },
   {
