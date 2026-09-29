@@ -1,0 +1,2838 @@
+{
+ "id": "ski-2026",
+ "name": "Mountain Athlete Hybrid",
+ "subtitle": "Ski season and beyond",
+ "startDate": "2026-10-05",
+ "status": "active",
+ "runWarmup": [
+  {
+   "k": "mv",
+   "n": "Leg Swings, front-back and lateral",
+   "rx": "10 / side"
+  },
+  {
+   "k": "mv",
+   "n": "Hip Circles",
+   "rx": "8 / side"
+  },
+  {
+   "k": "mv",
+   "n": "Ankle Circles",
+   "rx": "10 / side"
+  },
+  {
+   "k": "mv",
+   "n": "Walking Knee Hug",
+   "rx": "10 steps"
+  },
+  {
+   "k": "mv",
+   "n": "Walking Leg Cradle",
+   "rx": "10 steps"
+  }
+ ],
+ "publishedThrough": "Build Block 1",
+ "nextUp": "Build Block 2",
+ "days": {
+  "W1-mon": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W1-tue": {
+   "type": "run",
+   "title": "Easy Run",
+   "trt": "0:45",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy",
+       "cue": "Walk breaks welcome."
+      }
+     ]
+    }
+   ],
+   "optional": true
+  },
+  "W1-wed": {
+   "type": "gym",
+   "title": "Easy Full Body A",
+   "note": "Recover week · about 40 minutes",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy bike",
+       "rx": "5 min"
+      },
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8 · 3-sec pause at bottom"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Pull-Apart",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "World's Greatest Stretch",
+       "rx": "3 / side"
+      }
+     ],
+     "meta": "5 min bike, then 2 rounds · continuous"
+    },
+    {
+     "title": "Main",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Ring Row",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "DB Bench Press",
+       "rx": "10"
+      }
+     ],
+     "meta": "3 rounds · not for time · RPE 5 · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Accessory",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Foot-on-Wall DB RDL",
+       "rx": "8 / side · light"
+      },
+      {
+       "k": "mv",
+       "n": "Dead Bug",
+       "rx": "8 / side"
+      }
+     ],
+     "meta": "2 rounds · no rest between exercises",
+     "rest": "rest 30 s after round"
+    },
+    {
+     "title": "Engine",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike",
+       "rx": "10 min · Easy"
+      }
+     ],
+     "meta": "Continuous"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Child's Pose Lat Reach",
+       "rx": "60 s"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W1-thu": {
+   "type": "run",
+   "title": "Easy Run",
+   "trt": "0:45",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      }
+     ]
+    }
+   ],
+   "optional": true
+  },
+  "W1-fri": {
+   "type": "gym",
+   "title": "Easy Full Body B",
+   "note": "Recover week · about 40 minutes",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy row",
+       "rx": "5 min"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Scap Pull-Up",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Lunge",
+       "rx": "6 / side"
+      }
+     ],
+     "meta": "5 min row, then 2 rounds · continuous"
+    },
+    {
+     "title": "Main",
+     "items": [
+      {
+       "k": "mv",
+       "n": "KB Deadlift",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "DB Strict Press",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Band-Assisted Pull-Up",
+       "rx": "6"
+      }
+     ],
+     "meta": "3 rounds · RPE 5 · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Accessory",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bulgarian Split Squat",
+       "rx": "8 / side · bodyweight"
+      },
+      {
+       "k": "mv",
+       "n": "Suitcase Carry",
+       "rx": "30 m / side"
+      }
+     ],
+     "meta": "2 rounds · no rest between exercises",
+     "rest": "rest 30 s after round"
+    },
+    {
+     "title": "Engine",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row",
+       "rx": "10 min · Easy"
+      }
+     ],
+     "meta": "Continuous"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Supine Hamstring Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W1-sat": {
+   "type": "run",
+   "title": "Steady Run",
+   "trt": "1:00",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Steady run",
+       "rx": "60 min · Steady",
+       "cue": "Unstructured; terrain of choice."
+      }
+     ]
+    }
+   ]
+  },
+  "W1-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W2-mon": {
+   "type": "gym",
+   "title": "Max Strength",
+   "calibration": true,
+   "note": "Record every 📝 value. Build Block 1 starting loads are set 5–10% below them.",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row or Echo Bike",
+       "rx": "250 m or 12/9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8 · 3-sec pause"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Pull-Apart",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "World's Greatest Stretch",
+       "rx": "5 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Hollow Hold",
+       "rx": "20 s"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Back Squat",
+       "rx": "Build to one set of 6 @ RPE 7, then 2 more sets of 6 at that load",
+       "rest": "2:00 between sets",
+       "log": "load",
+       "cal": true
+      },
+      {
+       "k": "mv",
+       "n": "Strict Pull-Up",
+       "rx": "1 set · max clean strict reps",
+       "cue": "Baseline for the strict pull-up progression.",
+       "log": "reps",
+       "cal": true
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bulgarian Split Squat",
+       "rx": "8 / side",
+       "rest": "rest 30 s after exercise",
+       "log": "load",
+       "cal": true
+      },
+      {
+       "k": "mv",
+       "n": "Foot-on-Wall DB RDL",
+       "rx": "8 / side · @3011",
+       "log": "load",
+       "cal": true
+      },
+      {
+       "k": "note",
+       "text": "Find the load that feels RPE 7 on both and record it."
+      }
+     ],
+     "meta": "Durability Circuit · 2 rounds · not for time",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Standing Calf Raise, loaded, off a step",
+       "rx": "15",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout",
+       "rx": "8"
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Dead Hang",
+       "rx": "30 s"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W2-tue": {
+   "type": "run",
+   "title": "Easy + Strides",
+   "trt": "0:50",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      },
+      {
+       "k": "mv",
+       "n": "Strides",
+       "rx": "6 × 20 s fast-but-relaxed",
+       "rest": "60 s walk between"
+      }
+     ]
+    }
+   ]
+  },
+  "W2-wed": {
+   "type": "gym",
+   "title": "Upper + Engine",
+   "calibration": true,
+   "note": "Record every 📝 value. Build Block 1 starting loads are set 5–10% below them.",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row",
+       "rx": "250 m · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Scap Pull-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "10 · slow"
+      },
+      {
+       "k": "mv",
+       "n": "Band Dislocate",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Bird Dog",
+       "rx": "6 / side"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bench Press",
+       "rx": "Build to one set of 6 @ RPE 7, then 2 more sets of 6",
+       "rest": "2:00 between sets",
+       "log": "load",
+       "cal": true
+      },
+      {
+       "k": "mv",
+       "n": "Ring Row",
+       "rx": "3 × 10",
+       "rest": "60 s between sets"
+      },
+      {
+       "k": "mv",
+       "n": "Pull-Up Negative",
+       "rx": "2 × 2 · 5-sec lower",
+       "rest": "60 s between sets"
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "wod",
+       "head": "AMRAP 8",
+       "effort": "Steady effort",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Wall Balls",
+         "rx": "8 · 20 / 14 lb"
+        },
+        {
+         "k": "mv",
+         "n": "Band-Assisted Pull-Ups",
+         "rx": "6"
+        },
+        {
+         "k": "mv",
+         "n": "Row",
+         "rx": "8 / 6 cal"
+        }
+       ]
+      },
+      {
+       "k": "flag",
+       "kind": "scaling",
+       "text": "Choose loads you can perform unbroken through the first round. Loads listed men's / women's."
+      }
+     ],
+     "meta": "WOD · clock-managed"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hanging Knee Raise",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "DB Lateral Raise",
+       "rx": "15",
+       "iso": true
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Doorway Pec Stretch",
+       "rx": "45 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Child's Pose Lat Reach",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Thread-the-Needle",
+       "rx": "5 / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W2-thu": {
+   "type": "run",
+   "title": "Easy Run",
+   "trt": "0:45",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      }
+     ]
+    }
+   ],
+   "optional": true
+  },
+  "W2-fri": {
+   "type": "gym",
+   "title": "Mountain Athlete",
+   "calibration": true,
+   "note": "Record every 📝 value. Build Block 1 starting loads are set 5–10% below them.",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike",
+       "rx": "12 / 9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "KB Deadlift",
+       "rx": "10 · light"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Lunge",
+       "rx": "6 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Side Plank",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "10"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trap Bar Deadlift",
+       "rx": "Build to one set of 5 @ RPE 7, then 2 more sets of 5",
+       "rest": "2:00 between sets",
+       "log": "load",
+       "cal": true
+      },
+      {
+       "k": "group",
+       "label": "Single-Leg Superset",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Bulgarian Split Squat",
+         "rx": "8 / side · Monday's load",
+         "rest": "rest 30 s after exercise"
+        },
+        {
+         "k": "mv",
+         "n": "Foot-on-Wall DB RDL",
+         "rx": "8 / side · @3011 · Monday's load"
+        }
+       ],
+       "meta": "2 rounds",
+       "rest": "rest 60 s after round"
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Lateral Bound",
+       "rx": "5 / side · stick each landing 2 s"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Arm KB Front-Rack Carry",
+       "rx": "40 m / side"
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank, short lever",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Bear Crawl",
+       "rx": "20 m"
+      }
+     ],
+     "meta": "Stability Circuit · 2 rounds · steady pace · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg Bent-Knee Calf Raise",
+       "rx": "12 / side",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "12 · 3-sec lower"
+      },
+      {
+       "k": "mv",
+       "n": "Chest-Supported DB Row",
+       "rx": "12"
+      }
+     ],
+     "meta": "2 rounds · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Supine Hamstring Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W2-sat": {
+   "type": "run",
+   "title": "Long Run",
+   "trt": "1:10",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Long run",
+       "rx": "70 min · Steady"
+      }
+     ]
+    }
+   ]
+  },
+  "W2-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W3-mon": {
+   "type": "gym",
+   "title": "Max Strength",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row or Echo Bike",
+       "rx": "250 m or 12/9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8 · 3-sec pause at bottom"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Pull-Apart",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "World's Greatest Stretch",
+       "rx": "5 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Hollow Hold",
+       "rx": "20 s"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Back Squat ramp-up",
+       "rx": "3–4 progressively heavier sets to working weight",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:30",
+       "sets": 5,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Back Squat",
+         "rx": "6 @ RPE 6",
+         "log": "load",
+         "startFrom": "cal"
+        },
+        {
+         "t": "1:15",
+         "n": "Strict Pull-Up",
+         "rx": "2"
+        }
+       ],
+       "after": "rest until 2:30"
+      },
+      {
+       "k": "flag",
+       "kind": "fallback",
+       "text": "Pull-up fallback: If a rep slows noticeably or you start to kip, stop and finish that set's reps with a band."
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bulgarian Split Squat",
+       "rx": "8 / side @ RPE 5–6",
+       "rest": "rest 30 s after exercise",
+       "log": "load",
+       "startFrom": "cal"
+      },
+      {
+       "k": "mv",
+       "n": "Foot-on-Wall DB RDL",
+       "rx": "8 / side @ RPE 5–6 · @3011",
+       "rest": "rest 30 s after exercise",
+       "log": "load",
+       "startFrom": "cal"
+      },
+      {
+       "k": "mv",
+       "n": "Sled Push",
+       "rx": "20 m · moderate"
+      },
+      {
+       "k": "flag",
+       "kind": "regression",
+       "text": "If control breaks on a single-leg movement (hips rotate, knee caves, balance lost more than once in a set), drop to the previous variation and keep the prescribed sets and reps."
+      }
+     ],
+     "meta": "Durability Circuit · 3 rounds · not for time",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Standing Calf Raise, loaded, off a step",
+       "rx": "15",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout",
+       "rx": "8"
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Dead Hang",
+       "rx": "30 s"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W3-wed": {
+   "type": "gym",
+   "title": "Upper + Engine",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row",
+       "rx": "250 m · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Scap Pull-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "10 · slow"
+      },
+      {
+       "k": "mv",
+       "n": "Band Dislocate",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Bird Dog",
+       "rx": "6 / side"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bench Press ramp-up",
+       "rx": "3 progressively heavier sets",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:30",
+       "sets": 5,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Bench Press",
+         "rx": "6 @ RPE 6",
+         "log": "load",
+         "startFrom": "cal"
+        },
+        {
+         "t": "1:15",
+         "n": "Ring Row",
+         "rx": "10"
+        }
+       ],
+       "after": "rest until 2:30"
+      },
+      {
+       "k": "flag",
+       "kind": "fallback",
+       "text": "Ring row fallback: Chest-Supported DB Row."
+      },
+      {
+       "k": "mv",
+       "n": "Pull-Up Negative",
+       "rx": "3 × 2 · jump or step to top, 5-sec lower",
+       "rest": "60 s between sets"
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "wod",
+       "head": "AMRAP 12",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Wall Balls",
+         "rx": "10 · 20 / 14 lb"
+        },
+        {
+         "k": "mv",
+         "n": "Band-Assisted Pull-Ups",
+         "rx": "8"
+        },
+        {
+         "k": "mv",
+         "n": "Echo Bike",
+         "rx": "10 / 8 cal"
+        },
+        {
+         "k": "mv",
+         "n": "DB Push Press",
+         "rx": "8 · 35 / 25 lb"
+        }
+       ]
+      },
+      {
+       "k": "flag",
+       "kind": "scaling",
+       "text": "Choose loads you can perform unbroken through the first round. Loads listed men's / women's. With 8+ strict pull-ups, use strict or kipping pull-ups in place of band-assisted."
+      }
+     ],
+     "meta": "WOD · clock-managed"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hanging Knee Raise",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "DB Lateral Raise",
+       "rx": "15",
+       "iso": true
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Doorway Pec Stretch",
+       "rx": "45 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Child's Pose Lat Reach",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Thread-the-Needle",
+       "rx": "5 / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W3-fri": {
+   "type": "gym",
+   "title": "Mountain Athlete",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike",
+       "rx": "12 / 9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "KB Deadlift",
+       "rx": "10 · light"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Lunge",
+       "rx": "6 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Side Plank",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "10"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trap Bar Deadlift ramp-up",
+       "rx": "3 progressively heavier sets",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:00",
+       "sets": 4,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Trap Bar Deadlift",
+         "rx": "5 @ RPE 6",
+         "log": "load",
+         "startFrom": "cal"
+        }
+       ],
+       "after": "rest until 2:00"
+      },
+      {
+       "k": "group",
+       "label": "Single-Leg Superset",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Bulgarian Split Squat",
+         "rx": "8 / side @ RPE 6–7",
+         "rest": "rest 30 s after exercise",
+         "log": "load"
+        },
+        {
+         "k": "mv",
+         "n": "Foot-on-Wall DB RDL",
+         "rx": "8 / side @ RPE 6–7 · @3011",
+         "log": "load"
+        }
+       ],
+       "meta": "3 rounds",
+       "rest": "rest 60 s after round"
+      },
+      {
+       "k": "flag",
+       "kind": "regression",
+       "text": "If control breaks on a single-leg movement (hips rotate, knee caves, balance lost more than once in a set), drop to the previous variation and keep the prescribed sets and reps."
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Lateral Bound",
+       "rx": "5 / side · stick each landing 2 s"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Arm KB Front-Rack Carry",
+       "rx": "40 m / side · moderate"
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank, short lever",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Bear Crawl",
+       "rx": "20 m"
+      }
+     ],
+     "meta": "Stability Circuit · 3 rounds · steady pace · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg Bent-Knee Calf Raise",
+       "rx": "12 / side",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "12 · 3-sec lower"
+      },
+      {
+       "k": "mv",
+       "n": "Chest-Supported DB Row",
+       "rx": "12"
+      }
+     ],
+     "meta": "2 rounds · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Supine Hamstring Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W3-tue": {
+   "type": "run",
+   "title": "Easy + Strides",
+   "trt": "0:50",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      },
+      {
+       "k": "mv",
+       "n": "Strides",
+       "rx": "6 × 20 s fast-but-relaxed",
+       "rest": "60 s walk between"
+      }
+     ]
+    }
+   ]
+  },
+  "W3-thu": {
+   "type": "run",
+   "title": "Easy Run",
+   "trt": "0:45",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      }
+     ]
+    }
+   ],
+   "optional": true
+  },
+  "W3-sat": {
+   "type": "run",
+   "title": "Long Run",
+   "trt": "1:15",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Long run",
+       "rx": "75 min · Steady"
+      }
+     ]
+    }
+   ]
+  },
+  "W3-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W4-mon": {
+   "type": "gym",
+   "title": "Max Strength",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row or Echo Bike",
+       "rx": "250 m or 12/9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8 · 3-sec pause at bottom"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Pull-Apart",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "World's Greatest Stretch",
+       "rx": "5 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Hollow Hold",
+       "rx": "20 s"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Back Squat ramp-up",
+       "rx": "3–4 progressively heavier sets to working weight",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:30",
+       "sets": 5,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Back Squat",
+         "rx": "6 @ RPE 7",
+         "log": "load"
+        },
+        {
+         "t": "1:15",
+         "n": "Strict Pull-Up",
+         "rx": "2"
+        }
+       ],
+       "after": "rest until 2:30"
+      },
+      {
+       "k": "flag",
+       "kind": "fallback",
+       "text": "Pull-up fallback: If a rep slows noticeably or you start to kip, stop and finish that set's reps with a band."
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bulgarian Split Squat",
+       "rx": "8 / side @ RPE 6",
+       "rest": "rest 30 s after exercise",
+       "log": "load"
+      },
+      {
+       "k": "mv",
+       "n": "Foot-on-Wall DB RDL",
+       "rx": "8 / side @ RPE 6 · @3011",
+       "rest": "rest 30 s after exercise",
+       "log": "load"
+      },
+      {
+       "k": "mv",
+       "n": "Sled Push",
+       "rx": "20 m · moderate"
+      },
+      {
+       "k": "flag",
+       "kind": "regression",
+       "text": "If control breaks on a single-leg movement (hips rotate, knee caves, balance lost more than once in a set), drop to the previous variation and keep the prescribed sets and reps."
+      }
+     ],
+     "meta": "Durability Circuit · 3 rounds · not for time",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Standing Calf Raise, loaded, off a step",
+       "rx": "15",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout",
+       "rx": "8"
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Dead Hang",
+       "rx": "30 s"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W4-wed": {
+   "type": "gym",
+   "title": "Upper + Engine",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row",
+       "rx": "250 m · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Scap Pull-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "10 · slow"
+      },
+      {
+       "k": "mv",
+       "n": "Band Dislocate",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Bird Dog",
+       "rx": "6 / side"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bench Press ramp-up",
+       "rx": "3 progressively heavier sets",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:30",
+       "sets": 5,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Bench Press",
+         "rx": "6 @ RPE 7",
+         "log": "load"
+        },
+        {
+         "t": "1:15",
+         "n": "Ring Row",
+         "rx": "12"
+        }
+       ],
+       "after": "rest until 2:30"
+      },
+      {
+       "k": "flag",
+       "kind": "fallback",
+       "text": "Ring row fallback: Chest-Supported DB Row."
+      },
+      {
+       "k": "mv",
+       "n": "Pull-Up Negative",
+       "rx": "3 × 2 · jump or step to top, 5-sec lower",
+       "rest": "60 s between sets"
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "wod",
+       "head": "EMOM 15 · 5 rounds",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Minute 1 · Row",
+         "rx": "12 / 10 cal"
+        },
+        {
+         "k": "mv",
+         "n": "Minute 2 · Russian KB Swings",
+         "rx": "12 · 53 / 35 lb"
+        },
+        {
+         "k": "mv",
+         "n": "Minute 3 · Push-Ups + Band-Assisted Pull-Ups",
+         "rx": "10 + 5"
+        }
+       ]
+      },
+      {
+       "k": "flag",
+       "kind": "scaling",
+       "text": "Choose loads you can perform unbroken through the first round. Loads listed men's / women's. With 8+ strict pull-ups, use strict or kipping pull-ups in place of band-assisted."
+      }
+     ],
+     "meta": "WOD · clock-managed"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hanging Knee Raise",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "DB Lateral Raise",
+       "rx": "15",
+       "iso": true
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Doorway Pec Stretch",
+       "rx": "45 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Child's Pose Lat Reach",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Thread-the-Needle",
+       "rx": "5 / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W4-fri": {
+   "type": "gym",
+   "title": "Mountain Athlete",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike",
+       "rx": "12 / 9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "KB Deadlift",
+       "rx": "10 · light"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Lunge",
+       "rx": "6 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Side Plank",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "10"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trap Bar Deadlift ramp-up",
+       "rx": "3 progressively heavier sets",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:00",
+       "sets": 4,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Trap Bar Deadlift",
+         "rx": "5 @ RPE 7",
+         "log": "load"
+        }
+       ],
+       "after": "rest until 2:00"
+      },
+      {
+       "k": "group",
+       "label": "Single-Leg Superset",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Bulgarian Split Squat",
+         "rx": "8 / side @ RPE 7",
+         "rest": "rest 30 s after exercise",
+         "log": "load"
+        },
+        {
+         "k": "mv",
+         "n": "Foot-on-Wall DB RDL",
+         "rx": "8 / side @ RPE 7 · @3011",
+         "log": "load"
+        }
+       ],
+       "meta": "3 rounds",
+       "rest": "rest 60 s after round"
+      },
+      {
+       "k": "flag",
+       "kind": "regression",
+       "text": "If control breaks on a single-leg movement (hips rotate, knee caves, balance lost more than once in a set), drop to the previous variation and keep the prescribed sets and reps."
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Lateral Bound",
+       "rx": "5 / side · stick each landing 2 s"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Arm KB Front-Rack Carry",
+       "rx": "40 m / side · heavier"
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank, short lever",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Bear Crawl",
+       "rx": "20 m"
+      }
+     ],
+     "meta": "Stability Circuit · 3 rounds · steady pace · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg Bent-Knee Calf Raise",
+       "rx": "12 / side",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "12 · 3-sec lower"
+      },
+      {
+       "k": "mv",
+       "n": "Chest-Supported DB Row",
+       "rx": "12"
+      }
+     ],
+     "meta": "2 rounds · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Supine Hamstring Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W4-tue": {
+   "type": "run",
+   "title": "Easy + Hill Strides",
+   "trt": "0:50",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      },
+      {
+       "k": "mv",
+       "n": "Hill Strides",
+       "rx": "8 × 30 s uphill · Hard",
+       "rest": "walk down, ~60–75 s"
+      }
+     ]
+    }
+   ]
+  },
+  "W4-thu": {
+   "type": "run",
+   "title": "Easy Run",
+   "trt": "0:45",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      }
+     ]
+    }
+   ],
+   "optional": true
+  },
+  "W4-sat": {
+   "type": "run",
+   "title": "Long Run",
+   "trt": "1:20",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Long run",
+       "rx": "80 min · Steady"
+      }
+     ]
+    }
+   ]
+  },
+  "W4-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W5-mon": {
+   "type": "gym",
+   "title": "Max Strength",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row or Echo Bike",
+       "rx": "250 m or 12/9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8 · 3-sec pause at bottom"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Pull-Apart",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "World's Greatest Stretch",
+       "rx": "5 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Hollow Hold",
+       "rx": "20 s"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Back Squat ramp-up",
+       "rx": "3–4 progressively heavier sets to working weight",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:30",
+       "sets": 6,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Back Squat",
+         "rx": "5 @ RPE 8",
+         "log": "load"
+        },
+        {
+         "t": "1:15",
+         "n": "Strict Pull-Up",
+         "rx": "2"
+        }
+       ],
+       "after": "rest until 2:30"
+      },
+      {
+       "k": "flag",
+       "kind": "fallback",
+       "text": "Pull-up fallback: If a rep slows noticeably or you start to kip, stop and finish that set's reps with a band."
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bulgarian Split Squat",
+       "rx": "8 / side @ RPE 6–7",
+       "rest": "rest 30 s after exercise",
+       "log": "load"
+      },
+      {
+       "k": "mv",
+       "n": "Foot-on-Wall DB RDL",
+       "rx": "8 / side @ RPE 6–7 · @3011",
+       "rest": "rest 30 s after exercise",
+       "log": "load"
+      },
+      {
+       "k": "mv",
+       "n": "Sled Push",
+       "rx": "20 m · moderate"
+      },
+      {
+       "k": "flag",
+       "kind": "regression",
+       "text": "If control breaks on a single-leg movement (hips rotate, knee caves, balance lost more than once in a set), drop to the previous variation and keep the prescribed sets and reps."
+      }
+     ],
+     "meta": "Durability Circuit · 3 rounds · not for time",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Standing Calf Raise, loaded, off a step",
+       "rx": "15",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout",
+       "rx": "8"
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Dead Hang",
+       "rx": "30 s"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W5-wed": {
+   "type": "gym",
+   "title": "Upper + Engine",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row",
+       "rx": "250 m · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Scap Pull-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "10 · slow"
+      },
+      {
+       "k": "mv",
+       "n": "Band Dislocate",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Bird Dog",
+       "rx": "6 / side"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bench Press ramp-up",
+       "rx": "3 progressively heavier sets",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:30",
+       "sets": 5,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Bench Press",
+         "rx": "5 @ RPE 8",
+         "log": "load"
+        },
+        {
+         "t": "1:15",
+         "n": "Ring Row",
+         "rx": "12 · harder angle"
+        }
+       ],
+       "after": "rest until 2:30"
+      },
+      {
+       "k": "flag",
+       "kind": "fallback",
+       "text": "Ring row fallback: Chest-Supported DB Row."
+      },
+      {
+       "k": "mv",
+       "n": "Pull-Up Negative",
+       "rx": "3 × 3 · jump or step to top, 5-sec lower",
+       "rest": "60 s between sets"
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "wod",
+       "head": "3 rounds for time · 15-min cap",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Echo Bike",
+         "rx": "15 / 12 cal"
+        },
+        {
+         "k": "mv",
+         "n": "DB Thrusters",
+         "rx": "12 · 35 / 25 lb"
+        },
+        {
+         "k": "mv",
+         "n": "Burpees",
+         "rx": "10"
+        },
+        {
+         "k": "mv",
+         "n": "Band-Assisted Pull-Ups",
+         "rx": "10"
+        }
+       ]
+      },
+      {
+       "k": "flag",
+       "kind": "scaling",
+       "text": "Choose loads you can perform unbroken through the first round. Loads listed men's / women's. With 8+ strict pull-ups, use strict or kipping pull-ups in place of band-assisted."
+      }
+     ],
+     "meta": "WOD · clock-managed"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hanging Knee Raise",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "DB Lateral Raise",
+       "rx": "15",
+       "iso": true
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Doorway Pec Stretch",
+       "rx": "45 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Child's Pose Lat Reach",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Thread-the-Needle",
+       "rx": "5 / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W5-fri": {
+   "type": "gym",
+   "title": "Mountain Athlete",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike",
+       "rx": "12 / 9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "KB Deadlift",
+       "rx": "10 · light"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Lunge",
+       "rx": "6 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Side Plank",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "10"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trap Bar Deadlift ramp-up",
+       "rx": "3 progressively heavier sets",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:00",
+       "sets": 5,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Trap Bar Deadlift",
+         "rx": "5 @ RPE 7",
+         "log": "load"
+        }
+       ],
+       "after": "rest until 2:00"
+      },
+      {
+       "k": "group",
+       "label": "Single-Leg Superset",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Bulgarian Split Squat",
+         "rx": "8 / side @ RPE 7–8",
+         "rest": "rest 30 s after exercise",
+         "log": "load"
+        },
+        {
+         "k": "mv",
+         "n": "Foot-on-Wall DB RDL",
+         "rx": "8 / side @ RPE 7–8 · @3011",
+         "log": "load"
+        }
+       ],
+       "meta": "3 rounds",
+       "rest": "rest 60 s after round"
+      },
+      {
+       "k": "flag",
+       "kind": "regression",
+       "text": "If control breaks on a single-leg movement (hips rotate, knee caves, balance lost more than once in a set), drop to the previous variation and keep the prescribed sets and reps."
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Lateral Bound",
+       "rx": "5 / side · stick each landing 2 s"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Arm KB Front-Rack Carry",
+       "rx": "40 m / side · heavier"
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank, short lever",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Bear Crawl",
+       "rx": "20 m"
+      }
+     ],
+     "meta": "Stability Circuit · 3 rounds · steady pace · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg Bent-Knee Calf Raise",
+       "rx": "12 / side",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "12 · 3-sec lower"
+      },
+      {
+       "k": "mv",
+       "n": "Chest-Supported DB Row",
+       "rx": "12"
+      }
+     ],
+     "meta": "2 rounds · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Supine Hamstring Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W5-tue": {
+   "type": "run",
+   "title": "Easy + Hill Strides",
+   "trt": "0:50",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      },
+      {
+       "k": "mv",
+       "n": "Hill Strides",
+       "rx": "8 × 30 s uphill · Hard",
+       "rest": "walk down, ~60–75 s"
+      }
+     ]
+    }
+   ]
+  },
+  "W5-thu": {
+   "type": "run",
+   "title": "Easy Run",
+   "trt": "0:45",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      }
+     ]
+    }
+   ],
+   "optional": true
+  },
+  "W5-sat": {
+   "type": "run",
+   "title": "Long Run",
+   "trt": "1:30",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Long run",
+       "rx": "90 min · Steady"
+      }
+     ]
+    }
+   ]
+  },
+  "W5-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W6-mon": {
+   "type": "gym",
+   "title": "Max Strength",
+   "deload": true,
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row or Echo Bike",
+       "rx": "250 m or 12/9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8 · 3-sec pause at bottom"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Pull-Apart",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "World's Greatest Stretch",
+       "rx": "5 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Hollow Hold",
+       "rx": "20 s"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Back Squat ramp-up",
+       "rx": "3–4 progressively heavier sets to working weight",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:30",
+       "sets": 3,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Back Squat",
+         "rx": "5 @ RPE 6",
+         "log": "load"
+        },
+        {
+         "t": "1:15",
+         "n": "Strict Pull-Up",
+         "rx": "2"
+        }
+       ],
+       "after": "rest until 2:30"
+      },
+      {
+       "k": "flag",
+       "kind": "fallback",
+       "text": "Pull-up fallback: If a rep slows noticeably or you start to kip, stop and finish that set's reps with a band."
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bulgarian Split Squat",
+       "rx": "8 / side @ RPE 5",
+       "rest": "rest 30 s after exercise",
+       "log": "load"
+      },
+      {
+       "k": "mv",
+       "n": "Foot-on-Wall DB RDL",
+       "rx": "8 / side @ RPE 5 · @3011",
+       "rest": "rest 30 s after exercise",
+       "log": "load"
+      },
+      {
+       "k": "mv",
+       "n": "Sled Push",
+       "rx": "20 m · moderate"
+      },
+      {
+       "k": "flag",
+       "kind": "regression",
+       "text": "If control breaks on a single-leg movement (hips rotate, knee caves, balance lost more than once in a set), drop to the previous variation and keep the prescribed sets and reps."
+      }
+     ],
+     "meta": "Durability Circuit · 2 rounds · not for time",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Standing Calf Raise, loaded, off a step",
+       "rx": "15",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout",
+       "rx": "8"
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Dead Hang",
+       "rx": "30 s"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W6-wed": {
+   "type": "gym",
+   "title": "Upper + Engine",
+   "deload": true,
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row",
+       "rx": "250 m · easy"
+      },
+      {
+       "k": "mv",
+       "n": "Scap Pull-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "10 · slow"
+      },
+      {
+       "k": "mv",
+       "n": "Band Dislocate",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Bird Dog",
+       "rx": "6 / side"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bench Press ramp-up",
+       "rx": "3 progressively heavier sets",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:30",
+       "sets": 3,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Bench Press",
+         "rx": "5 @ RPE 6",
+         "log": "load"
+        },
+        {
+         "t": "1:15",
+         "n": "Ring Row",
+         "rx": "10"
+        }
+       ],
+       "after": "rest until 2:30"
+      },
+      {
+       "k": "flag",
+       "kind": "fallback",
+       "text": "Ring row fallback: Chest-Supported DB Row."
+      },
+      {
+       "k": "mv",
+       "n": "Pull-Up Negative",
+       "rx": "2 × 2 · jump or step to top, 5-sec lower",
+       "rest": "60 s between sets"
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "wod",
+       "head": "AMRAP 8",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Wall Balls",
+         "rx": "8"
+        },
+        {
+         "k": "mv",
+         "n": "Ring Rows",
+         "rx": "8"
+        },
+        {
+         "k": "mv",
+         "n": "Row",
+         "rx": "8 / 6 cal"
+        }
+       ],
+       "effort": "Steady effort, not Hard"
+      },
+      {
+       "k": "flag",
+       "kind": "scaling",
+       "text": "Choose loads you can perform unbroken through the first round. Loads listed men's / women's. With 8+ strict pull-ups, use strict or kipping pull-ups in place of band-assisted."
+      }
+     ],
+     "meta": "WOD · clock-managed"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hanging Knee Raise",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "DB Lateral Raise",
+       "rx": "15",
+       "iso": true
+      }
+     ],
+     "meta": "3 rounds · no rest between exercises",
+     "rest": "rest 45 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Doorway Pec Stretch",
+       "rx": "45 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Child's Pose Lat Reach",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Thread-the-Needle",
+       "rx": "5 / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W6-fri": {
+   "type": "gym",
+   "title": "Mountain Athlete",
+   "deload": true,
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike",
+       "rx": "12 / 9 cal · easy"
+      },
+      {
+       "k": "mv",
+       "n": "KB Deadlift",
+       "rx": "10 · light"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Lunge",
+       "rx": "6 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Side Plank",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "10"
+      }
+     ],
+     "meta": "2 rounds · continuous"
+    },
+    {
+     "title": "Strength Intensity",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trap Bar Deadlift ramp-up",
+       "rx": "3 progressively heavier sets",
+       "rest": "as needed, ~60–90 s"
+      },
+      {
+       "k": "interval",
+       "every": "2:00",
+       "sets": 3,
+       "marks": [
+        {
+         "t": "0:00",
+         "n": "Trap Bar Deadlift",
+         "rx": "5 @ RPE 6",
+         "log": "load"
+        }
+       ],
+       "after": "rest until 2:00"
+      },
+      {
+       "k": "group",
+       "label": "Single-Leg Superset",
+       "items": [
+        {
+         "k": "mv",
+         "n": "Bulgarian Split Squat",
+         "rx": "8 / side @ RPE 6",
+         "rest": "rest 30 s after exercise",
+         "log": "load"
+        },
+        {
+         "k": "mv",
+         "n": "Foot-on-Wall DB RDL",
+         "rx": "8 / side @ RPE 6 · @3011",
+         "log": "load"
+        }
+       ],
+       "meta": "2 rounds",
+       "rest": "rest 60 s after round"
+      },
+      {
+       "k": "flag",
+       "kind": "regression",
+       "text": "If control breaks on a single-leg movement (hips rotate, knee caves, balance lost more than once in a set), drop to the previous variation and keep the prescribed sets and reps."
+      }
+     ]
+    },
+    {
+     "title": "Conditioning",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Lateral Bound",
+       "rx": "5 / side · stick each landing 2 s"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Arm KB Front-Rack Carry",
+       "rx": "40 m / side · moderate"
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank, short lever",
+       "rx": "20 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Bear Crawl",
+       "rx": "20 m"
+      }
+     ],
+     "meta": "Stability Circuit · 2 rounds · steady pace · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Finisher",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg Bent-Knee Calf Raise",
+       "rx": "12 / side",
+       "iso": true
+      },
+      {
+       "k": "mv",
+       "n": "Push-Up",
+       "rx": "12 · 3-sec lower"
+      },
+      {
+       "k": "mv",
+       "n": "Chest-Supported DB Row",
+       "rx": "12"
+      }
+     ],
+     "meta": "2 rounds · no rest between exercises",
+     "rest": "rest 60 s after round"
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Supine Hamstring Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ],
+     "meta": "Continuous"
+    }
+   ]
+  },
+  "W6-tue": {
+   "type": "run",
+   "title": "Easy Run",
+   "trt": "0:45",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      }
+     ]
+    }
+   ],
+   "deload": true
+  },
+  "W6-thu": {
+   "type": "run",
+   "title": "Easy Run",
+   "trt": "0:45",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy run",
+       "rx": "45 min · Easy"
+      }
+     ]
+    }
+   ],
+   "optional": true,
+   "deload": true
+  },
+  "W6-sat": {
+   "type": "run",
+   "title": "Long Run",
+   "trt": "1:00",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Long run",
+       "rx": "60 min · Steady"
+      }
+     ]
+    }
+   ],
+   "deload": true
+  },
+  "W6-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  }
+ }
+}

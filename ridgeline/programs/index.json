@@ -1,0 +1,20 @@
+{
+ "active": "ski-2026",
+ "travel": "programs/travel.json",
+ "programs": [
+  {
+   "id": "ski-2026",
+   "name": "Mountain Athlete Hybrid",
+   "file": "programs/ski-2026.json",
+   "status": "active",
+   "dates": "from Oct 5, 2026"
+  },
+  {
+   "id": "golden-leaf-2026",
+   "name": "Golden Leaf",
+   "file": "programs/golden-leaf-2026.json",
+   "status": "archived",
+   "dates": "Aug 3 – Sep 26, 2026"
+  }
+ ]
+}
