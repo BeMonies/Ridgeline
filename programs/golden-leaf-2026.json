@@ -1,0 +1,3227 @@
+{
+ "id": "golden-leaf-2026",
+ "name": "Golden Leaf",
+ "subtitle": "Golden Leaf Half Marathon cycle",
+ "startDate": "2026-08-03",
+ "status": "archived",
+ "endCard": "Race Day!",
+ "runWarmup": [
+  {
+   "k": "mv",
+   "n": "Leg Swings, front-back and lateral",
+   "rx": "10 / side"
+  },
+  {
+   "k": "mv",
+   "n": "Hip Circles",
+   "rx": "8 / side"
+  },
+  {
+   "k": "mv",
+   "n": "Ankle Circles",
+   "rx": "10 / side"
+  },
+  {
+   "k": "mv",
+   "n": "Walking Knee Hug",
+   "rx": "10 steps"
+  },
+  {
+   "k": "mv",
+   "n": "Walking Leg Cradle",
+   "rx": "10 steps"
+  }
+ ],
+ "days": {
+  "W1-mon": {
+   "type": "gym",
+   "title": "Re-Entry",
+   "note": "2 days post-50K · upper emphasis, legs unloaded",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "2 sets · continuous",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike or Row",
+       "rx": "90 s @ RPE 3"
+      },
+      {
+       "k": "mv",
+       "n": "Wolf Wedge Ankle Rock",
+       "rx": "10 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Pull-Apart",
+       "rx": "20"
+      },
+      {
+       "k": "mv",
+       "n": "Dead Bug, slow",
+       "rx": "8 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets · paired, not contrast",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Chest-Supported Row",
+       "rx": "10 @ RPE 5 · @2011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Landmine Press",
+       "rx": "8 / arm @ RPE 5 · @2011",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Reverse Hyper",
+       "rx": "12 @ RPE 4 · @2012",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Ring Row, easy angle",
+       "rx": "10 @ RPE 5 · @2012",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Suitcase Carry",
+       "rx": "40 m / side · moderate KB",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Pallof Press",
+       "rx": "12 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Tricep Pushdown",
+       "rx": "20"
+      },
+      {
+       "k": "flag",
+       "kind": "isolation",
+       "text": "Isolation dose — one per session, Finisher only."
+      },
+      {
+       "k": "mv",
+       "n": "Side Plank",
+       "rx": "30 s / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener over roller",
+       "rx": "60 s"
+      }
+     ]
+    }
+   ]
+  },
+  "W1-tue": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W1-wed": {
+   "type": "gym",
+   "title": "Durability",
+   "hotel": true,
+   "note": "DB RDL substitutes trap bar deadlift",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "2 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bike or incline treadmill walk",
+       "rx": "90 s @ RPE 3"
+      },
+      {
+       "k": "mv",
+       "n": "DB RDL, light",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Bird Dog",
+       "rx": "8 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "pair",
+       "rest": "rest 90 s after pair",
+       "a": {
+        "n": "DB RDL",
+        "rx": "6 @ RPE 6 · @2011"
+       },
+       "b": {
+        "n": "DB Step-Up (bench)",
+        "rx": "12 total @ RPE 5 · @2111"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg DB RDL",
+       "rx": "8 / side @ RPE 5 · @3011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Single-Arm Cable Row",
+       "rx": "12 / arm @ RPE 5",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank (bench edge)",
+       "rx": "20 s / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · 60 s between",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Heavy Farmer Carry (DB)",
+       "rx": "30 m"
+      },
+      {
+       "k": "mv",
+       "n": "Cable Pull-Through",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Hanging Knee Raise or Cable Crunch",
+       "rx": "12"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener over roller",
+       "rx": "60 s"
+      }
+     ]
+    }
+   ]
+  },
+  "W1-thu": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W1-fri": {
+   "type": "gym",
+   "title": "Spring & Stability",
+   "bonus": true,
+   "hotel": true,
+   "note": "No plyo box — step-up drive replaces jump landing",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Fast feet / high knees in place",
+       "rx": "30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Pogo Hop",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Toe / short-foot activation",
+       "rx": "30 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Leg Swings",
+       "rx": "10 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "DB Goblet Squat",
+       "rx": "8 @ RPE 5 · @2111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Step-Up, fast drive / slow step-down",
+       "rx": "5 / side · max intent up",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg DB RDL",
+       "rx": "8 / side @ RPE 5 · @3011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Cable / Machine Hip Abduction",
+       "rx": "15 / side",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Cable Chop, rotational",
+       "rx": "8 / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Push-Up, feet elevated",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Cable Crunch",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Leg Calf Raise",
+       "rx": "15 / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener over roller",
+       "rx": "60 s"
+      }
+     ]
+    }
+   ]
+  },
+  "W1-sat": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W1-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W2-mon": {
+   "type": "gym",
+   "title": "Max Force",
+   "hotel": true,
+   "note": "First appearance of this day-type — DB squat stands in for back squat",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "2 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bike or treadmill",
+       "rx": "90 s @ RPE 3"
+      },
+      {
+       "k": "mv",
+       "n": "Bodyweight Squat",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Cable Face Pull, light",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Dead Bug",
+       "rx": "8 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "pair",
+       "rest": "rest 90 s after pair",
+       "a": {
+        "n": "DB Front-Loaded Squat",
+        "rx": "6 @ RPE 6 · @2011"
+       },
+       "b": {
+        "n": "Lat Pulldown",
+        "rx": "10 @ RPE 6 · @2011"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Leg Press",
+       "rx": "12 @ RPE 6 · @2011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Seated Cable Row",
+       "rx": "12 @ RPE 5",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Pallof Press (cable)",
+       "rx": "12 / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Chest Press Machine or DB Bench Press",
+       "rx": "12"
+      },
+      {
+       "k": "mv",
+       "n": "Cable Tricep Pushdown",
+       "rx": "15"
+      },
+      {
+       "k": "flag",
+       "kind": "isolation",
+       "text": "Isolation dose — one per session, Finisher only."
+      },
+      {
+       "k": "mv",
+       "n": "Plank",
+       "rx": "30–45 s"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener over roller",
+       "rx": "60 s"
+      }
+     ]
+    }
+   ]
+  },
+  "W2-tue": {
+   "type": "run",
+   "title": "Return to Run",
+   "trt": "0:30",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Treadmill",
+       "rx": "30 min · Easy",
+       "cue": "First load test on a controlled surface."
+      }
+     ]
+    }
+   ]
+  },
+  "W2-wed": {
+   "type": "gym",
+   "title": "Durability",
+   "note": "True trap bar deadlift debut",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "2–3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row or Bike",
+       "rx": "90 s @ RPE 3"
+      },
+      {
+       "k": "mv",
+       "n": "KB Deadlift, light",
+       "rx": "10 · @2011"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Bird Dog",
+       "rx": "8 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "pair",
+       "rest": "rest 90 s after pair",
+       "a": {
+        "n": "Trap Bar Deadlift",
+        "rx": "5 @ RPE 6 · @2011"
+       },
+       "b": {
+        "n": "Alternating Goblet Step-Up (12″)",
+        "rx": "12 total @ RPE 5 · @2111"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Barbell RDL",
+       "rx": "10 @ RPE 5 · @3111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Single-Arm Cable Row",
+       "rx": "12 / arm @ RPE 5",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank, short lever",
+       "rx": "20 s / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · 60 s between",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Sled Push",
+       "rx": "20 m · moderate"
+      },
+      {
+       "k": "mv",
+       "n": "Farmer Carry",
+       "rx": "30 m"
+      },
+      {
+       "k": "mv",
+       "n": "Hanging Knee Raise",
+       "rx": "12"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Floss",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W2-thu": {
+   "type": "run",
+   "title": "Return to Run",
+   "trt": "0:50",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "45–50 min · Easy",
+       "cue": "Gentlest terrain available; walk climbs freely."
+      }
+     ]
+    }
+   ]
+  },
+  "W2-fri": {
+   "type": "gym",
+   "title": "Spring & Stability",
+   "bonus": true,
+   "note": "True debut — real box, KB, clubs",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Jump Rope",
+       "rx": "45 s"
+      },
+      {
+       "k": "mv",
+       "n": "Pogo Hop",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Short Foot / Toe Yoga",
+       "rx": "30 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Leg Swings, front-back and lateral",
+       "rx": "10 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8 @ RPE 5 · @2111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Box Jump, step down",
+       "rx": "6–8 autoregulated",
+       "rest": "rest 90 s"
+      },
+      {
+       "k": "flag",
+       "kind": "stoprule",
+       "text": "Stop the set the moment a rep is visibly slower or lower than the first."
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg RDL (KB)",
+       "rx": "8 / side @ RPE 5 · @3011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Lateral Walk",
+       "rx": "15 steps / direction",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Club Rotation",
+       "rx": "8 / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Ring Push-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout, from knees",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Leg Calf Raise",
+       "rx": "15 / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W2-sat": {
+   "type": "run",
+   "title": "Long Run",
+   "trt": "0:55",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "50–55 min · Easy"
+      }
+     ]
+    }
+   ]
+  },
+  "W2-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W3-mon": {
+   "type": "gym",
+   "title": "Max Force",
+   "note": "Back Squat debut — first loaded barbell squat of the cycle",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets · continuous",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike or Row",
+       "rx": "90 s @ RPE 3"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Monster Walk",
+       "rx": "10 steps / direction"
+      },
+      {
+       "k": "mv",
+       "n": "Goblet Squat, slow",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Dead Bug",
+       "rx": "8 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "pair",
+       "rest": "rest 90 s after pair",
+       "a": {
+        "n": "Back Squat",
+        "rx": "5 @ RPE 6 · @2011",
+        "cue": "Build across 2–3 ramp sets before set 1. The working weight you establish here is what Aug 24 and Aug 31 climb from."
+       },
+       "b": {
+        "n": "Goblet Squat",
+        "rx": "10 @ RPE 5 · @2111"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bench Press",
+       "rx": "8 @ RPE 6 · @2011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Bulgarian Split Squat",
+       "rx": "8 / leg @ RPE 5 · @2111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Pallof Press",
+       "rx": "12 / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Weighted Pull-Up",
+       "rx": "6–8"
+      },
+      {
+       "k": "mv",
+       "n": "DB Hammer Curl",
+       "rx": "20"
+      },
+      {
+       "k": "flag",
+       "kind": "isolation",
+       "text": "Isolation dose — one per session, Finisher only."
+      },
+      {
+       "k": "mv",
+       "n": "Farmer Carry",
+       "rx": "30 m"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hip Flexor Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W3-tue": {
+   "type": "run",
+   "title": "Easy",
+   "trt": "0:55",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "50–55 min · Easy to Steady"
+      }
+     ]
+    }
+   ]
+  },
+  "W3-wed": {
+   "type": "gym",
+   "title": "Durability",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "2–3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row or Bike",
+       "rx": "90 s @ RPE 3"
+      },
+      {
+       "k": "mv",
+       "n": "KB Deadlift, light",
+       "rx": "10 · @2011"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Bird Dog",
+       "rx": "8 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "pair",
+       "rest": "rest 90 s after pair",
+       "a": {
+        "n": "Trap Bar Deadlift",
+        "rx": "5 @ RPE 7 · @2011"
+       },
+       "b": {
+        "n": "Alternating Goblet Step-Up (12″)",
+        "rx": "12 total @ RPE 6 · @2111"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Barbell RDL",
+       "rx": "10 @ RPE 6 · @3111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Single-Arm Cable Row",
+       "rx": "12 / arm @ RPE 6",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank, short lever",
+       "rx": "25 s / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · 60 s between",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Sled Push",
+       "rx": "20 m · moderate"
+      },
+      {
+       "k": "mv",
+       "n": "Farmer Carry",
+       "rx": "30 m"
+      },
+      {
+       "k": "mv",
+       "n": "Hanging Knee Raise",
+       "rx": "12"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Floss",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W3-thu": {
+   "type": "run",
+   "title": "Easy + Strides",
+   "trt": "1:00",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Main",
+       "rx": "50 min · Easy"
+      },
+      {
+       "k": "mv",
+       "n": "Strides",
+       "rx": "6 × 20 s fast-but-relaxed",
+       "cue": "Walk to full recovery (~60 s)."
+      }
+     ]
+    }
+   ]
+  },
+  "W3-fri": {
+   "type": "gym",
+   "title": "Spring & Stability",
+   "bonus": true,
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Jump Rope",
+       "rx": "45 s"
+      },
+      {
+       "k": "mv",
+       "n": "Pogo Hop",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Short Foot / Toe Yoga",
+       "rx": "30 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Leg Swings, front-back and lateral",
+       "rx": "10 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8 @ RPE 6 · @2111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Box Jump, step down",
+       "rx": "6–8 autoregulated",
+       "rest": "rest 90 s"
+      },
+      {
+       "k": "flag",
+       "kind": "stoprule",
+       "text": "Stop the set the moment a rep is visibly slower or lower than the first."
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg RDL (KB)",
+       "rx": "8 / side @ RPE 6 · @3011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Lateral Walk",
+       "rx": "15 steps / direction",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Club Rotation",
+       "rx": "8 / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Ring Push-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout, from knees",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Leg Calf Raise",
+       "rx": "15 / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W3-sat": {
+   "type": "run",
+   "title": "Long Run",
+   "trt": "1:15",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "65–75 min · Steady",
+       "cue": "First run back at normal working effort."
+      }
+     ]
+    }
+   ]
+  },
+  "W3-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W4-mon": {
+   "type": "gym",
+   "title": "Max Force",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike or Row",
+       "rx": "90 s @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Monster Walk",
+       "rx": "10 steps / direction"
+      },
+      {
+       "k": "mv",
+       "n": "Goblet Squat, slow",
+       "rx": "8"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "5 sets",
+     "items": [
+      {
+       "k": "pair",
+       "rest": "rest 90 s after pair",
+       "resolution": "Strip-Set",
+       "a": {
+        "n": "Back Squat",
+        "rx": "5 @ RPE 7 · @2011"
+       },
+       "b": {
+        "n": "Front Squat",
+        "rx": "~6 @ RPE 6 · @2011",
+        "cue": "One plate/side lighter than the squat — the fastest strip. Adjust reps to hit RPE, not the reverse."
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3–4 sets",
+     "items": [
+      {
+       "k": "cluster",
+       "n": "Bench Press",
+       "groups": "5 · 5 · 5",
+       "rx": "@ RPE 7 · @20X1",
+       "intra": "20 s between groups",
+       "post": "rest 60 s after cluster"
+      },
+      {
+       "k": "mv",
+       "n": "Bulgarian Split Squat",
+       "rx": "8 / leg @ RPE 6 · @2111",
+       "rest": "rest 45 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Weighted Pull-Up",
+       "rx": "6–8"
+      },
+      {
+       "k": "mv",
+       "n": "Landmine Rainbow",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Farmer Carry",
+       "rx": "30 m"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hip Flexor Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W4-tue": {
+   "type": "run",
+   "title": "Hill Repeats",
+   "trt": "1:05",
+   "parts": [
+    {
+     "label": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "15 min · Easy"
+      }
+     ]
+    },
+    {
+     "label": "Main Set",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Uphill repeats",
+       "rx": "8 × 90 s · Hard"
+      },
+      {
+       "k": "mv",
+       "n": "Recovery",
+       "rx": "2:00 · jog / walk down"
+      },
+      {
+       "k": "note",
+       "text": "Grade 6–8%, non-technical. Recovery is full; the climb is the stimulus."
+      }
+     ]
+    },
+    {
+     "label": "Cooldown",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "10 min · Easy"
+      }
+     ]
+    }
+   ]
+  },
+  "W4-wed": {
+   "type": "gym",
+   "title": "Durability",
+   "note": "Nordic curl and lateral step-down debut",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "2–3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row or Bike",
+       "rx": "90 s @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Curl",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "6 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4–5 sets",
+     "items": [
+      {
+       "k": "pair",
+       "rest": "rest 90 s after pair",
+       "resolution": "Same-Load",
+       "a": {
+        "n": "Trap Bar Deadlift",
+        "rx": "5 @ RPE 7 · @2011"
+       },
+       "b": {
+        "n": "Trap Bar RDL, partial range",
+        "rx": "~8 @ RPE 6 · @3011",
+        "cue": "Same load as the deadlift, no plate change — partial range is what makes it lighter. RPE and reps vary session to session; don’t force the count."
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3–4 sets",
+     "items": [
+      {
+       "k": "cluster",
+       "n": "Nordic Hamstring Curl",
+       "groups": "4 · 4 · 4",
+       "rx": "@ RPE 7–8",
+       "intra": "20 s between groups",
+       "post": "rest 60 s after cluster"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Step-Down (12″)",
+       "rx": "8 / side @ RPE 6 · @3011",
+       "rest": "rest 45 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Sled Push",
+       "rx": "20 m · moderate-heavy"
+      },
+      {
+       "k": "mv",
+       "n": "Rear Delt Fly (band)",
+       "rx": "20"
+      },
+      {
+       "k": "flag",
+       "kind": "isolation",
+       "text": "Isolation dose — one per session, Finisher only."
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank, long lever",
+       "rx": "20 s / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Floss",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W4-thu": {
+   "type": "run",
+   "title": "Easy",
+   "trt": "1:00",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "50–60 min · Easy to Steady"
+      }
+     ]
+    }
+   ]
+  },
+  "W4-fri": {
+   "type": "gym",
+   "title": "Spring & Stability",
+   "bonus": true,
+   "note": "Box jump reps corrected",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Jump Rope",
+       "rx": "45 s"
+      },
+      {
+       "k": "mv",
+       "n": "Pogo Hop",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Leg Swings",
+       "rx": "10 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Toe Yoga",
+       "rx": "30 s / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "8 @ RPE 5 · @2111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Box Jump, step down",
+       "rx": "6–8 autoregulated",
+       "rest": "rest 90 s"
+      },
+      {
+       "k": "flag",
+       "kind": "stoprule",
+       "text": "Stop the set the moment a rep is visibly slower or lower than the first."
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg RDL (KB)",
+       "rx": "8 / side @ RPE 5 · @3011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Pallof Press",
+       "rx": "12 / side",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Bound, stick landing",
+       "rx": "6 / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Ring Push-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout, from knees",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Leg Calf Raise",
+       "rx": "15 / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W4-sat": {
+   "type": "run",
+   "title": "Long Run",
+   "trt": "1:30",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "90 min · Steady",
+       "cue": "Hike steep sections."
+      }
+     ]
+    }
+   ]
+  },
+  "W4-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W5-mon": {
+   "type": "gym",
+   "title": "Max Force",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets · same as Aug 24",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike or Row",
+       "rx": "90 s @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Monster Walk",
+       "rx": "10 steps / direction"
+      },
+      {
+       "k": "mv",
+       "n": "Goblet Squat, slow",
+       "rx": "8"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "5 sets",
+     "items": [
+      {
+       "k": "pair",
+       "rest": "rest 90 s after pair",
+       "resolution": "Strip-Set",
+       "a": {
+        "n": "Back Squat",
+        "rx": "4 @ RPE 8 · @2011"
+       },
+       "b": {
+        "n": "Front Squat",
+        "rx": "~5 @ RPE 7 · @2011",
+        "cue": "One plate/side lighter — reps are the lever, not load."
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "cluster",
+       "n": "Bench Press",
+       "groups": "4 · 4 · 4",
+       "rx": "@ RPE 8 · @20X1",
+       "intra": "20 s between groups",
+       "post": "rest 60 s after cluster"
+      },
+      {
+       "k": "mv",
+       "n": "Bulgarian Split Squat",
+       "rx": "7 / leg @ RPE 7 · @2111",
+       "rest": "rest 45 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Weighted Pull-Up",
+       "rx": "5–7"
+      },
+      {
+       "k": "mv",
+       "n": "Landmine Rainbow",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Farmer Carry",
+       "rx": "35 m"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hip Flexor Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W5-tue": {
+   "type": "run",
+   "title": "Threshold",
+   "trt": "1:15",
+   "parts": [
+    {
+     "label": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "15 min · Easy"
+      }
+     ]
+    },
+    {
+     "label": "Main Set",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Threshold repeats",
+       "rx": "3 × 8 min · Threshold"
+      },
+      {
+       "k": "mv",
+       "n": "Recovery",
+       "rx": "3:00 · Easy between"
+      },
+      {
+       "k": "note",
+       "text": "Rolling or flat, controlled terrain."
+      }
+     ]
+    },
+    {
+     "label": "Cooldown",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "10 min · Easy"
+      }
+     ]
+    }
+   ]
+  },
+  "W5-wed": {
+   "type": "gym",
+   "title": "Durability",
+   "note": "Eccentric ceiling — heaviest Nordic curl and step-down of the cycle",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "2–3 sets · same as Aug 26",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row or Bike",
+       "rx": "90 s @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Curl",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "6 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "5 sets",
+     "items": [
+      {
+       "k": "pair",
+       "rest": "rest 90 s after pair",
+       "resolution": "Same-Load",
+       "a": {
+        "n": "Trap Bar Deadlift",
+        "rx": "4 @ RPE 8 · @2011"
+       },
+       "b": {
+        "n": "Trap Bar RDL, partial range",
+        "rx": "~7 @ RPE 7 · @3011",
+        "cue": "Same load, no plate change — partial range only. Adjust reps to RPE."
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "cluster",
+       "n": "Nordic Hamstring Curl",
+       "groups": "3 · 3 · 3",
+       "rx": "@ RPE 9",
+       "intra": "20 s between groups",
+       "post": "rest 60 s after cluster"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Step-Down (12″)",
+       "rx": "7 / side @ RPE 8 · @3011",
+       "rest": "rest 45 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Sled Push",
+       "rx": "20 m · heavy"
+      },
+      {
+       "k": "mv",
+       "n": "Rear Delt Fly (band)",
+       "rx": "20"
+      },
+      {
+       "k": "flag",
+       "kind": "isolation",
+       "text": "Isolation dose — one per session, Finisher only."
+      },
+      {
+       "k": "mv",
+       "n": "Copenhagen Plank, long lever",
+       "rx": "25 s / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Floss",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W5-thu": {
+   "type": "run",
+   "title": "Easy + Strides",
+   "trt": "1:05",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Main",
+       "rx": "50–60 min · Easy"
+      },
+      {
+       "k": "mv",
+       "n": "Strides",
+       "rx": "6 × 20 s",
+       "cue": "Full recovery."
+      }
+     ]
+    }
+   ]
+  },
+  "W5-fri": {
+   "type": "gym",
+   "title": "Spring & Stability",
+   "bonus": true,
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Jump Rope",
+       "rx": "45 s"
+      },
+      {
+       "k": "mv",
+       "n": "Pogo Hop",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Leg Swings",
+       "rx": "10 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Toe Yoga",
+       "rx": "30 s / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "7 @ RPE 6 · @2111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Box Jump, step down",
+       "rx": "6–8 autoregulated",
+       "rest": "rest 90 s"
+      },
+      {
+       "k": "flag",
+       "kind": "stoprule",
+       "text": "Stop the set the moment a rep is visibly slower or lower than the first."
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg RDL (KB)",
+       "rx": "7 / side @ RPE 6 · @3011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Pallof Press",
+       "rx": "12 / side",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Bound, stick landing",
+       "rx": "6 / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Ring Push-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout, from knees",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Leg Calf Raise",
+       "rx": "15 / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W5-sat": {
+   "type": "run",
+   "title": "Long Run",
+   "trt": "2:00",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "110–120 min · Steady",
+       "cue": "Include descending."
+      },
+      {
+       "k": "flag",
+       "kind": "descent",
+       "text": "Govern descents by leg control, not heart rate — HR reads low while quad damage runs high."
+      }
+     ]
+    }
+   ]
+  },
+  "W5-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W6-mon": {
+   "type": "gym",
+   "title": "Max Force",
+   "note": "Squat / box jump complex",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike",
+       "rx": "90 s @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Monster Walk",
+       "rx": "10 steps / direction"
+      },
+      {
+       "k": "mv",
+       "n": "Pogo Hop",
+       "rx": "10"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "5 sets",
+     "items": [
+      {
+       "k": "complex",
+       "rest": "rest 2:00 after pair",
+       "a": {
+        "n": "Back Squat",
+        "rx": "3 @ RPE 8 · @20X1"
+       },
+       "b": {
+        "n": "Box Jump",
+        "rx": "3 · max height"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Barbell Hip Thrust",
+       "rx": "6 @ RPE 7 · @20X1 explosive drive",
+       "rest": "rest 60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Weighted Pull-Up",
+       "rx": "5 @ RPE 7",
+       "rest": "rest 60 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Med Ball Slam",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Suitcase Carry",
+       "rx": "30 m / side"
+      },
+      {
+       "k": "mv",
+       "n": "Plank",
+       "rx": "30 s"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hip Flexor Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W6-tue": {
+   "type": "run",
+   "title": "Goal-Pace Intervals",
+   "trt": "1:20",
+   "parts": [
+    {
+     "label": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "15 min · Easy"
+      }
+     ]
+    },
+    {
+     "label": "Main Set",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Goal-pace repeats",
+       "rx": "5 × 5 min @ goal half pace",
+       "cue": "~11:00 / mi for 2:24"
+      },
+      {
+       "k": "mv",
+       "n": "Recovery",
+       "rx": "2:00 · Easy between"
+      },
+      {
+       "k": "note",
+       "text": "Race-representative terrain if possible. Recovery is intentionally incomplete — accumulating fatigue is what makes it race-specific."
+      }
+     ]
+    },
+    {
+     "label": "Cooldown",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "10 min · Easy"
+      }
+     ]
+    }
+   ]
+  },
+  "W6-wed": {
+   "type": "gym",
+   "title": "Durability",
+   "note": "Deadlift / broad jump complex, first appearance",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "2–3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row",
+       "rx": "90 s @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Activation",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "6 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "5 sets",
+     "items": [
+      {
+       "k": "complex",
+       "rest": "rest 2:00 after pair",
+       "a": {
+        "n": "Trap Bar Deadlift",
+        "rx": "3 @ RPE 8 · @20X1 fast pull"
+       },
+       "b": {
+        "n": "Broad Jump",
+        "rx": "3 · stick landing"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg Hip Thrust",
+       "rx": "8 / side @ RPE 7 · @20X1",
+       "rest": "rest 45 s"
+      },
+      {
+       "k": "mv",
+       "n": "Sled Push, heavy / short",
+       "rx": "15 m · max effort",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Heavy Farmer Carry",
+       "rx": "30 m"
+      },
+      {
+       "k": "mv",
+       "n": "Rear Delt Fly (band)",
+       "rx": "20"
+      },
+      {
+       "k": "flag",
+       "kind": "isolation",
+       "text": "Isolation dose — one per session, Finisher only."
+      },
+      {
+       "k": "mv",
+       "n": "Side Plank",
+       "rx": "30 s / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Floss",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W6-thu": {
+   "type": "run",
+   "title": "Easy",
+   "trt": "1:00",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "50–60 min · Easy to Steady"
+      }
+     ]
+    }
+   ]
+  },
+  "W6-fri": {
+   "type": "gym",
+   "title": "Spring & Stability",
+   "bonus": true,
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Jump Rope",
+       "rx": "45 s"
+      },
+      {
+       "k": "mv",
+       "n": "Pogo Hop",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Leg Swings",
+       "rx": "10 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Toe Yoga",
+       "rx": "30 s / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "7 @ RPE 6 · @2111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Box Jump, step down",
+       "rx": "6–8 autoregulated",
+       "rest": "rest 90 s"
+      },
+      {
+       "k": "flag",
+       "kind": "stoprule",
+       "text": "Stop the set the moment a rep is visibly slower or lower than the first."
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg RDL (KB)",
+       "rx": "7 / side @ RPE 6 · @3011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Pallof Press",
+       "rx": "12 / side",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Bound, stick landing",
+       "rx": "6 / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Ring Push-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout, from knees",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Leg Calf Raise",
+       "rx": "15 / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W6-sat": {
+   "type": "run",
+   "title": "Peak Long Run",
+   "trt": "2:30",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "135–150 min · Steady",
+       "cue": "Descending at moderate pace. Longest run of the cycle, 14 days out. Race-similar terrain and vert."
+      },
+      {
+       "k": "mv",
+       "n": "Fuelling",
+       "rx": "Practise race-day fuelling exactly"
+      },
+      {
+       "k": "flag",
+       "kind": "descent",
+       "text": "Govern descents by leg control, not heart rate."
+      }
+     ]
+    }
+   ]
+  },
+  "W6-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W7-mon": {
+   "type": "gym",
+   "title": "Max Force",
+   "note": "Highest RPE of the cycle",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets · same as Sep 7",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Echo Bike",
+       "rx": "90 s @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Monster Walk",
+       "rx": "10 steps / direction"
+      },
+      {
+       "k": "mv",
+       "n": "Pogo Hop",
+       "rx": "10"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "5 sets",
+     "items": [
+      {
+       "k": "complex",
+       "rest": "rest 2:00 after pair",
+       "a": {
+        "n": "Back Squat",
+        "rx": "2 @ RPE 9 · @20X1"
+       },
+       "b": {
+        "n": "Box Jump",
+        "rx": "3 · max height"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Barbell Hip Thrust",
+       "rx": "5 @ RPE 8 · @20X1",
+       "rest": "rest 60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Weighted Pull-Up",
+       "rx": "4 @ RPE 8",
+       "rest": "rest 60 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Med Ball Slam",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Suitcase Carry",
+       "rx": "30 m / side"
+      },
+      {
+       "k": "mv",
+       "n": "Plank",
+       "rx": "30 s"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Hip Flexor Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener",
+       "rx": "60 s"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W7-tue": {
+   "type": "run",
+   "title": "Race Simulation",
+   "trt": "1:20",
+   "parts": [
+    {
+     "label": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "15 min · Easy"
+      }
+     ]
+    },
+    {
+     "label": "Main Set",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Race-pace blocks",
+       "rx": "2 × 15 min @ goal half pace",
+       "cue": "Including sustained descending."
+      },
+      {
+       "k": "mv",
+       "n": "Recovery",
+       "rx": "5:00 · Easy between"
+      },
+      {
+       "k": "flag",
+       "kind": "descent",
+       "text": "Last hard session of the cycle. The descending is the point — govern it by leg control, not heart rate."
+      }
+     ]
+    },
+    {
+     "label": "Cooldown",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "10 min · Easy"
+      }
+     ]
+    }
+   ]
+  },
+  "W7-wed": {
+   "type": "gym",
+   "title": "Durability",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "2–3 sets · same as Sep 9",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row",
+       "rx": "90 s @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Activation",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "6 / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "5 sets",
+     "items": [
+      {
+       "k": "complex",
+       "rest": "rest 2:00 after pair",
+       "a": {
+        "n": "Trap Bar Deadlift",
+        "rx": "2 @ RPE 9 · @20X1"
+       },
+       "b": {
+        "n": "Broad Jump",
+        "rx": "3"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg Hip Thrust",
+       "rx": "6 / side @ RPE 8 · @20X1",
+       "rest": "rest 45 s"
+      },
+      {
+       "k": "mv",
+       "n": "Sled Push, heavy / short",
+       "rx": "15 m · max effort",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Heavy Farmer Carry",
+       "rx": "30 m"
+      },
+      {
+       "k": "mv",
+       "n": "Tricep Pushdown (cable / band)",
+       "rx": "20"
+      },
+      {
+       "k": "flag",
+       "kind": "isolation",
+       "text": "Isolation dose — one per session, Finisher only."
+      },
+      {
+       "k": "mv",
+       "n": "Side Plank",
+       "rx": "30 s / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Banded Hamstring Floss",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Adductor Rock-Back",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Ankle Wall Mobilization",
+       "rx": "10 / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W7-thu": {
+   "type": "run",
+   "title": "Easy",
+   "trt": "0:50",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "45–50 min · Easy"
+      }
+     ]
+    }
+   ]
+  },
+  "W7-fri": {
+   "type": "gym",
+   "title": "Spring & Stability",
+   "bonus": true,
+   "note": "Deliberately unchanged from Sep 11 — no progression on this day, regardless of block",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Jump Rope",
+       "rx": "45 s"
+      },
+      {
+       "k": "mv",
+       "n": "Pogo Hop",
+       "rx": "15"
+      },
+      {
+       "k": "mv",
+       "n": "Leg Swings",
+       "rx": "10 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Toe Yoga",
+       "rx": "30 s / side"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "4 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Goblet Squat",
+       "rx": "7 @ RPE 6 · @2111",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Box Jump, step down",
+       "rx": "6–8 autoregulated",
+       "rest": "rest 90 s"
+      },
+      {
+       "k": "flag",
+       "kind": "stoprule",
+       "text": "Stop the set the moment a rep is visibly slower or lower than the first."
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "3 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg RDL (KB)",
+       "rx": "7 / side @ RPE 6 · @3011",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Half-Kneeling Pallof Press",
+       "rx": "12 / side",
+       "rest": "rest 30 s"
+      },
+      {
+       "k": "mv",
+       "n": "Lateral Bound, stick landing",
+       "rx": "6 / side",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Finisher 1",
+     "meta": "2 rounds · minimal rest",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Ring Push-Up",
+       "rx": "10"
+      },
+      {
+       "k": "mv",
+       "n": "Ab Wheel Rollout, from knees",
+       "rx": "8"
+      },
+      {
+       "k": "mv",
+       "n": "Single-Leg Calf Raise",
+       "rx": "15 / side"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Pigeon",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Soleus Wall Stretch",
+       "rx": "45 s / side"
+      }
+     ]
+    }
+   ]
+  },
+  "W7-sat": {
+   "type": "run",
+   "title": "Long Run, Reduced",
+   "trt": "1:25",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trail",
+       "rx": "75–85 min · Steady",
+       "cue": "Taper begins. No descending emphasis."
+      }
+     ]
+    }
+   ]
+  },
+  "W7-sun": {
+   "type": "rest",
+   "title": "Rest Day"
+  },
+  "W8-mon": {
+   "type": "gym",
+   "title": "Taper",
+   "note": "Volume cut hard, no new stimulus",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "1–2 sets · shortened",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bike",
+       "rx": "60 s @ RPE 3"
+      },
+      {
+       "k": "mv",
+       "n": "Bodyweight Squat",
+       "rx": "8"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "2 sets · no contrast pairing",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Back Squat",
+       "rx": "3 @ RPE 4–5 · light",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "2 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Bodyweight Hip Thrust",
+       "rx": "8 @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Band Pull-Apart",
+       "rx": "15"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "meta": "full routine, unhurried — this is the priority now, not load",
+     "items": [
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener over roller",
+       "rx": "60 s"
+      },
+      {
+       "k": "note",
+       "text": "No Finisher this session."
+      }
+     ]
+    }
+   ]
+  },
+  "W8-tue": {
+   "type": "run",
+   "title": "Sharpener",
+   "trt": "0:35",
+   "parts": [
+    {
+     "label": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "10 min · Easy"
+      }
+     ]
+    },
+    {
+     "label": "Main Set",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Goal-pace repeats",
+       "rx": "4 × 90 s @ goal half pace"
+      },
+      {
+       "k": "mv",
+       "n": "Recovery",
+       "rx": "90 s · Easy between"
+      }
+     ]
+    },
+    {
+     "label": "Cooldown",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "10 min · Easy"
+      }
+     ]
+    }
+   ]
+  },
+  "W8-wed": {
+   "type": "gym",
+   "title": "Taper",
+   "note": "Last gym session before the race",
+   "sections": [
+    {
+     "title": "Warm-Up",
+     "meta": "1–2 sets · shortened",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Row",
+       "rx": "60 s @ RPE 3"
+      },
+      {
+       "k": "mv",
+       "n": "Glute Bridge",
+       "rx": "10"
+      }
+     ]
+    },
+    {
+     "title": "Strength Intensity",
+     "meta": "2 sets · no contrast pairing",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Trap Bar Deadlift",
+       "rx": "3 @ RPE 4–5 · light",
+       "rest": "rest 90 s"
+      }
+     ]
+    },
+    {
+     "title": "Strength Balance",
+     "meta": "2 sets",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Single-Leg RDL, bodyweight",
+       "rx": "6 / side @ RPE 4"
+      },
+      {
+       "k": "mv",
+       "n": "Pallof Press",
+       "rx": "10 / side · light band"
+      }
+     ]
+    },
+    {
+     "title": "Mobility",
+     "meta": "full routine",
+     "items": [
+      {
+       "k": "mv",
+       "n": "90/90 Hip Switch",
+       "rx": "8 / side"
+      },
+      {
+       "k": "mv",
+       "n": "Couch Stretch",
+       "rx": "60 s / side"
+      },
+      {
+       "k": "mv",
+       "n": "Thoracic Opener over roller",
+       "rx": "60 s"
+      },
+      {
+       "k": "note",
+       "text": "No Finisher, and no Friday session this week."
+      }
+     ]
+    }
+   ]
+  },
+  "W8-thu": {
+   "type": "run",
+   "title": "Easy",
+   "trt": "0:30",
+   "parts": [
+    {
+     "label": null,
+     "items": [
+      {
+       "k": "mv",
+       "n": "Flat running",
+       "rx": "30 min · Easy"
+      }
+     ]
+    }
+   ]
+  },
+  "W8-fri": {
+   "type": "run",
+   "title": "Shake-Out",
+   "trt": "0:25",
+   "note": "No gym session today.",
+   "parts": [
+    {
+     "label": "Warm-Up",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "15 min · Easy"
+      }
+     ]
+    },
+    {
+     "label": "Main Set",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Floats",
+       "rx": "6 × 30 s @ Threshold"
+      },
+      {
+       "k": "mv",
+       "n": "Recovery",
+       "rx": "30 s · Easy between"
+      }
+     ]
+    },
+    {
+     "label": "Cooldown",
+     "items": [
+      {
+       "k": "mv",
+       "n": "Easy running",
+       "rx": "5 min · Easy"
+      }
+     ]
+    }
+   ]
+  },
+  "W8-sat": {
+   "type": "race",
+   "title": "Race Day!"
+  }
+ }
+}
