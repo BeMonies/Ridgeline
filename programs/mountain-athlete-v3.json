@@ -80,7 +80,6 @@
   "W1-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -126,18 +125,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -301,8 +294,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -348,7 +340,6 @@
   "W1-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -376,9 +367,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -427,7 +416,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "2 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -437,8 +426,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "2 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -452,11 +457,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -539,16 +539,6 @@
        "k": "flag",
        "kind": "scaling",
        "text": "Slightly lower effort than Monday to fit the full session. If it runs long, extend it and shorten the WOD first."
-      },
-      {
-       "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
       },
       {
        "k": "sub",
@@ -643,8 +633,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -669,7 +658,6 @@
   "W1-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -843,7 +831,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -854,8 +842,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -873,11 +879,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -1055,8 +1056,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -1091,7 +1091,6 @@
   "W2-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -1137,18 +1136,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -1312,8 +1305,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -1359,7 +1351,6 @@
   "W2-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -1387,9 +1378,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -1438,7 +1427,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "2 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -1448,8 +1437,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "2 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -1463,11 +1468,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -1550,16 +1550,6 @@
        "k": "flag",
        "kind": "scaling",
        "text": "Slightly lower effort than Monday to fit the full session. If it runs long, extend it and shorten the WOD first."
-      },
-      {
-       "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
       },
       {
        "k": "sub",
@@ -1666,8 +1656,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -1692,7 +1681,6 @@
   "W2-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -1866,7 +1854,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -1877,8 +1865,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -1896,11 +1902,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -2078,8 +2079,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -2114,7 +2114,6 @@
   "W3-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -2160,18 +2159,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -2335,8 +2328,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -2382,7 +2374,6 @@
   "W3-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -2410,9 +2401,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -2461,7 +2450,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "2 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -2471,8 +2460,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "2 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -2486,11 +2491,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -2573,16 +2573,6 @@
        "k": "flag",
        "kind": "scaling",
        "text": "Slightly lower effort than Monday to fit the full session. If it runs long, extend it and shorten the WOD first."
-      },
-      {
-       "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
       },
       {
        "k": "sub",
@@ -2694,8 +2684,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -2720,7 +2709,6 @@
   "W3-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -2894,7 +2882,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -2905,8 +2893,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -2924,11 +2930,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -3106,8 +3107,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -3142,7 +3142,6 @@
   "W4-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Deload — may finish early. Don't add work to fill the hour.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -3188,18 +3187,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -3368,8 +3361,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ],
    "deload": true
@@ -3392,13 +3384,11 @@
     ],
     "flags": []
    },
-   "deload": true,
-   "note": "Deload — an easy run with no quality intervals."
+   "deload": true
   },
   "W4-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Deload — may finish early. Don't add work to fill the hour.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -3426,9 +3416,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -3477,7 +3465,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "1 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -3487,8 +3475,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "1 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -3502,11 +3506,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -3597,16 +3596,6 @@
       },
       {
        "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
-      },
-      {
-       "k": "sub",
        "text": "WOD",
        "budget": "6 min easy"
       },
@@ -3683,8 +3672,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ],
    "deload": true
@@ -3707,13 +3695,11 @@
     ],
     "flags": []
    },
-   "deload": true,
-   "note": "Deload — shorter and easy."
+   "deload": true
   },
   "W4-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Deload — may finish early. Don't add work to fill the hour.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -3887,7 +3873,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -3898,8 +3884,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -3917,11 +3921,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -4109,8 +4108,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ],
    "deload": true
@@ -4133,8 +4131,7 @@
     ],
     "flags": []
    },
-   "deload": true,
-   "note": "Deload — shorter and easy."
+   "deload": true
   },
   "W4-sun": {
    "type": "rest",
@@ -4143,7 +4140,6 @@
   "W5-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -4189,18 +4185,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -4360,8 +4350,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -4408,7 +4397,6 @@
   "W5-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -4436,9 +4424,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -4487,7 +4473,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "2 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -4497,8 +4483,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "2 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -4512,11 +4514,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -4603,16 +4600,6 @@
        "k": "flag",
        "kind": "scaling",
        "text": "Slightly lower effort than Monday to fit the full session. If it runs long, extend it and shorten the WOD first."
-      },
-      {
-       "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
       },
       {
        "k": "sub",
@@ -4709,8 +4696,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -4735,7 +4721,6 @@
   "W5-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -4909,7 +4894,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -4920,8 +4905,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -4939,11 +4942,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -5122,8 +5120,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -5158,7 +5155,6 @@
   "W6-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -5204,18 +5200,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -5375,8 +5365,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -5423,7 +5412,6 @@
   "W6-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -5451,9 +5439,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -5502,7 +5488,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "2 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -5512,8 +5498,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "2 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -5527,11 +5529,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -5618,16 +5615,6 @@
        "k": "flag",
        "kind": "scaling",
        "text": "Slightly lower effort than Monday to fit the full session. If it runs long, extend it and shorten the WOD first."
-      },
-      {
-       "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
       },
       {
        "k": "sub",
@@ -5734,8 +5721,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -5760,7 +5746,6 @@
   "W6-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -5934,7 +5919,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -5945,8 +5930,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -5964,11 +5967,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -6147,8 +6145,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -6183,7 +6180,6 @@
   "W7-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -6229,18 +6225,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -6400,8 +6390,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -6448,7 +6437,6 @@
   "W7-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -6476,9 +6464,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -6527,7 +6513,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "2 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -6537,8 +6523,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "2 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -6552,11 +6554,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -6643,16 +6640,6 @@
        "k": "flag",
        "kind": "scaling",
        "text": "Slightly lower effort than Monday to fit the full session. If it runs long, extend it and shorten the WOD first."
-      },
-      {
-       "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
       },
       {
        "k": "sub",
@@ -6754,8 +6741,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -6780,7 +6766,6 @@
   "W7-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -6954,7 +6939,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -6965,8 +6950,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -6984,11 +6987,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -7167,8 +7165,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -7203,7 +7200,6 @@
   "W8-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Deload — may finish early. Don't add work to fill the hour.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -7249,18 +7245,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -7425,8 +7415,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ],
    "deload": true
@@ -7449,13 +7438,11 @@
     ],
     "flags": []
    },
-   "deload": true,
-   "note": "Deload — an easy run with no quality intervals."
+   "deload": true
   },
   "W8-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Deload — may finish early. Don't add work to fill the hour.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -7483,9 +7470,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -7534,7 +7519,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "1 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -7544,8 +7529,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "1 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -7559,11 +7560,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -7658,16 +7654,6 @@
       },
       {
        "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
-      },
-      {
-       "k": "sub",
        "text": "WOD",
        "budget": "6 min easy"
       },
@@ -7744,8 +7730,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ],
    "deload": true
@@ -7768,13 +7753,11 @@
     ],
     "flags": []
    },
-   "deload": true,
-   "note": "Deload — shorter and easy."
+   "deload": true
   },
   "W8-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Deload — may finish early. Don't add work to fill the hour.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -7948,7 +7931,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -7959,8 +7942,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -7978,11 +7979,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -8171,8 +8167,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ],
    "deload": true
@@ -8195,8 +8190,7 @@
     ],
     "flags": []
    },
-   "deload": true,
-   "note": "Deload — shorter and easy."
+   "deload": true
   },
   "W8-sun": {
    "type": "rest",
@@ -8205,7 +8199,6 @@
   "W9-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -8251,18 +8244,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -8431,8 +8418,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -8478,7 +8464,6 @@
   "W9-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -8506,9 +8491,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -8557,7 +8540,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "2 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -8567,8 +8550,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "2 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -8582,11 +8581,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -8658,16 +8652,6 @@
        "k": "flag",
        "kind": "scaling",
        "text": "Slightly lower effort than Monday to fit the full session. If it runs long, extend it and shorten the WOD first."
-      },
-      {
-       "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
       },
       {
        "k": "sub",
@@ -8789,7 +8773,7 @@
       },
       {
        "k": "flag",
-       "kind": "scaling",
+       "kind": "rule",
        "text": "{{lbDose}}",
        "when": {
         "lb": true
@@ -8880,8 +8864,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -8906,7 +8889,6 @@
   "W9-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -9080,7 +9062,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -9091,8 +9073,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -9110,11 +9110,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -9315,8 +9310,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -9351,7 +9345,6 @@
   "W10-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -9397,18 +9390,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -9572,8 +9559,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -9619,7 +9605,6 @@
   "W10-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -9647,9 +9632,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -9698,7 +9681,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "2 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -9708,8 +9691,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "2 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -9723,11 +9722,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -9799,16 +9793,6 @@
        "k": "flag",
        "kind": "scaling",
        "text": "Slightly lower effort than Monday to fit the full session. If it runs long, extend it and shorten the WOD first."
-      },
-      {
-       "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
       },
       {
        "k": "sub",
@@ -9927,7 +9911,7 @@
       },
       {
        "k": "flag",
-       "kind": "scaling",
+       "kind": "rule",
        "text": "{{lbDose}}",
        "when": {
         "lb": true
@@ -10018,8 +10002,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -10044,7 +10027,6 @@
   "W10-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -10218,7 +10200,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -10229,8 +10211,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -10248,11 +10248,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -10453,8 +10448,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -10489,7 +10483,6 @@
   "W11-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -10535,18 +10528,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -10710,8 +10697,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -10758,7 +10744,6 @@
   "W11-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -10786,9 +10771,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -10837,7 +10820,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "2 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -10847,8 +10830,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "2 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -10862,11 +10861,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -10938,16 +10932,6 @@
        "k": "flag",
        "kind": "scaling",
        "text": "Slightly lower effort than Monday to fit the full session. If it runs long, extend it and shorten the WOD first."
-      },
-      {
-       "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
       },
       {
        "k": "sub",
@@ -11051,7 +11035,7 @@
       },
       {
        "k": "flag",
-       "kind": "scaling",
+       "kind": "rule",
        "text": "{{lbDose}}",
        "when": {
         "lb": true
@@ -11142,8 +11126,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -11168,7 +11151,6 @@
   "W11-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Planned 60-minute budget, including setup and transitions.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -11342,7 +11324,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -11353,8 +11335,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -11372,11 +11372,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -11577,8 +11572,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ]
   },
@@ -11613,7 +11607,6 @@
   "W12-mon": {
    "type": "gym",
    "title": "Strength Foundation",
-   "note": "Deload — may finish early. Don't add work to fill the hour.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -11659,18 +11652,12 @@
        "log": "load",
        "basis": "barbell"
       }
-     ],
-     "meta": "General preparation. Use movements and ranges that suit you."
+     ]
     },
     {
      "title": "Max Strength",
      "budget": "20 min · 8:00–28:00",
      "items": [
-      {
-       "k": "mv",
-       "n": "Finish ramp-up, prepare the pair, set up",
-       "rx": "≈ 7 min"
-      },
       {
        "k": "interval",
        "every": "3:15",
@@ -11839,8 +11826,7 @@
        "n": "Lat and Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ],
    "deload": true
@@ -11863,13 +11849,11 @@
     ],
     "flags": []
    },
-   "deload": true,
-   "note": "Deload — an easy run with no quality intervals."
+   "deload": true
   },
   "W12-wed": {
    "type": "gym",
    "title": "Upper + Engine",
-   "note": "Deload — may finish early. Don't add work to fill the hour.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -11897,9 +11881,7 @@
         {
          "k": "mv",
          "n": "Light DB Press",
-         "rx": "8",
-         "log": "load",
-         "basis": "dumbbell"
+         "rx": "8"
         },
         {
          "k": "mv",
@@ -11948,7 +11930,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "1 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "sets start about 90 s apart",
        "when": {
         "wall": true
@@ -11958,8 +11940,24 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "1 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "sets start about 90 s apart",
+       "when": {
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "wall": false
        }
@@ -11973,11 +11971,6 @@
        "k": "sub",
        "text": "Primary strength + pull",
        "budget": "18 min"
-      },
-      {
-       "k": "mv",
-       "n": "Finish pressing ramp-up, set up the pull",
-       "rx": "≈ 5 min"
       },
       {
        "k": "interval",
@@ -12057,16 +12050,6 @@
       },
       {
        "k": "sub",
-       "text": "Transition",
-       "budget": "≈ 1 min"
-      },
-      {
-       "k": "mv",
-       "n": "Set up the next station",
-       "rx": "≈ 1 min"
-      },
-      {
-       "k": "sub",
        "text": "WOD",
        "budget": "6 min easy"
       },
@@ -12143,8 +12126,7 @@
        "n": "Gentle Shoulder Mobility",
        "rx": "1 min"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ],
    "deload": true
@@ -12167,13 +12149,11 @@
     ],
     "flags": []
    },
-   "deload": true,
-   "note": "Deload — shorter and easy."
+   "deload": true
   },
   "W12-fri": {
    "type": "gym",
    "title": "Power + Athleticism",
-   "note": "Deload — may finish early. Don't add work to fill the hour.",
    "sections": [
     {
      "title": "Warm-Up",
@@ -12347,7 +12327,7 @@
        "k": "mv",
        "n": "Medicine-Ball Wall Chest Pass",
        "rx": "3 × 3 crisp throws",
-       "cue": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "cue": "Drop, retrieve and reset each rep.",
        "rest": "rest 60–90 s between sets",
        "when": {
         "friPower": "throws",
@@ -12358,8 +12338,26 @@
        "k": "mv",
        "n": "Fast-Concentric Incline Push-Up",
        "rx": "3 × 3",
-       "cue": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
+       "cue": "Fast press-up, no hand release.",
        "rest": "rest 60–90 s between sets",
+       "when": {
+        "friPower": "throws",
+        "wall": false
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "Needs a gym-approved wall and a wall-throw-rated ball with a clear rebound and retrieval area. Throw from chest height, let the ball drop, retrieve it yourself and fully reset every rep — no partner or catch is needed. Retrieval counts toward the time. A floor slam is not a substitute for the wall pass.",
+       "when": {
+        "friPower": "throws",
+        "wall": true
+       }
+      },
+      {
+       "k": "flag",
+       "kind": "setup",
+       "text": "No wall or ball: fast-concentric incline push-ups on a fixed, sturdy surface. Lower under control and press up quickly with no hand release. Adjust the incline to keep it fast. This is a different movement from the throw, so it is logged separately.",
        "when": {
         "friPower": "throws",
         "wall": false
@@ -12377,11 +12375,6 @@
        "k": "sub",
        "text": "Upper-body strength",
        "budget": "10 min"
-      },
-      {
-       "k": "mv",
-       "n": "Light preparation and setup",
-       "rx": "≈ 1 min"
       },
       {
        "k": "interval",
@@ -12562,8 +12555,7 @@
        "n": "Shoulder and Lat Mobility",
        "rx": "90 s"
       }
-     ],
-     "meta": "Comfortable ranges only."
+     ]
     }
    ],
    "deload": true
@@ -12586,8 +12578,7 @@
     ],
     "flags": []
    },
-   "deload": true,
-   "note": "Deload — shorter and easy."
+   "deload": true
   },
   "W12-sun": {
    "type": "rest",

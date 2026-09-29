@@ -143,9 +143,8 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
 
   return (
     <form onSubmit={submit} aria-label={`Log ${name}`} noValidate
-      style={{ marginTop:16, borderTop:`1px solid ${T.rule}`, paddingTop:12 }}>
-      <p style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600 }}>{reps ? "Log reps" : "Log weight"}</p>
-      {!reps && basis && BASIS[basis] && <p style={{ margin:"2px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>{BASIS[basis]}</p>}
+      style={{ marginTop:12, borderTop:`1px solid ${T.rule}`, paddingTop:12 }}>
+      {!reps && basis && BASIS[basis] && <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>{BASIS[basis]}</p>}
       {range && (
         <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", color:T.ink }}>
           <b>Start {range[0]}–{range[1]} {range[2]}</b> · 5–10% below your calibration ({calSet.w} {calSet.u || "lb"})
@@ -177,11 +176,11 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
       {errs.r && <p id={`${uid}r`} role="alert" style={{ margin:"6px 0 0", fontSize:14, color:T.alert, fontWeight:600 }}>⚠ {errs.r}</p>}
       <Pressable as="button" type="submit" className="rl-btn" style={{ ...btnSecondary, width:"100%", marginTop:8 }}>Log set</Pressable>
 
-      <p style={{ margin:"12px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
-        {last
-          ? <>Previous: <b style={{ color:T.ink }}>{setText(last, unit, mode)}</b> · {fmtShort(last.date)}{last.count>1 ? ` · ${last.count} sets` : ""}</>
-          : (reps ? "No previous reps logged." : "No previous load logged.")}
-      </p>
+      {last && (
+        <p style={{ margin:"12px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
+          Previous: <b style={{ color:T.ink }}>{setText(last, unit, mode)}</b> · {fmtShort(last.date)}{last.count>1 ? ` · ${last.count} sets` : ""}
+        </p>
+      )}
       {sets.length>0 && (
         <ol style={{ margin:"8px 0 0", paddingLeft:22, fontSize:14, lineHeight:"20px", fontVariantNumeric:"tabular-nums" }}>
           {sets.map((s,i)=>(
@@ -224,8 +223,36 @@ const blockCard = { border:`1px solid ${T.rule}`, borderRadius:12, overflow:"hid
 const blockHead = { padding:"14px 16px", background:T.tealWash, color:T.tealDeep };
 const eyebrow   = { margin:0, fontSize:14, lineHeight:"20px", fontWeight:600 };
 
+/* Setup, scaling and alternative notes are context, not the workout: consecutive ones fold into a
+   single closed disclosure. Stop rules and the Leg Blaster dose stay in the flow. */
+const NOTE_KINDS = ["fallback","setup","scaling","regression"];
+function groupNotes(items){
+  const out = [];
+  for (const it of items){
+    if (it.k==="flag" && NOTE_KINDS.includes(it.kind)){
+      const last = out[out.length-1];
+      if (last && last.k==="notes") last.flags.push(it); else out.push({ k:"notes", flags:[it] });
+    } else out.push(it);
+  }
+  return out;
+}
 function ItemList({ items, date, gap=24 }){
-  return <div style={{ display:"flex", flexDirection:"column", gap }}>{items.map((it,i)=><Item key={i} it={it} date={date}/>)}</div>;
+  return <div style={{ display:"flex", flexDirection:"column", gap }}>{groupNotes(items).map((it,i)=><Item key={i} it={it} date={date}/>)}</div>;
+}
+const NOTE_LABEL = { setup:"Setup", scaling:"Scaling", regression:"Adjustment", fallback:"Alternative" };
+function NotesGroup({ flags }){
+  return (
+    <details style={{ fontSize:14, lineHeight:"20px" }}>
+      <summary style={{ minHeight:44, display:"flex", alignItems:"center", cursor:"pointer", fontWeight:600, color:T.ink }}>
+        Notes and alternatives
+      </summary>
+      <div style={{ display:"grid", gap:12, paddingBottom:12 }}>
+        {flags.map((f,i)=>(
+          <p key={i} style={{ ...noteStyle, margin:0 }}><b style={{ color:T.ink }}>{NOTE_LABEL[f.kind]}: </b>{f.text}</p>
+        ))}
+      </div>
+    </details>
+  );
 }
 
 function Interval({ it, date }){
@@ -245,7 +272,7 @@ function Interval({ it, date }){
             <Movement it={m} date={date}/>
           </div>
         ))}
-        <TimingLine style={{ marginTop:20 }}>{cap(it.after)}, then begin the next interval.</TimingLine>
+        <TimingLine style={{ marginTop:20 }}>{cap(it.after)}</TimingLine>
       </div>
     </div>
   );
@@ -320,16 +347,7 @@ const FLAG = {
   regression: { label:"Adjustment" },
 };
 function Flag({ kind, text }){
-  if (kind==="fallback"){
-    return (
-      <details style={{ fontSize:14, lineHeight:"20px" }}>
-        <summary style={{ minHeight:44, display:"flex", alignItems:"center", gap:8, cursor:"pointer", fontWeight:600, color:T.ink }}>
-          Alternative exercise or setup
-        </summary>
-        <p style={{ margin:"0 0 12px", color:T.muted }}>{text}</p>
-      </details>
-    );
-  }
+  if (kind==="rule") return <p role="note" style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600, color:T.ink }}>{text}</p>;
   const f = FLAG[kind] || { label:cap(kind) };
   if (f.warn){
     return (
@@ -353,6 +371,7 @@ function Item({ it, date }){
     case "cluster":  return <ClusterSet it={it}/>;
     case "flag":     return <Flag kind={it.kind} text={it.text}/>;
     case "note":     return <Note text={it.text}/>;
+    case "notes":    return <NotesGroup flags={it.flags}/>;
     case "sub":      return <SubHead text={it.text} budget={it.budget}/>;
     default:         return <Movement it={it} date={date}/>;
   }
@@ -373,10 +392,12 @@ function Section({ s, date }){
 function ZoneKey({ zk }){
   if (!zk || !zk.zones || !zk.zones.length) return null;
   return (
-    <section aria-label="Zones used in this run" style={{ marginBottom:32 }}>
-      <SectionLabel>Zones</SectionLabel>
+    <details aria-label="Zones used in this run" style={{ marginBottom:32 }}>
+      <summary style={{ minHeight:48, display:"flex", alignItems:"center", cursor:"pointer", fontWeight:650, fontSize:18, color:T.tealDeep }}>
+        Zones for this run
+      </summary>
       <p style={{ margin:"0 0 8px", fontSize:14, lineHeight:"20px", color:T.muted }}>
-        {zk.profile ? `Profile: ${zk.profile}` : "No zone profile set, so heart-rate boundaries show as not set. Add yours in Setup."}
+        {zk.profile ? `Profile: ${zk.profile}` : "No zone profile set. Add yours in Program setup."}
       </p>
       {zk.zones.map(z=>(
         <div key={z.z} style={{ display:"grid", gridTemplateColumns:"44px minmax(0,1fr)", gap:12, padding:"12px 0", borderTop:`1px solid ${T.rule}` }}>
@@ -390,7 +411,7 @@ function ZoneKey({ zk }){
           </div>
         </div>
       ))}
-    </section>
+    </details>
   );
 }
 
@@ -417,10 +438,3 @@ function CompleteBar({ iso }){
   );
 }
 
-function EndOfSession(){
-  return (
-    <p style={{ margin:"32px 0 0", borderTop:`1px solid ${T.rule}`, paddingTop:20, textAlign:"center", fontSize:14, color:T.muted }}>
-      End of session
-    </p>
-  );
-}

@@ -217,7 +217,7 @@ function resolveDay(day, ctx){
     Object.assign(out, r);
     if (r.runExample){
       const own = out.note ? out.note + " " : "";
-      out.note = own + "Example length (" + r.trtMin + " min). Set your own weekly run baselines in Setup.";
+      out.note = own + "Example length. Set your own in Program setup.";
     }
   }
   return out;

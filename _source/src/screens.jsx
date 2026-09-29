@@ -64,7 +64,7 @@ function SessionPicker({ sched, current, onPick, label="Jump to date" }){
   };
   return (
     <div>
-      <p style={{ margin:"0 0 6px", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.muted }}>{label}</p>
+      {label && <p style={{ margin:"0 0 6px", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.muted }}>{label}</p>}
       <button ref={btnRef} type="button" aria-expanded={open} aria-controls={uid} onClick={()=>setOpen(o=>!o)}
         style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, width:"100%", minHeight:48,
           textAlign:"left", border:`1px solid ${T.ruleStrong}`, borderRadius: open ? "8px 8px 0 0" : 8, padding:"10px 12px",
@@ -120,119 +120,122 @@ function sessionMeta(d){
   if (d.type==="race") return "Race day";
   if (d.type==="run") return d.trt ? `Total run time ${d.trt}` : "Run";
   const m = gymMinutes(d);
-  return m ? `${m} min planned` : "Strength and conditioning";
+  return m ? `${m} min` : "Strength and conditioning";
+}
+
+function MenuIcon(){
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    </svg>
+  );
+}
+
+/* Everything that isn't today's session lives here: setup, travel workouts, backup and the archive. */
+function MenuPanel({ program, index, hasTravel, onSetup, onTravel, onClose }){
+  const archive = (index.programs||[]).filter(p => p.status==="archived" && p.id!==program.id);
+  const item = { ...textBtn, textDecoration:"none", display:"flex", width:"100%", minHeight:48, padding:"12px var(--gutter, 20px)",
+    fontSize:16, fontWeight:600, color:T.ink, borderTop:`1px solid ${T.rule}`, textAlign:"left", justifyContent:"flex-start" };
+  return (
+    <div role="menu" aria-label="Menu" onKeyDown={e=>{ if (e.key==="Escape"){ e.stopPropagation(); onClose(); } }}
+      style={{ position:"absolute", left:0, right:0, top:"100%", zIndex:30, background:T.surface, color:T.ink,
+        borderBottom:`1px solid ${T.rule}`, boxShadow:"0 12px 24px rgba(28,38,40,.14)", maxHeight:"calc(100vh - 80px)", overflowY:"auto" }}>
+      {program.engine && <Pressable role="menuitem" autoFocus onClick={()=>{ onClose(false); onSetup(); }} style={{ ...item, borderTop:0 }}>Program setup</Pressable>}
+      {hasTravel && <Pressable role="menuitem" onClick={()=>{ onClose(false); onTravel(); }} style={item}>Travel workouts</Pressable>}
+      <div style={{ padding:"16px var(--gutter, 20px)", borderTop:`1px solid ${T.rule}` }}><LogPanel/></div>
+      {archive.length>0 && (
+        <div style={{ borderTop:`1px solid ${T.rule}`, padding:"8px var(--gutter, 20px) 12px" }}>
+          <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.muted }}>Earlier programs</p>
+          {archive.map(p=>(
+            <a key={p.id} href={`?p=${encodeURIComponent(p.id)}`} role="menuitem"
+              style={{ display:"flex", alignItems:"center", minHeight:44, color:T.ink, fontWeight:600, fontSize:16, textDecoration:"underline", textUnderlineOffset:4 }}>
+              {p.name}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function Home({ program, sched, index, today, sel, setSel, onOpen, onTravel, hasTravel, resolve, onSetup, done }){
+  const [menu, setMenu] = React.useState(false);
+  const menuBtn = React.useRef(null);
+  const closeMenu = (refocus = true) => { setMenu(false); if (refocus) requestAnimationFrame(()=>menuBtn.current && menuBtn.current.focus()); };
   const archived = program.status==="archived";
-  const archive = (index.programs||[]).filter(p => p.status==="archived" && p.id!==program.id);
   const raw = sched.byIso[sel], d = resolve(raw);
   const selDone = !!(done && done[sel]);
-  const sum = summaryFor(sched, program, today);
   const d0 = dateOf(sel);
   const shift = n => setSel(addDays(sel, n));
   return (
     <div>
-      <header className="on-dark" style={{ position:"relative", overflow:"hidden", background:T.night, color:T.onNight, padding:"28px var(--gutter, 20px) 24px" }}>
-        <TopoField opacity={.55}/>
-        <div style={{ position:"relative" }}>
-          <Lockup tone="dark" width={232}/>
-          <p style={{ margin:"14px 0 0", fontSize:14, lineHeight:"20px", color:T.onNightMuted }}>Strength for mountain athletes</p>
-          <p style={{ margin:"20px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.nightInfo }}>
-            {program.name} · {archived ? "Archived" : `From ${fmtShort(sched.start)}`}
-          </p>
-        </div>
-      </header>
+      <div style={{ position:"relative", zIndex:20 }}>
+        <header className="on-dark" style={{ position:"relative", overflow:"hidden", background:T.night, color:T.onNight,
+          padding:"8px 4px 8px var(--gutter, 20px)", display:"flex", alignItems:"center", justifyContent:"space-between", minHeight:56 }}>
+          <TopoField opacity={.35} style={{ width:"120%", right:"-30%", bottom:"-260%" }}/>
+          <div style={{ position:"relative" }}><Lockup tone="dark" width={184}/></div>
+          <Pressable ref={menuBtn} onClick={()=> menu ? closeMenu() : setMenu(true)} ariaLabel="Menu" aria-expanded={menu} aria-haspopup="menu"
+            style={{ position:"relative", width:48, height:48, display:"flex", alignItems:"center", justifyContent:"center", color:T.onNight, borderRadius:8 }}>
+            <MenuIcon/>
+          </Pressable>
+        </header>
+        {menu && (
+          <>
+            <div onClick={()=>closeMenu()} style={{ position:"fixed", inset:0, zIndex:-1 }}/>
+            <MenuPanel program={program} index={index} hasTravel={hasTravel} onSetup={onSetup} onTravel={onTravel} onClose={closeMenu}/>
+          </>
+        )}
+      </div>
 
-      <main style={{ padding:"24px var(--gutter, 20px) 40px" }}>
+      <main style={{ padding:"20px var(--gutter, 20px) 32px" }}>
         {archived && (
-          <a href="./" style={{ display:"block", background:T.flagWash, color:T.flag, borderRadius:8, padding:12, marginBottom:24,
+          <a href="./" style={{ display:"block", background:T.flagWash, color:T.flag, borderRadius:8, padding:12, marginBottom:16,
             fontSize:14, lineHeight:"20px", textDecoration:"underline", fontWeight:600 }}>
-            You're viewing an archived program. Back to the current program →
+            Archived program. Back to the current program →
           </a>
         )}
 
-        <section aria-label="Session calendar">
-          <SectionLabel>{MONTH_FULL[d0.getMonth()]} {d0.getFullYear()}</SectionLabel>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:12 }}>
-            <Pressable onClick={()=>shift(-7)} ariaLabel="Previous week" style={textBtn}>← Previous</Pressable>
-            <Pressable onClick={()=>setSel(today)} style={textBtn}>Go to today</Pressable>
-            <Pressable onClick={()=>shift(7)} ariaLabel="Next week" style={textBtn}>Next →</Pressable>
-          </div>
-          <WeekStrip sched={sched} selected={sel} today={today} done={done} onSelect={setSel}/>
-          <div style={{ marginTop:16 }}><SessionPicker sched={sched} current={sel} onPick={setSel}/></div>
-          <p aria-live="polite" style={{ margin:"16px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
-            Today: {fmtPick(today)}. You can open any published session, regardless of its planned date.
-          </p>
-        </section>
-
-        <section aria-label="Selected session" style={{ marginTop:24, padding:20, background:T.surface, border:`1px solid ${T.rule}`, borderRadius:12 }}>
-          <p style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600 }}>
-            Planned · {fmtPick(sel)}{sel===today ? " · Today" : ""}
+        <section aria-label="Selected session" style={{ padding:20, background:T.surface, border:`1px solid ${T.rule}`, borderRadius:12 }}>
+          <p style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600, color:T.muted }}>
+            {fmtPick(sel)}{sel===today ? " · Today" : ""}{selDone ? " · ✓ Complete" : ""}
           </p>
           {d ? (
             <>
-              <h2 style={{ margin:"12px 0 0", fontSize:24, lineHeight:"30px", fontWeight:700, letterSpacing:"-.015em" }}>{d.title}</h2>
-              <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
+              <h1 style={{ margin:"8px 0 0", fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>{d.title}</h1>
+              <p style={{ margin:"4px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.tealDeep }}>
                 {sessionMeta(d)}{d.deload ? " · Deload" : ""}
               </p>
-              {selDone && <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.success }}>✓ Complete</p>}
               <Pressable onClick={()=>onOpen(sel)} ariaLabel={`Open ${fmtLong(sel)} — ${d.title}`} className="rl-btn rl-primary"
-                style={{ ...btnPrimary, width:"100%", marginTop:24 }}>
+                style={{ ...btnPrimary, width:"100%", marginTop:20 }}>
                 Open this session <span aria-hidden="true">→</span>
               </Pressable>
             </>
           ) : (
             <>
-              <h2 style={{ margin:"12px 0 0", fontSize:24, lineHeight:"30px", fontWeight:700 }}>No session published</h2>
-              <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
-                {sel < sched.first ? `This program starts ${fmtLong(sched.first)}.` :
-                 sel > sched.last ? (program.endCard ? `${program.endCard}. The last session is ${fmtLong(sched.last)}.` : `The program is published through ${fmtLong(sched.last)}. The next block isn't loaded yet.`) :
-                 "Nothing is scheduled on this date."}
+              <h1 style={{ margin:"8px 0 0", fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>No session</h1>
+              <p style={{ margin:"4px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
+                {sel < sched.first ? `The program starts ${fmtLong(sched.first)}.` :
+                 sel > sched.last ? (program.endCard ? `${program.endCard}.` : "The next block isn't loaded yet.") : "Nothing is scheduled."}
               </p>
-              <Pressable onClick={()=>setSel(sel < sched.first ? sched.first : sched.last)} style={{ ...btnSecondary, width:"100%", marginTop:24 }}>
+              <Pressable onClick={()=>setSel(sel < sched.first ? sched.first : sched.last)} className="rl-btn" style={{ ...btnSecondary, width:"100%", marginTop:20 }}>
                 {sel < sched.first ? "Go to the first session" : "Go to the last session"}
               </Pressable>
             </>
           )}
         </section>
 
-        <p style={{ margin:"16px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
-          {(archived || program.engine)
-            ? `${fmtLong(sched.first)} – ${fmtLong(sched.last)}.`
-            : `Published through ${fmtLong(sched.last)}. The next block appears here once it's written.`}
-        </p>
-
-        {(hasTravel || program.engine) && (
-          <div style={{ marginTop:32, display:"grid", gap:12 }}>
-            {hasTravel && (
-              <Pressable onClick={onTravel} style={{ ...btnSecondary, display:"block", textAlign:"left", width:"100%", borderRadius:12, padding:16 }}>
-                <span style={{ display:"block", fontSize:16, fontWeight:650 }}>Travel workouts</span>
-                <span style={{ display:"block", fontSize:14, fontWeight:400, color:T.muted, marginTop:2 }}>Seven sessions · on demand, any day</span>
-              </Pressable>
-            )}
-            {program.engine && (
-              <Pressable onClick={onSetup} ariaLabel="Program setup" style={{ ...btnSecondary, display:"block", textAlign:"left", width:"100%", borderRadius:12, padding:16 }}>
-                <span style={{ display:"block", fontSize:16, fontWeight:650 }}>Program setup</span>
-                <span style={{ display:"block", fontSize:14, fontWeight:400, color:T.muted, marginTop:2 }}>Start date · run lengths · zones · equipment · options</span>
-              </Pressable>
-            )}
+        <section aria-label="Session calendar" style={{ marginTop:20 }}>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:4 }}>
+            <Pressable onClick={()=>shift(-7)} ariaLabel="Previous week" style={{ ...textBtn, textDecoration:"none", fontSize:20, justifyContent:"center" }}>←</Pressable>
+            <h2 style={{ margin:0, fontSize:16, lineHeight:"24px", fontWeight:650, flex:1, textAlign:"center" }}>
+              {MONTH_FULL[d0.getMonth()]} {d0.getFullYear()}
+            </h2>
+            <Pressable onClick={()=>setSel(today)} style={{ ...textBtn, padding:"8px" }}>Today</Pressable>
+            <Pressable onClick={()=>shift(7)} ariaLabel="Next week" style={{ ...textBtn, textDecoration:"none", fontSize:20, justifyContent:"center" }}>→</Pressable>
           </div>
-        )}
-
-        <LogPanel/>
-
-        {archive.length>0 && (
-          <section style={{ marginTop:32 }}>
-            <SectionLabel>Archive</SectionLabel>
-            {archive.map(p=>(
-              <a key={p.id} href={`?p=${encodeURIComponent(p.id)}`}
-                style={{ display:"block", padding:"12px 0", minHeight:44, boxSizing:"border-box", color:T.ink, fontWeight:600, textDecoration:"underline", textUnderlineOffset:4 }}>
-                {p.name} <span style={{ color:T.muted, fontWeight:400 }}>· {p.dates}</span> →
-              </a>
-            ))}
-          </section>
-        )}
+          <WeekStrip sched={sched} selected={sel} today={today} done={done} onSelect={setSel}/>
+          <div style={{ marginTop:12 }}><SessionPicker sched={sched} current={sel} onPick={setSel}/></div>
+        </section>
       </main>
     </div>
   );
@@ -289,10 +292,10 @@ function LogPanel(){
   };
 
   return (
-    <section style={{ marginTop:32 }}>
-      <SectionLabel>Training log</SectionLabel>
-      <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>
-        {n ? `${n} ${n===1?"entry":"entries"} saved on this phone.` : "Nothing logged yet."} Back it up now and then — deleting the app icon deletes the log.
+    <div>
+      <h3 style={{ margin:0, fontSize:16, lineHeight:"24px", fontWeight:650 }}>Training log</h3>
+      <p style={{ margin:"2px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
+        {n ? `${n} ${n===1?"entry":"entries"} saved on this phone.` : "Nothing logged yet."} Deleting the app icon deletes the log.
       </p>
       <div style={{ display:"flex", gap:8, marginTop:12, flexWrap:"wrap" }}>
         <Pressable onClick={doExport} disabled={!n} className="rl-btn" style={{ ...btnSecondary, opacity:n?1:.5 }}>Export backup</Pressable>
@@ -301,7 +304,7 @@ function LogPanel(){
           style={{ display:"none" }} aria-hidden="true" tabIndex={-1}/>
       </div>
       {msg && <p role="status" aria-live="polite" style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px" }}>{msg}</p>}
-    </section>
+    </div>
   );
 }
 
@@ -320,14 +323,14 @@ function SessionHeading({ d, sched, today, onPick, extra }){
   return (
     <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
       <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>
-        Planned · {fmtPick(d.iso)}{d.iso===today ? " · Today" : ""}
+        {fmtPick(d.iso)}{d.iso===today ? " · Today" : ""}
       </p>
       <h1 style={{ margin:"8px 0 0", fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em", color:T.ink }}>{d.title}</h1>
       <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.tealDeep }}>
-        {sessionMeta(d)}{d.type==="gym" ? " · intervals and rest are instructions, not timers" : ""}
+        {sessionMeta(d)}
       </p>
       {extra}
-      <div style={{ marginTop:16 }}><SessionPicker sched={sched} current={d.iso} onPick={onPick}/></div>
+      <div style={{ marginTop:12 }}><SessionPicker sched={sched} current={d.iso} onPick={onPick} label={null}/></div>
     </div>
   );
 }
@@ -345,7 +348,7 @@ function DayBadges({ d }){
   );
 }
 
-const pagePad = { padding:"24px var(--gutter, 20px) 40px" };
+const pagePad = { padding:"20px var(--gutter, 20px) 40px" };
 
 function GymDay({ d }){
   return (
@@ -355,10 +358,9 @@ function GymDay({ d }){
           Hotel-gym equipment only. The anchor lift is deferred to its next home session, not skipped.
         </p>
       )}
-      {d.note && <p style={{ ...noteStyle, margin:"0 0 32px" }}>{d.note}</p>}
+      {d.note && <p style={{ ...noteStyle, margin:"0 0 24px" }}>{d.note}</p>}
       {d.sections.map((s,i)=><Section key={i} s={s} date={d.iso}/>)}
       <CompleteBar iso={d.iso}/>
-      <EndOfSession/>
     </main>
   );
 }
@@ -380,7 +382,6 @@ function RunDay({ d, warmup }){
       ))}
       <ZoneKey zk={d.zoneKey}/>
       <CompleteBar iso={d.iso}/>
-      <EndOfSession/>
     </main>
   );
 }
@@ -440,8 +441,7 @@ function TravelDetail({ w, onBack, onHome }){
       </div>
       <main style={pagePad}>
         {w.sections.map((s,i)=><Section key={i} s={s}/>)}
-        <EndOfSession/>
-      </main>
+        </main>
     </div>
   );
 }
