@@ -179,6 +179,8 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
       {last && (
         <p style={{ margin:"12px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
           Previous: <b style={{ color:T.ink }}>{setText(last, unit, mode)}</b> · {fmtShort(last.date)}{last.count>1 ? ` · ${last.count} sets` : ""}
+          {ctx.openHistory && <>{" · "}<Pressable onClick={()=>ctx.openHistory(name)} ariaLabel={`History for ${name}`}
+            style={{ ...textBtn, display:"inline", minHeight:0, padding:0, color:T.ink }}>History</Pressable></>}
         </p>
       )}
       {sets.length>0 && (
