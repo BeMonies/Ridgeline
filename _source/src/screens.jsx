@@ -132,7 +132,7 @@ function MenuIcon(){
 }
 
 /* Everything that isn't today's session lives here: setup, travel workouts, backup and the archive. */
-function MenuPanel({ program, index, hasTravel, onSetup, onTravel, onClose }){
+function MenuPanel({ program, index, hasTravel, onSetup, onTravel, onHistory, onClose }){
   const archive = (index.programs||[]).filter(p => p.status==="archived" && p.id!==program.id);
   const item = { ...textBtn, textDecoration:"none", display:"flex", width:"100%", minHeight:48, padding:"12px var(--gutter, 20px)",
     fontSize:16, fontWeight:600, color:T.ink, borderTop:`1px solid ${T.rule}`, textAlign:"left", justifyContent:"flex-start" };
@@ -140,7 +140,8 @@ function MenuPanel({ program, index, hasTravel, onSetup, onTravel, onClose }){
     <div role="menu" aria-label="Menu" onKeyDown={e=>{ if (e.key==="Escape"){ e.stopPropagation(); onClose(); } }}
       style={{ position:"absolute", left:0, right:0, top:"100%", zIndex:30, background:T.surface, color:T.ink,
         borderBottom:`1px solid ${T.rule}`, boxShadow:"0 12px 24px rgba(28,38,40,.14)", maxHeight:"calc(100vh - 80px)", overflowY:"auto" }}>
-      {program.engine && <Pressable role="menuitem" autoFocus onClick={()=>{ onClose(false); onSetup(); }} style={{ ...item, borderTop:0 }}>Program setup</Pressable>}
+      <Pressable role="menuitem" autoFocus onClick={()=>{ onClose(false); onHistory(); }} style={{ ...item, borderTop:0 }}>Exercise history</Pressable>
+      {program.engine && <Pressable role="menuitem" onClick={()=>{ onClose(false); onSetup(); }} style={item}>Program setup</Pressable>}
       {hasTravel && <Pressable role="menuitem" onClick={()=>{ onClose(false); onTravel(); }} style={item}>Travel workouts</Pressable>}
       <div style={{ padding:"16px var(--gutter, 20px)", borderTop:`1px solid ${T.rule}` }}><LogPanel/></div>
       {archive.length>0 && (
@@ -158,7 +159,7 @@ function MenuPanel({ program, index, hasTravel, onSetup, onTravel, onClose }){
   );
 }
 
-function Home({ program, sched, index, today, sel, setSel, onOpen, onTravel, hasTravel, resolve, onSetup, done }){
+function Home({ program, sched, index, today, sel, setSel, onOpen, onTravel, hasTravel, resolve, onSetup, onHistory, done }){
   const [menu, setMenu] = React.useState(false);
   const menuBtn = React.useRef(null);
   const closeMenu = (refocus = true) => { setMenu(false); if (refocus) requestAnimationFrame(()=>menuBtn.current && menuBtn.current.focus()); };
@@ -182,7 +183,7 @@ function Home({ program, sched, index, today, sel, setSel, onOpen, onTravel, has
         {menu && (
           <>
             <div onClick={()=>closeMenu()} style={{ position:"fixed", inset:0, zIndex:-1 }}/>
-            <MenuPanel program={program} index={index} hasTravel={hasTravel} onSetup={onSetup} onTravel={onTravel} onClose={closeMenu}/>
+            <MenuPanel program={program} index={index} hasTravel={hasTravel} onSetup={onSetup} onTravel={onTravel} onHistory={onHistory} onClose={closeMenu}/>
           </>
         )}
       </div>
@@ -446,6 +447,173 @@ function TravelDetail({ w, onBack, onHome }){
   );
 }
 
+/* ══════════════════ EXERCISE HISTORY ══════════════════
+   Every logged movement, its progress over time, and estimated loads worked out from the
+   athlete's own sets. Read-only: nothing here changes the log. */
+
+function HistoryList({ names, onHome, onOpen }){
+  const { log, unit } = React.useContext(LogContext);
+  const [q, setQ] = React.useState("");
+  const rows = historyIndex(log).map(r => ({ ...r, meta: names[r.key] || { name:titleFromKey(r.key) } }))
+    .filter(r => !q.trim() || r.meta.name.toLowerCase().includes(q.trim().toLowerCase()))
+    .sort((a,b) => a.meta.name.localeCompare(b.meta.name));
+  return (
+    <div>
+      <StickyBar left={<Pressable onClick={onHome} ariaLabel="Back to schedule" style={textBtn}>← Schedule</Pressable>}/>
+      <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
+        <h1 style={{ margin:0, fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>Exercise history</h1>
+      </div>
+      <main style={pagePad}>
+        <label style={{ ...fieldLabel, marginBottom:16 }}>Search exercises
+          <input type="search" value={q} onChange={e=>setQ(e.target.value)} style={{ ...fieldInput, fontWeight:400 }}/>
+        </label>
+        {rows.length===0 && (
+          <p style={{ margin:0, fontSize:16, lineHeight:"24px", color:T.muted }}>
+            {q.trim() ? "No logged exercise matches." : "Nothing logged yet. Log a set in any session and it will appear here."}
+          </p>
+        )}
+        <div style={{ display:"grid", gap:8 }}>
+          {rows.map(r=>(
+            <Pressable key={r.key} onClick={()=>onOpen(r.key)} ariaLabel={`${r.meta.name}, ${r.sessions} ${r.sessions===1?"session":"sessions"}`}
+              className="rl-btn" style={{ ...btnSecondary, display:"block", textAlign:"left", width:"100%", borderRadius:12, padding:"12px 16px", borderColor:T.rule }}>
+              <span style={{ display:"block", fontSize:18, lineHeight:"24px", fontWeight:600 }}>{r.meta.name}</span>
+              <span style={{ display:"block", fontSize:14, lineHeight:"20px", fontWeight:400, color:T.muted, fontVariantNumeric:"tabular-nums" }}>
+                {setText(r.last.top || r.last.sets[r.last.sets.length-1], unit, r.last.top ? "load" : "reps")} · {fmtShort(r.last.date)} · {r.sessions} {r.sessions===1?"session":"sessions"}
+              </span>
+            </Pressable>
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function TrendChart({ points, unit }){
+  /* points: [{date, value}] oldest first. Deep teal line; the latest point is marked and labelled. */
+  const W = 320, H = 132, padX = 14, padTop = 22, padBot = 22;
+  const vals = points.map(p=>p.value), lo = Math.min(...vals), hi = Math.max(...vals), span = (hi - lo) || 1;
+  const x = i => points.length===1 ? W/2 : padX + i*(W - 2*padX)/(points.length-1);
+  const y = v => padTop + (1 - (v - lo)/span) * (H - padTop - padBot);
+  const last = points[points.length-1];
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" width="100%"
+      aria-label={`Heaviest set per session, from ${fmtNum(points[0].value)} ${unit} on ${fmtShort(points[0].date)} to ${fmtNum(last.value)} ${unit} on ${fmtShort(last.date)}`}
+      style={{ display:"block", maxWidth:480 }}>
+      <line x1={padX} x2={W-padX} y1={H-padBot} y2={H-padBot} stroke={T.rule}/>
+      <polyline fill="none" stroke={T.tealDeep} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"
+        points={points.map((p,i)=>`${x(i)},${y(p.value)}`).join(" ")}/>
+      {points.map((p,i)=> i < points.length-1 && <circle key={i} cx={x(i)} cy={y(p.value)} r="3" fill={T.surface} stroke={T.tealDeep} strokeWidth="2"/>)}
+      <circle cx={x(points.length-1)} cy={y(last.value)} r="5" fill={T.action}/>
+      <text x={Math.min(W-padX, x(points.length-1))} y={Math.max(12, y(last.value)-10)} textAnchor="end" fontSize="13" fontWeight="700" fill={T.ink}>{fmtNum(last.value)} {unit}</text>
+      <text x={padX} y={H-6} fontSize="12" fill={T.muted}>{fmtShort(points[0].date)}</text>
+      <text x={W-padX} y={H-6} textAnchor="end" fontSize="12" fill={T.muted}>{fmtShort(last.date)}</text>
+    </svg>
+  );
+}
+
+const cell = { padding:"8px 6px", textAlign:"right", fontVariantNumeric:"tabular-nums", borderTop:`1px solid ${T.rule}` };
+
+function HistoryDetail({ hkey, names, onBack, backLabel="History" }){
+  const { log, unit } = React.useContext(LogContext);
+  const meta = names[hkey] || { name:titleFromKey(hkey) };
+  const hist = movementHistory(log, hkey);
+  const loaded = hist.filter(h => h.top);
+  const isLoad = loaded.length > 0;
+  const estimable = isLoad && meta.basis !== "sled" && meta.basis !== "carry";
+  const withE1 = estimable ? hist.filter(h => h.e1 != null) : [];
+  const current = withE1.length ? withE1[withE1.length-1] : null;
+  const best = withE1.reduce((a,h) => (!a || h.e1 > a.e1) ? h : a, null);
+  const show = kg => String(Math.round(fromKg(kg, unit)));
+  const first = loaded[0], latest = loaded[loaded.length-1];
+  const change = loaded.length > 1 ? fromKg(latest.top.kg, unit) - fromKg(first.top.kg, unit) : null;
+  const points = isLoad ? loaded.map(h => ({ date:h.date, value:Math.round(fromKg(h.top.kg, unit)*100)/100 }))
+                        : hist.map(h => ({ date:h.date, value:h.reps }));
+  const REPS = [3,4,5,6,8,10], RPES = [6,7,8,9];
+  return (
+    <div>
+      <StickyBar left={<Pressable onClick={onBack} ariaLabel={`Back to ${backLabel.toLowerCase()}`} style={textBtn}>← {backLabel}</Pressable>}/>
+      <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
+        <h1 style={{ margin:0, fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>{meta.name}</h1>
+        {meta.basis && BASIS[meta.basis] && <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>{BASIS[meta.basis]}</p>}
+      </div>
+      <main style={pagePad}>
+        {hist.length===0 ? <p style={{ margin:0, color:T.muted }}>Nothing logged for this exercise yet.</p> : (
+          <>
+            <section style={{ marginBottom:32 }}>
+              <SectionLabel>Progress</SectionLabel>
+              <TimingLine style={{ marginBottom:8 }}>{isLoad ? "Heaviest set each session" : "Most reps in a set each session"}</TimingLine>
+              {points.length > 1 ? <TrendChart points={points} unit={isLoad ? unit : "reps"}/>
+                : <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>One session so far. Log it again to see a trend.</p>}
+              {change !== null && (
+                <p style={{ margin:"12px 0 0", fontSize:16, lineHeight:"24px" }}>
+                  <b>{change > 0 ? "+" : ""}{fmtNum(change)} {unit}</b> on the heaviest set since {fmtShort(first.date)} · {hist.length} sessions
+                </p>
+              )}
+            </section>
+
+            {current && (
+              <section style={{ marginBottom:32 }}>
+                <SectionLabel>Estimated loads</SectionLabel>
+                <p style={{ margin:"0 0 12px", fontSize:16, lineHeight:"24px" }}>
+                  Estimated max <b>{show(current.e1)} {unit}</b> from {fmtShort(current.date)}
+                  {best && best.date !== current.date ? <> · best <b>{show(best.e1)} {unit}</b> on {fmtShort(best.date)}</> : null}
+                </p>
+                <table style={{ width:"100%", borderCollapse:"collapse", fontSize:16, lineHeight:"24px" }}>
+                  <caption style={{ textAlign:"left", fontSize:14, lineHeight:"20px", color:T.muted, paddingBottom:8 }}>
+                    Estimated load ({unit}) for a set at each RPE, rounded to the nearest {unit==="kg" ? "2.5" : "5"}.
+                  </caption>
+                  <thead><tr>
+                    <th scope="col" style={{ ...cell, borderTop:0, textAlign:"left", fontSize:14, fontWeight:600 }}>Reps</th>
+                    {RPES.map(p=><th key={p} scope="col" style={{ ...cell, borderTop:0, fontSize:14, fontWeight:600, color:T.tealDeep }}>RPE {p}</th>)}
+                  </tr></thead>
+                  <tbody>
+                    {REPS.map(r=>(
+                      <tr key={r}>
+                        <th scope="row" style={{ ...cell, textAlign:"left", fontWeight:600 }}>{r}</th>
+                        {RPES.map(p=><td key={p} style={cell}>{fmtNum(roundLoad(fromKg(loadAtRpeKg(current.e1, r, p), unit), unit))}</td>)}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <details style={{ marginTop:8, fontSize:14, lineHeight:"20px" }}>
+                  <summary style={{ minHeight:44, display:"flex", alignItems:"center", cursor:"pointer", fontWeight:600 }}>Percent of estimated max</summary>
+                  <table style={{ width:"100%", borderCollapse:"collapse", fontSize:16, lineHeight:"24px" }}>
+                    <tbody>
+                      {[95,90,85,80,75,70,65,60].map(pc=>(
+                        <tr key={pc}>
+                          <th scope="row" style={{ ...cell, textAlign:"left", fontWeight:600 }}>{pc}%</th>
+                          <td style={cell}>{fmtNum(roundLoad(fromKg(current.e1*pc/100, unit), unit))} {unit}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <p style={{ margin:"12px 0", color:T.muted }}>
+                    Estimates use the Epley formula on your best recent set of 1–12 reps. They are a guide for choosing a starting load, not a tested max.
+                  </p>
+                </details>
+              </section>
+            )}
+
+            <section>
+              <SectionLabel>Sessions</SectionLabel>
+              <div style={{ display:"grid" }}>
+                {[...hist].reverse().map((h,i)=>(
+                  <div key={h.date} style={{ padding:"12px 0", borderTop: i ? `1px solid ${T.rule}` : "none" }}>
+                    <p style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600, color:T.muted }}>{fmtPick(h.date)}</p>
+                    <p style={{ margin:"2px 0 0", fontSize:16, lineHeight:"24px", fontVariantNumeric:"tabular-nums" }}>
+                      {h.sets.map(s => setText(s, unit, isLoad ? "load" : "reps")).join("  ·  ")}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </>
+        )}
+      </main>
+    </div>
+  );
+}
+
 /* ══════════════════ SETUP ══════════════════
    The athlete's own choices for a program: start date, run lengths, heart-rate zones, equipment,
    options and personal overrides. Kept on this device only (ridgeline.personal.v1) — never in a
@@ -673,6 +841,7 @@ function App(){
   const [sel, setSel]     = React.useState(null);          /* session being viewed */
   const [homeSel, setHomeSel] = React.useState(null);      /* date chosen on the schedule */
   const [travelId, setTid]= React.useState(null);
+  const [hist, setHist]   = React.useState(null);          /* { key, from } — exercise being reviewed */
   const scrollRef = React.useRef(null);
   const logRef = React.useRef(log);
   logRef.current = log;
@@ -735,6 +904,8 @@ function App(){
       lbDone: w => setsOf(entryOn(log, "Mini Leg Blaster", addDays(sched.start, (w-1)*7 + 2))).length > 0 });
   },[ready, boot, setup, personal, log, sched]);
 
+  const names = React.useMemo(()=> ready ? movementNames([boot.program.days, boot.travel || []]) : {}, [ready, boot]);
+
   const scrollTop = ()=>{ const el = scrollRef.current; if (el){ if (el.scrollTo) el.scrollTo(0,0); else el.scrollTop = 0; } };
 
   if (boot.status!=="ready") return <BootScreen error={boot.status==="error"} onRetry={load}/>;
@@ -742,20 +913,22 @@ function App(){
   const { index, program, travel } = boot;
   const goHome = ()=>{ setScreen("home"); setSel(null); scrollTop(); };
   const openDay = iso=>{ setSel(iso); setHomeSel(iso); setScreen("day"); scrollTop(); };
+  const openHistory = name=>{ setHist({ key:mkey(name), from:screen }); setScreen("historyDetail"); scrollTop(); };
   const d = sel ? resolve(sched.byIso[sel]) : null;
   const w = travelId && travel ? travel.find(x=>x.id===travelId) : null;
   const idx = sel ? sched.dates.indexOf(sel) : -1;
   const prevIso = idx > 0 ? sched.dates[idx-1] : null, nextIso = idx >= 0 && idx < sched.dates.length-1 ? sched.dates[idx+1] : null;
 
   return (
-    <LogContext.Provider value={{ log, addSet, removeSet, setDone, replaceLog, drafts, setDraft, unit, setUnit, today }}>
+    <LogContext.Provider value={{ log, addSet, removeSet, setDone, replaceLog, drafts, setDraft, unit, setUnit, today, openHistory }}>
       <div className="rl-shell">
         <div className="rl-scroll" ref={scrollRef}>
-          <div key={screen+String(sel)+String(travelId)} style={{ animation:"rlRise 180ms cubic-bezier(.2,0,0,1)" }}>
+          <div key={screen+String(sel)+String(travelId)+String(hist && hist.key)} style={{ animation:"rlRise 180ms cubic-bezier(.2,0,0,1)" }}>
             {screen==="home" && homeSel && (
               <Home program={program} sched={sched} index={index} today={today} sel={homeSel} setSel={setHomeSel}
                 onOpen={openDay} hasTravel={!!(travel && travel.length)} resolve={resolve} done={log.done}
                 onSetup={()=>{ setScreen("setup"); scrollTop(); }}
+                onHistory={()=>{ setScreen("history"); scrollTop(); }}
                 onTravel={()=>{ setScreen("travel"); scrollTop(); }}/>
             )}
             {screen==="day" && d && (
@@ -773,6 +946,12 @@ function App(){
                 {d.type==="run"  && <RunDay d={d} warmup={program.runWarmup||[]}/>}
                 {(d.type==="rest"||d.type==="race") && <BareDay d={d}/>}
               </>
+            )}
+            {screen==="history" && (
+              <HistoryList names={names} onHome={goHome} onOpen={key=>{ setHist({ key, from:"history" }); setScreen("historyDetail"); scrollTop(); }}/>
+            )}
+            {screen==="historyDetail" && hist && (
+              <HistoryDetail hkey={hist.key} names={names} backLabel={hist.from==="day" && sel ? "Session" : "History"} onBack={()=>{ setScreen(hist.from==="day" && sel ? "day" : "history"); scrollTop(); }}/>
             )}
             {screen==="setup" && program.engine && (
               <Setup program={program} sched={sched} personal={personal} setup={setup} update={updatePersonal} onHome={goHome}/>

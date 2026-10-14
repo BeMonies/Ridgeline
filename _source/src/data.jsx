@@ -196,4 +196,53 @@ function repsHint(rx){
   return m ? m[1] : "";
 }
 
+/* ══════════════════ HISTORY & ESTIMATES ══════════════════
+   Estimates use the Epley formula: est. max = weight × (1 + reps ÷ 30), for sets of 1–12 reps.
+   A load for R reps at RPE p treats the set as R + (10 − p) reps to the limit. These are
+   estimates from what was logged, never a prescription. */
+function e1rmKg(kg, reps){
+  const r = Number(reps);
+  if (!(kg > 0) || !(r >= 1) || r > 12) return null;
+  return r === 1 ? kg : kg * (1 + r/30);
+}
+function loadAtRpeKg(e1, reps, rpe){ return e1 / (1 + (Number(reps) + (10 - rpe)) / 30); }
+function roundLoad(value, unit){ const step = unit==="kg" ? 2.5 : 5; return Math.round(value/step)*step; }
+
+/* One row per planned date with logged sets: the sets, the heaviest set and the best estimate. */
+function movementHistory(log, key){
+  const m = log.entries[key] || {};
+  return Object.keys(m).sort().map(date => {
+    const sets = setsOf(m[date]);
+    if (!sets.length) return null;
+    let top = null, e1 = null, reps = 0;
+    for (const s of sets){
+      if (s.kg != null && (top === null || s.kg > top.kg)) top = s;
+      const e = s.kg != null ? e1rmKg(s.kg, s.r) : null;
+      if (e != null && (e1 === null || e > e1)) e1 = e;
+      reps = Math.max(reps, parseInt(s.r, 10) || 0);
+    }
+    return { date, sets, top, e1, reps };
+  }).filter(Boolean);
+}
+function historyIndex(log){
+  return Object.keys(log.entries).map(key => {
+    const h = movementHistory(log, key);
+    return h.length ? { key, sessions:h.length, last:h[h.length-1] } : null;
+  }).filter(Boolean);
+}
+/* Display names: the log stores a normalised key, so names come from the loaded content. */
+function movementNames(sources){
+  const out = {};
+  const walk = node => {
+    if (Array.isArray(node)) node.forEach(walk);
+    else if (node && typeof node === "object"){
+      if (typeof node.n === "string"){ const k = mkey(node.n); if (!out[k] || node.log) out[k] = { name:node.n, basis:node.basis || (out[k] && out[k].basis), mode:node.log || (out[k] && out[k].mode) }; }
+      Object.values(node).forEach(walk);
+    }
+  };
+  sources.forEach(walk);
+  return out;
+}
+function titleFromKey(key){ return key.replace(/\b[a-z]/g, c => c.toUpperCase()); }
+
 const LogContext = React.createContext(null);

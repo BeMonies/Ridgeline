@@ -344,7 +344,7 @@ check("historical programs are preserved", () => {
 
 /* ── training log data model (units, sets, completion, history) ── */
 const D = vm.runInNewContext(read("_source/src/data.jsx") +
-  "\n({ toKg, fromKg, fmtNum, loadText, setText, setsOf, withSet, withoutSet, withDone, lastBefore, entryOn, mkey, emptyLog, startingRange, repsHint, countEntries })",
+  "\n({ toKg, fromKg, fmtNum, loadText, setText, setsOf, withSet, withoutSet, withDone, lastBefore, entryOn, mkey, emptyLog, startingRange, repsHint, countEntries, e1rmKg, loadAtRpeKg, roundLoad, movementHistory, historyIndex, movementNames, titleFromKey })",
   { React:{ createContext:()=>({}) }, localStorage:{ getItem:()=>null, setItem:()=>{} } });
 check("1 lb = 0.45359237 kg exactly; 135 lb shows about 61.23 kg", () => {
   eq(D.toKg(1,"lb"), 0.45359237);
@@ -414,6 +414,34 @@ check("brand assets: logo geometry is verbatim from the kit, and the shipped fon
   ok(!/GLYPHS|feTurbulence|LETTERS/.test(b), "old brush wordmark must be gone");
   for (const f of ["fonts/Inter-Variable.ttf","fonts/Inter-OFL.txt","assets/ridgeline-topo-support.svg","icons/icon-192.png","icons/icon-512.png","icons/apple-touch-icon.png"])
     ok(fs.existsSync(path.join(root, f)), `${f} missing`);
+});
+
+/* ── exercise history and estimates ── */
+check("estimated max uses Epley for 1–12 reps and nothing outside that", () => {
+  eq(D.e1rmKg(100, 1), 100); ok(Math.abs(D.e1rmKg(100, 5) - 116.6667) < 1e-3); ok(Math.abs(D.e1rmKg(100, 10) - 133.3333) < 1e-3);
+  eq(D.e1rmKg(100, 13), null); eq(D.e1rmKg(0, 5), null); eq(D.e1rmKg(100, ""), null);
+});
+check("RPE loads are consistent with the set they came from, and lighter at lower RPE", () => {
+  const e1 = D.e1rmKg(100, 5);                              /* 100 × 5 treated as an all-out set */
+  ok(Math.abs(D.loadAtRpeKg(e1, 5, 10) - 100) < 1e-9, "5 reps at RPE 10 returns the logged weight");
+  ok(D.loadAtRpeKg(e1, 5, 8) < D.loadAtRpeKg(e1, 5, 9) && D.loadAtRpeKg(e1, 8, 8) < D.loadAtRpeKg(e1, 5, 8));
+  eq(D.roundLoad(226.4, "lb"), 225); eq(D.roundLoad(101.3, "kg"), 102.5);
+});
+check("history lists each session with its heaviest set, across units and old entries", () => {
+  let log = { v:1, done:{}, entries:{ "back squat":{ "2026-08-10":{ w:"225", r:"5", t:1 } } } };
+  log = D.withSet(log, "Back Squat", "2026-10-05", { w:"100", u:"kg", kg:100, r:"6", at:2 });
+  log = D.withSet(log, "Back Squat", "2026-10-05", { w:"105", u:"kg", kg:105, r:"6", at:3 });
+  log = D.withSet(log, "Strict Pull-Up", "2026-10-05", { w:"", u:"", kg:null, r:"4", at:4 });
+  const h = D.movementHistory(log, "back squat");
+  eq(h.map(x => x.date), ["2026-08-10","2026-10-05"]); eq(h[1].top.w, "105"); ok(Math.abs(h[0].top.kg - 102.058) < 1e-2);
+  ok(h[1].e1 > h[0].e1);
+  const pu = D.movementHistory(log, "strict pull up"); eq(pu[0].top, null); eq(pu[0].reps, 4); eq(pu[0].e1, null);
+  eq(D.historyIndex(log).map(r => [r.key, r.sessions]).sort(), [["back squat",2],["strict pull up",1]]);
+});
+check("history shows the program's own exercise names, with a readable fallback", () => {
+  const names = D.movementNames([program.days]);
+  eq(names[D.mkey("Foot-on-Wall DB RDL")].name, "Foot-on-Wall DB RDL"); eq(names["back squat"].basis, "barbell");
+  eq(D.titleFromKey("db goblet squat"), "Db Goblet Squat");
 });
 
 if (failures.length){
