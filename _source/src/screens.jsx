@@ -821,6 +821,43 @@ function BootScreen({ error, onRetry }){
 
 /* ══════════════════ APP ══════════════════ */
 
+/* ── self-update ──
+   A home-screen app on iPhone is usually resumed from memory, not reloaded, so it would keep
+   running old code. Each time it comes to the foreground it compares its build stamp with
+   version.json on the server and refreshes when they differ. The log, drafts and setup live in
+   localStorage and are untouched by a refresh. */
+const BUILD = typeof __BUILD__ !== "undefined" ? __BUILD__ : "dev";
+const RELOAD_KEY = "ridgeline.reloadedFor";
+async function latestBuild(){
+  try {
+    const r = await fetch("version.json?t=" + Date.now(), { cache:"no-store" });
+    if (!r.ok) return null;
+    const j = await r.json();
+    return (j && typeof j.v === "string") ? j.v : null;
+  } catch { return null; }
+}
+async function refreshServiceWorker(){
+  try {
+    if (!("serviceWorker" in navigator)) return;
+    const reg = await navigator.serviceWorker.getRegistration();
+    if (!reg) return;
+    await reg.update();
+    const sw = reg.installing || reg.waiting;
+    if (sw && sw.state !== "activated"){
+      await Promise.race([
+        new Promise(res => sw.addEventListener("statechange", () => { if (sw.state === "activated") res(); })),
+        new Promise(res => setTimeout(res, 4000)),
+      ]);
+    }
+  } catch {}
+}
+function alreadyReloadedFor(v){ try { return sessionStorage.getItem(RELOAD_KEY) === v; } catch { return true; } }
+async function reloadFor(v){
+  try { sessionStorage.setItem(RELOAD_KEY, v); } catch {}
+  await refreshServiceWorker();
+  window.location.reload();
+}
+
 function programIdFromUrl(){
   try { return new URLSearchParams(window.location.search).get("p"); } catch { return null; }
 }
@@ -842,6 +879,7 @@ function App(){
   const [homeSel, setHomeSel] = React.useState(null);      /* date chosen on the schedule */
   const [travelId, setTid]= React.useState(null);
   const [hist, setHist]   = React.useState(null);          /* { key, from } — exercise being reviewed */
+  const [newBuild, setNewBuild] = React.useState(null);    /* a newer version is on the server */
   const scrollRef = React.useRef(null);
   const logRef = React.useRef(log);
   logRef.current = log;
@@ -870,6 +908,22 @@ function App(){
     document.addEventListener("visibilitychange", f);
     return ()=>document.removeEventListener("visibilitychange", f);
   },[]);
+
+  /* Look for a newer version on launch and every time the app returns to the foreground. */
+  React.useEffect(()=>{
+    if (BUILD === "dev") return;
+    let live = true;
+    const check = async ()=>{ const v = await latestBuild(); if (live && v && v !== BUILD) setNewBuild(v); };
+    const onShow = ()=>{ if (document.visibilityState==="visible") check(); };
+    check();
+    document.addEventListener("visibilitychange", onShow);
+    window.addEventListener("pageshow", onShow);
+    return ()=>{ live = false; document.removeEventListener("visibilitychange", onShow); window.removeEventListener("pageshow", onShow); };
+  },[]);
+  /* On the schedule it refreshes by itself; mid-session it waits for a tap so a workout is never yanked away. */
+  React.useEffect(()=>{
+    if (newBuild && screen==="home" && !alreadyReloadedFor(newBuild)) reloadFor(newBuild);
+  },[newBuild, screen]);
 
   /* Log changes are computed from the latest log and only shown once they are saved. */
   const commitLog = React.useCallback(next=>{
@@ -922,6 +976,13 @@ function App(){
   return (
     <LogContext.Provider value={{ log, addSet, removeSet, setDone, replaceLog, drafts, setDraft, unit, setUnit, today, openHistory }}>
       <div className="rl-shell">
+        {newBuild && (screen!=="home" || alreadyReloadedFor(newBuild)) && (
+          <div role="status" style={{ position:"absolute", left:0, right:0, bottom:0, zIndex:40, background:T.night, color:T.onNight,
+            padding:"8px var(--gutter, 20px) calc(8px + env(safe-area-inset-bottom))", display:"flex", alignItems:"center", justifyContent:"space-between", gap:12 }}>
+            <span style={{ fontSize:14, lineHeight:"20px" }}>A new version is ready. Your log is kept.</span>
+            <Pressable onClick={()=>reloadFor(newBuild)} className="rl-btn rl-primary" style={{ ...btnPrimary, minHeight:44, padding:"8px 14px", fontSize:14 }}>Update</Pressable>
+          </div>
+        )}
         <div className="rl-scroll" ref={scrollRef}>
           <div key={screen+String(sel)+String(travelId)+String(hist && hist.key)} style={{ animation:"rlRise 180ms cubic-bezier(.2,0,0,1)" }}>
             {screen==="home" && homeSel && (

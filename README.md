@@ -6,7 +6,8 @@ Mountain athlete training program, as an installable web app.
 Program content lives in `programs/`. To publish a change, replace the
 program file (for example `programs/ski-2026.json`) with the new version and
 commit. The site updates in about a minute; the app picks it up the next time
-it opens with a connection. No code changes, no build step.
+it opens with a connection. No code changes; run `sh _source/build.sh` before committing so
+installed phones are told to refresh.
 
 - `programs/index.json` — which program is active, plus the archive list
 - `programs/mountain-athlete-v3.json` — Mountain Athlete Strength, 12 weeks (active)

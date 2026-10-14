@@ -5,7 +5,7 @@ It shows a day-by-day program, lets the athlete log working weights, and works o
 Pushing to `main` publishes the site in about a minute. **The repo is public.**
 
 ## Layout (everything below is at the repo root)
-- `index.html`, `app.js`, `sw.js`, `manifest.webmanifest`, `icons/`, `fonts/`, `assets/` — the shipped site
+- `index.html`, `app.js`, `version.json`, `sw.js`, `manifest.webmanifest`, `icons/`, `fonts/`, `assets/` — the shipped site
 - `brand/` — identity kit v1.2 reference (design spec, product requirements, tokens); not shipped to users
 - `programs/index.json` — which program is active, plus the archive and travel file
 - `programs/mountain-athlete-v3.json` — Mountain Athlete Strength, v3.1, 12 weeks (active)
@@ -29,8 +29,9 @@ hand edits. **The JSON files in `programs/` are the source of truth. Edit them d
 If you add a file the app needs offline, add it to `SHELL` in `sw.js` and bump `CACHE`.
 
 ## Workflow
-1. Make the change. If it touches app code, run `sh _source/build.sh`. If it touches a program
-   file or `resolve.jsx`, run `node _source/check.mjs` and fix anything it reports.
+1. Make the change, then run `sh _source/build.sh` (always — it also refreshes the version stamp
+   that tells installed phones to update). If it touches a program file or `resolve.jsx`, run
+   `node _source/check.mjs` and fix anything it reports.
 2. Preview locally: serve the repo root (`python3 -m http.server 8000`) and open localhost:8000.
    Check today's view, a gym day, a run day, the date overlay, and a log entry.
 3. Show me what changed. Only commit and push when I say so.
@@ -130,9 +131,18 @@ If you add a file the app needs offline, add it to `SHELL` in `sw.js` and bump `
   but unused; they predate the kit's corrected mark.
 - No photography is bundled. Use owned or licensed imagery only.
 
-## Service worker
-`sw.js` is network-first, so updates arrive the next time the app opens online. If you add a
-new top-level file the app needs offline, add it to the `SHELL` list in `sw.js`.
+## Service worker and updates
+`sw.js` is network-first and revalidates every request, so a fresh load always gets the newest
+files. If you add a new top-level file the app needs offline, add it to the `SHELL` list in `sw.js`.
+
+An installed iPhone home-screen app is resumed from memory rather than reloaded, so it also checks
+for itself: `build.sh` stamps a hash into `app.js` (`__BUILD__`) and writes the same value to
+`version.json`. On launch and every return to the foreground the app fetches `version.json`; if it
+differs it refreshes by itself on the schedule screen, or shows an "Update" bar mid-session.
+**Always run `sh _source/build.sh` before committing — including program-only edits — and commit
+`version.json` with `app.js`.** Otherwise installed phones won't know anything changed.
+`check.mjs` fails if the two stamps differ. A refresh never touches the log: it lives in
+localStorage, which is separate for the home-screen app, Safari and each other device.
 
 ## Known state
 - Mountain Athlete Strength (v3.1) is the active program: all 12 weeks are written. Its default

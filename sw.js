@@ -1,7 +1,7 @@
 /* Ridgeline service worker.
    Network-first: when online you always get the latest program and app;
    when offline (gym basements, trailheads) the last-loaded copy is served. */
-const CACHE = "ridgeline-v2";
+const CACHE = "ridgeline-v3";
 const SHELL = ["./", "./index.html", "./app.js", "./manifest.webmanifest",
   "./programs/index.json", "./fonts/Inter-Variable.ttf", "./assets/ridgeline-topo-support.svg",
   "./assets/ridgeline-favicon.svg", "./icons/apple-touch-icon.png", "./icons/icon-192.png", "./icons/icon-512.png"];
@@ -16,9 +16,13 @@ self.addEventListener("activate", e => {
 });
 self.addEventListener("fetch", e => {
   const req = e.request;
-  if (req.method !== "GET" || new URL(req.url).origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  if (req.method !== "GET" || url.origin !== self.location.origin) return;
+  if (url.pathname.endsWith("/version.json")) return;            /* update check: always straight to the network, never cached */
+  /* Ask the server every time (revalidate) so a new release is never hidden by the browser's own cache. */
+  const fresh = () => fetch(req, { cache:"no-cache" }).catch(() => fetch(req));
   e.respondWith(
-    fetch(req).then(res => {
+    fresh().then(res => {
       if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
       return res;
     }).catch(() => caches.match(req, { ignoreSearch: true })

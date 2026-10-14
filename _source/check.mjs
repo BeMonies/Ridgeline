@@ -444,6 +444,13 @@ check("history shows the program's own exercise names, with a readable fallback"
   eq(D.titleFromKey("db goblet squat"), "Db Goblet Squat");
 });
 
+check("the shipped app.js carries the same build stamp as version.json (so phones can tell when to refresh)", () => {
+  const v = json("version.json").v;
+  ok(/^[0-9a-f]{12}$/.test(v), "version.json has a build stamp");
+  ok(read("app.js").includes(`"${v}"`), "app.js was not rebuilt after the last change — run sh _source/build.sh");
+  ok(/version\.json/.test(read("sw.js")) && !/SHELL = \[[^\]]*version\.json/.test(read("sw.js")), "version.json must bypass the service-worker cache");
+});
+
 if (failures.length){
   console.error(`\n${failures.length} check(s) failed (${passed} passed):\n`);
   failures.forEach(f => console.error(" ✗ " + f + "\n"));
