@@ -12,7 +12,7 @@ const read = f => fs.readFileSync(path.join(root, f), "utf8");
 const json = f => JSON.parse(read(f));
 
 const R = vm.runInNewContext(read("_source/src/resolve.jsx") +
-  "\n({ normalizeSetup, resolveDay, legBlasterAvailable, zoneKey, roundHalfUp })", {});
+  "\n({ normalizeSetup, resolveDay, legBlasterAvailable, legBlasterWeeks, zoneKey, roundHalfUp, cycleSlot })", {});
 const program = json("programs/mountain-athlete-v3.json");
 
 let passed = 0; const failures = [];
@@ -297,7 +297,7 @@ check("no unresolved {{templates}} or stray `when` keys under any setup", () => 
   for (const o of combos) for (const k of Object.keys(program.days)){
     const w = Number(k.match(/^W(\d+)/)[1]);
     const t = text(day(w, k.split("-")[1], o));
-    ok(!/\{\{|\}\}/.test(t), `${k} ${JSON.stringify(o)} has an unresolved template`);
+    ok(!/\{\{\w+\}\}/.test(t), `${k} ${JSON.stringify(o)} has an unresolved template`);
     ok(!/"when"/.test(t), `${k} still carries a when`);
   }
 });
@@ -344,7 +344,7 @@ check("historical programs are preserved", () => {
 
 /* ── training log data model (units, sets, completion, history) ── */
 const D = vm.runInNewContext(read("_source/src/data.jsx") +
-  "\n({ toKg, fromKg, fmtNum, loadText, setText, setsOf, withSet, withoutSet, withDone, lastBefore, entryOn, mkey, emptyLog, startingRange, repsHint, countEntries, e1rmKg, loadAtRpeKg, roundLoad, movementHistory, historyIndex, movementNames, titleFromKey })",
+  "\n({ toKg, fromKg, fmtNum, loadText, setText, setsOf, withSet, withoutSet, withDone, lastBefore, entryOn, mkey, emptyLog, startingRange, repsHint, countEntries, e1rmKg, loadAtRpeKg, roundLoad, movementHistory, historyIndex, movementNames, titleFromKey, canAssist, assistRank, BANDS, buildSchedule, e1rmFor, startDateFor })",
   { React:{ createContext:()=>({}) }, localStorage:{ getItem:()=>null, setItem:()=>{} } });
 check("1 lb = 0.45359237 kg exactly; 135 lb shows about 61.23 kg", () => {
   eq(D.toKg(1,"lb"), 0.45359237);
@@ -449,6 +449,196 @@ check("the shipped app.js carries the same build stamp as version.json (so phone
   ok(/^[0-9a-f]{12}$/.test(v), "version.json has a build stamp");
   ok(read("app.js").includes(`"${v}"`), "app.js was not rebuilt after the last change — run sh _source/build.sh");
   ok(/version\.json/.test(read("sw.js")) && !/SHELL = \[[^\]]*version\.json/.test(read("sw.js")), "version.json must bypass the service-worker cache");
+});
+
+/* ── band-assisted pull-ups ── */
+check("pull-up variations offer a band field; other moves do not", () => {
+  for (const n of ["Strict Pull-Up","Neutral-Grip Pull-Up","Band-Assisted Pull-Ups","Weighted Pull-Up","Chin-Up"]) ok(D.canAssist(n), n);
+  for (const n of ["Scap Pull-Up","Banded Pull-Apart","DB Pullover","Neutral-Grip Lat Pulldown","Push-Up"]) ok(!D.canAssist(n), n);
+});
+check("a banded set says so, a strict set says strict, and the band is kept on the set", () => {
+  eq(D.setText({ r:"6", a:"Medium band" }, "lb", "reps", true), "6 reps · medium band");
+  eq(D.setText({ r:"2" }, "lb", "reps", true), "2 reps · strict");
+  eq(D.setText({ r:"10" }, "lb", "reps", false), "10 reps");
+  const log = D.withSet(D.emptyLog(), "Strict Pull-Up", "2026-10-19", { w:"", u:"", kg:null, r:"6", a:"Medium band", at:1 });
+  eq(D.setsOf(D.entryOn(log, "Strict Pull-Up", "2026-10-19"))[0].a, "Medium band");
+});
+check("history separates strict reps from banded reps and tracks the lightest band", () => {
+  let log = D.emptyLog();
+  log = D.withSet(log, "Strict Pull-Up", "2026-10-12", { r:"6", a:"Heavy band", at:1 });
+  log = D.withSet(log, "Strict Pull-Up", "2026-10-12", { r:"6", a:"Medium band", at:1 });
+  log = D.withSet(log, "Strict Pull-Up", "2026-10-19", { r:"7", a:"Medium band", at:2 });
+  log = D.withSet(log, "Strict Pull-Up", "2026-10-19", { r:"2", at:2 });
+  const h = D.movementHistory(log, "strict pull up");
+  eq(h.map(x => [x.band, x.strict, x.reps]), [["Medium band",0,6],["Medium band",2,7]]);
+  ok(D.assistRank("") < D.assistRank("Light band") && D.assistRank("Light band") < D.assistRank("Heavy band"));
+});
+
+/* ══ v3.3 (v3.2 strength system + v3.3 running): rolling 6-week blocks ══ */
+const P2 = json("programs/mountain-athlete-v3-3.json");
+const S2 = D.buildSchedule(P2, {});
+const day2 = (pw, dow, opts = {}, extra = {}) => {
+  const iso = D.buildSchedule(P2, {}).dates.find(x => { const d = S2.byIso[x]; return d.pw === pw && d.key.endsWith("-" + dow); });
+  const raw = S2.byIso[iso];
+  return R.resolveDay(raw, { program:P2, setup:R.normalizeSetup(P2, { setup:{ [P2.id]:opts } }), zoneProfile:extra.zoneProfile, lbDone:extra.lbDone });
+};
+const pwOf = (block, bw) => (block-1)*6 + bw;
+check("v3.3: 84 templates (A and B × 6 weeks × 7 days); blocks alternate A, B, A with the same variants returning", () => {
+  eq(Object.keys(P2.days).length, 84);
+  eq([1,2,3,4].map(b => S2.byIso[S2.dates[(b-1)*42]].blockType), ["A","B","A","B"]);
+  const sq = b => marksOf(day2(pwOf(b,2),"mon"))[0].n;
+  eq([sq(1), sq(2), sq(3)], ["Back Squat","Front Squat","Back Squat"]);
+  ok(S2.dates.length >= 400, "rolls on well past a year");
+});
+check("v3.3: Week 1 establish + 3 × 6 @ 70%, Week 5 4 × 3 @ 86%, Week 6 test + 1 × 5 @ 60%", () => {
+  const w = bw => day2(pwOf(1,bw),"mon"), iv = d => items(d).find(i => i.k === "interval");
+  eq(iv(w(1)).marks[0].rx, "6 @ 70% of e1RM · rounds 1–3"); ok(/Establish: .*heavy triple at RPE 8/.test(text(w(1))));
+  eq(iv(w(5)).marks[0].rx, "3 @ 86% of e1RM"); eq(iv(w(5)).sets, 4);
+  eq(iv(w(6)).marks[0].rx, "5 @ 60% of e1RM · round 1 only"); eq(iv(w(6)).sets, 2); ok(/Test: ramp to a heavy triple at RPE 8–9/.test(text(w(6))));
+  eq(iv(w(3)).marks[0].pct, 77);
+});
+check("v3.3: Block B Wednesday hinge is Barbell RDL on the RDL wave, never below 5 reps", () => {
+  for (let bw = 1; bw <= 6; bw++){
+    const m = marksOf(day2(pwOf(2,bw),"wed"));
+    eq(m[0].n, "Barbell RDL"); ok(parseInt(m[0].rx, 10) >= 5, `week ${bw}: ${m[0].rx}`); eq(m[1].n, "Incline Bench Press");
+  }
+  eq(marksOf(day2(pwOf(1,1),"wed")).map(x => x.n), ["Trap Bar Deadlift","Bench Press"]);
+});
+check("v3.3: Monday and Wednesday carry the full tri-set, 3 × 8/side on build weeks and 2 rounds on the deload", () => {
+  for (const b of [1,2]) for (let bw = 1; bw <= 6; bw++) for (const dw of ["mon","wed"]){
+    const g = items(day2(pwOf(b,bw), dw)).find(i => i.label === "Single-Leg Tri-Set");
+    eq(g.items.map(i => i.n), ["Bulgarian Split Squat","Foot-on-Wall DB RDL","Weighted Lateral Step-Up"]);
+    ok(g.items.every(i => /^8 \/ side/.test(i.rx))); eq(g.meta, bw === 6 ? "2 rounds" : "3 rounds");
+  }
+});
+check("v3.3: no loaded strength lift in any finisher; Wednesday's finisher is the WOD; Friday conditioning is the 15-min WOD", () => {
+  const banned = new Set([...P2.options.anchors, "Bulgarian Split Squat","Foot-on-Wall DB RDL","Weighted Lateral Step-Up","Hang Power Clean"]);
+  for (const k of Object.keys(P2.days)) { const d = P2.days[k]; if (d.type !== "gym") continue;
+    const fin = d.sections.find(s => s.title === "Finisher");
+    for (const i of walkItems(fin)) ok(!(i.n && banned.has(i.n)), `${k} finisher has ${i.n}`); }
+  ok(items(section(day2(pwOf(1,2),"wed"),"Finisher")).some(i => i.k === "wod"));
+  ok(/15 min/.test(text(section(day2(pwOf(1,2),"fri"),"Strength Conditioning"))));
+});
+check("v3.3: Monday warm-up has scap pull-ups every block; week-4 refresh swaps the finisher", () => {
+  for (const k of Object.keys(P2.days).filter(k => k.endsWith("-mon"))) ok(text(P2.days[k].sections[0]).includes("Scap Pull-Up"), k);
+  const fin = bw => items(section(day2(pwOf(1,bw),"mon"),"Finisher")).find(i => i.k === "group").items.map(i => i.n);
+  eq(fin(1), ["Ring Row","Push-Up"]); eq(fin(3), ["Ring Row","Push-Up"]); eq(fin(4), ["Sled Push","Ring Row"]); eq(fin(5), ["Sled Push","Ring Row"]);
+});
+check("v3.3: normal section budgets are 60 (Mon, Wed) and 58 (Fri)", () => {
+  for (const k of Object.keys(P2.days)){ const d = P2.days[k]; if (d.type !== "gym") continue;
+    eq(d.sections.map(s => s.title), ["Warm-Up","Max Strength","Strength Conditioning","Finisher","Cooldown Mobility"]);
+    eq(d.sections.map(minutes).reduce((a,b)=>a+b,0), k.endsWith("fri") ? 58 : 60, k); }
+});
+check("v3.3: Leg Blasters only in Athletic Strength weeks 3–5, never in Strength Base or a deload", () => {
+  const ok3 = [9,10,11,21,22,23];
+  for (const pw of [1,3,4,5,6,8,12,15,16,17,18,24]) ok(!R.legBlasterAvailable(P2, pw), `pw ${pw} should be unavailable`);
+  for (const pw of ok3) ok(R.legBlasterAvailable(P2, pw), `pw ${pw} should be available`);
+  eq(R.legBlasterWeeks(P2).slice(0,6), ok3);
+});
+check("v3.3: a Leg Blaster week applies every linked change together", () => {
+  const on = { lbWeeks:[10] };
+  const wed = day2(10,"wed",on), fri = day2(10,"fri",on), friOff = day2(10,"fri");
+  ok(!items(wed).some(i => i.k === "wod" && i.head !== "Mini Leg Blaster") && items(wed).some(i => i.head === "Mini Leg Blaster"));
+  const n = names(fri);
+  ok(n.includes("Medicine-Ball Wall Chest Pass") && !n.includes("Lateral Bound") && !n.includes("Standing Broad Jump") && !n.includes("Hang Power Clean"));
+  ok(items(fri).some(i => i.k === "wod" && /40 s work/.test(i.head) && /RPE 6/.test(i.effort)), "Friday WOD becomes erg intervals at RPE 6");
+  ok(/2 rounds · RPE 6/.test(text(section(fri,"Finisher"))) && /3 rounds/.test(text(section(friOff,"Finisher"))));
+  eq(text(day2(4,"wed",{ lbWeeks:[4] })), text(day2(4,"wed")), "Strength Base week ignores the request");
+});
+check("v3.3: a Strength Base week-1 Tuesday on the Short class (53) is 15 + 10 strides + 23 + 5", () => {
+  const t = day2(pwOf(1,1),"tue");
+  eq(t.runSegments.map(s => s.sec/60), [15,10,23,5]); eq(t.runInfo.cls, "Short"); eq(t.trtMin, 53);
+});
+check("v3.3: Tuesday rotation — strides, hill sprints, Z4 intervals, threshold-lite; set minutes per block", () => {
+  const A = [10,14,21,25,24], B = [10,14,16,24,30];
+  A.forEach((m,i) => eq(day2(pwOf(1,i+1),"tue").runSegments[1].sec/60, m, `A week ${i+1}`));
+  B.forEach((m,i) => eq(day2(pwOf(2,i+1),"tue").runSegments[1].sec/60, m, `B week ${i+1}`));
+  eq([1,2,3,5].map(bw => day2(pwOf(1,bw),"tue").title), ["Quality Run — Strides","Quality Run — Hill Sprints","Quality Run — Intervals","Quality Run — Threshold-lite"]);
+  ok(/Never sprint downhill/.test(text(day2(pwOf(1,2),"tue"))));
+});
+check("v3.3: Thursday class wave and weekend windows (defaults 98 / 110 / 123 / 98 / 140 / 75)", () => {
+  eq([1,2,3,4,5,6].map(bw => day2(pwOf(1,bw),"thu").runInfo.cls), ["Flat","Short","Medium","Medium","Weekday Long","Flat"]);
+  eq([1,2,3,4,5,6].map(bw => day2(pwOf(2,bw),"sat").trtMin), [98,110,123,98,140,75]);
+  eq(day2(pwOf(1,5),"sat").runInfo.cls, "Peak"); eq(day2(pwOf(1,2),"sat").runInfo.window, [105,115]);
+});
+check("v3.3: week 6 runs Tuesday and Thursday on the Flat class with no quality set, weekend about 75 easy", () => {
+  const t = day2(pwOf(1,6),"tue");
+  eq(t.runInfo.cls, "Flat"); eq(t.runReps, 0); eq(t.runSegments.map(s => s.sec/60), [10,30,5]);
+  ok(/about 75 min/.test(day2(pwOf(1,6),"sat").runInfo.label));
+});
+check("v3.3: a chosen route sets the run's length; routes of another class are ignored", () => {
+  const routes = [{ id:"r1", name:"River loop", min:58, terrain:"flat", cls:"Medium" }, { id:"r2", name:"Ridge", min:140, terrain:"hilly", cls:"Peak" }];
+  const iso = S2.dates.find(x => S2.byIso[x].pw === pwOf(1,2) && S2.byIso[x].key.endsWith("tue"));
+  const t = day2(pwOf(1,2),"tue",{ routes, routeFor:{ [iso]:"r1" } });
+  eq(t.trtMin, 58); eq(t.runInfo.route.name, "River loop"); eq(t.runSegments.reduce((a,s)=>a+s.sec,0), 58*60);
+  const wrong = day2(pwOf(1,2),"tue",{ routes, routeFor:{ [iso]:"r2" } });
+  eq(wrong.trtMin, 60, "a Peak route can't be used for a Medium-class Tuesday");
+  eq(R.normalizeSetup(P2, { setup:{ [P2.id]:{ classMin:{ Short:"50" } } } }).classMin.Short, 50);
+});
+check("v3.3: no compounding, except Peak is held to Extended after two missed long runs", () => {
+  const pw = pwOf(1,5), dayPeak = (misses) => R.resolveDay({ ...S2.byIso[S2.dates.find(x => S2.byIso[x].pw === pw && S2.byIso[x].key.endsWith("sat"))] },
+    { program:P2, setup:R.normalizeSetup(P2, {}), longMisses:() => misses });
+  eq(dayPeak(0).runInfo.cls, "Peak"); eq(dayPeak(1).runInfo.cls, "Peak");
+  const held = dayPeak(2); eq(held.runInfo.cls, "Extended"); ok(held.runInfo.capped); eq(held.trtMin, 118);
+});
+check("v3.3: ski weekend skips Friday and the long run without hiding anything; post-ski Monday trims rounds, not loads", () => {
+  const pw = pwOf(1,2), ski = { skiWeekends:[pw] };
+  const fri = day2(pw,"fri",ski), plain = day2(pw,"fri");
+  eq(fri.skiSkip, "fri"); eq(JSON.stringify(fri.sections), JSON.stringify(plain.sections), "Friday content stays visible");
+  eq(day2(pw,"sat",ski).skiSkip, "sat"); eq(day2(pw,"sun",ski).skiSkip, "sun");
+  ok(day2(pw,"thu",ski).skiThu);
+  const bump = day2(pw,"thu",{ ...ski, adjust:{ [pw]:{ thu:true } } }); eq(bump.runInfo.cls, "Medium"); ok(bump.runInfo.bumped);
+  const mon = day2(pw+1,"mon",{ ...ski, adjust:{ [pw+1]:{ mon:true } } }), monPlain = day2(pw+1,"mon");
+  ok(day2(pw+1,"mon",ski).afterSki);
+  eq(items(mon).find(i => i.k === "interval").sets, 3); eq(items(monPlain).find(i => i.k === "interval").sets, 4);
+  eq(marksOf(mon)[0].rx, marksOf(monPlain)[0].rx, "anchor load unchanged");
+  eq(items(mon).find(i => i.label === "Single-Leg Tri-Set").meta, "2 rounds");
+  eq(items(day2(pw+1,"mon",{ ...ski, uniOverride:3, adjust:{ [pw+1]:{ mon:true } } })).find(i => i.label === "Single-Leg Tri-Set").meta, "3 rounds", "private override keeps its value");
+  const tue = day2(pw+1,"tue",{ ...ski, adjust:{ [pw+1]:{ mon:true } } }); eq(tue.runInfo.cls, "Flat"); ok(/Post-ski week/.test(text(tue)));
+  eq(tue.title, "Quality Run — Strides (post-ski)"); eq(tue.runSegments[1].sec, 600);
+});
+check("v3.3: hill-sprint days never offer a motorized treadmill", () => {
+  const src = read("_source/src/screens.jsx");
+  ok(/k === "treadmill" && hasSprints \? "Indoors — Assault Runner or air bike"/.test(src));
+  ok(/No all-out sprints on a motorized treadmill/.test(src));
+});
+check("v3.3: easy runs carry the effort cap", () => {
+  for (const dw of ["thu","sat"]) ok(/conversational on flats, Z3 on climbs is fine, no planned Z4/.test(text(day2(pwOf(1,2),dw))), dw);
+});
+check("v3.3: every template resolves cleanly under every setup", () => {
+  const combos = [{}, { lbWeeks:[9,10,11] }, { wall:false }, { powerMode:"clean" }, { lbWeeks:[10], wall:false, powerMode:"clean", uniOverride:3 }];
+  for (const o of combos) for (let pw = 1; pw <= 12; pw++) for (const dw of KEYS){
+    const t = text(day2(pw, dw, o));
+    ok(!/\{\{\w+\}\}/.test(t) && !/"when"/.test(t), `pw ${pw} ${dw} ${JSON.stringify(o)}`);
+  }
+});
+check("v3.3: shared content stays free of personal details and banned labels", () => {
+  const t = read("programs/mountain-athlete-v3-3.json");
+  for (const re of [/\bPT\b/, /physio/i, /rehab/i, /injur/i, /clinician/i, /\btrip\b/i, /Golden/i, /\bRIR\b/, /Strength Balance/i, /\bWeek \d/, /battle|rope/i])
+    ok(!re.test(t), `pattern ${re}`);
+  eq((t.match(/20\d\d-\d\d-\d\d/g) || []).join(), "2026-10-05");
+});
+check("v3.3: renamed variants keep their history; settings and start date carry over from v3.1", () => {
+  const pull = marksOf(day2(1,"mon"))[1]; eq(pull.n, "Pull-Up (strict or banded)"); eq(pull.logAs, "Strict Pull-Up");
+  eq(D.startDateFor(P2, { startDates:{ "mountain-athlete-v3":"2026-09-28" } }), "2026-09-28");
+  eq(D.startDateFor(P2, { startDates:{ "mountain-athlete-v3":"2026-09-28", [P2.id]:"2026-10-12" } }), "2026-10-12");
+  eq(R.normalizeSetup(P2, { setup:{ "mountain-athlete-v3":{ wall:false, uniOverride:"3" } } }).uniOverride, 3);
+});
+check("v3.3: e1RM comes from establish/test sets, a first logged session, or the athlete's newer entry", () => {
+  const sets = (w, r) => ({ w:String(w), u:"lb", kg:D.toKg(w,"lb"), r:String(r), at:1 });
+  const iso = (pw, dw) => S2.dates.find(x => S2.byIso[x].pw === pw && S2.byIso[x].key.endsWith(dw));
+  let log = D.emptyLog();
+  log = D.withSet(log, "Back Squat", iso(1,"mon"), sets(250, 3));                         /* establish triple */
+  log = D.withSet(log, "Back Squat", iso(2,"mon"), sets(300, 6));                         /* ordinary day: ignored */
+  const e = D.e1rmFor(log, S2, "Back Squat", iso(3,"mon"));
+  ok(Math.abs(D.fromKg(e.kg,"lb") - 275) < 0.01 && e.src === "establish");
+  log = D.withSet(log, "Back Squat", iso(6,"mon"), sets(270, 3));                         /* test week */
+  eq(D.e1rmFor(log, S2, "Back Squat", iso(7,"mon")).src, "test");
+  const fresh = D.withSet(D.emptyLog(), "Front Squat", iso(9,"mon"), sets(185, 5));      /* picked up mid-block */
+  eq(D.e1rmFor(fresh, S2, "Front Squat", iso(9,"mon")).src, "logged");
+  const manual = { kg:D.toKg(320,"lb"), date:"2099-01-01" };
+  eq(D.e1rmFor(log, S2, "Back Squat", iso(7,"mon"), manual).src, "entered");
+  eq(D.e1rmFor(D.emptyLog(), S2, "Barbell RDL", iso(8,"wed")), null);
 });
 
 if (failures.length){

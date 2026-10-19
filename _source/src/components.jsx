@@ -95,7 +95,7 @@ const fieldInput = { boxSizing:"border-box", width:"100%", minWidth:0, minHeight
   borderRadius:8, padding:"10px 12px", background:T.surface, color:T.ink, fontSize:16, fontFamily:"inherit",
   fontVariantNumeric:"tabular-nums" };
 
-function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
+function LogForm({ name, mode="load", date, cal, startFrom, hint, basis, assist }){
   const ctx = React.useContext(LogContext);
   const uid = React.useId().replace(/:/g,"");
   const [msg, setMsg] = React.useState(null);           /* {ok, text} after a save attempt */
@@ -111,6 +111,7 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
   const w = d.w != null ? d.w : "";
   const r = d.r != null ? d.r : (hint || "");
   const reps = mode==="reps";
+  const a = assist ? (d.a != null ? d.a : ((last && last.a) || "")) : "";   /* default to the band used last time */
   const repsLabel = (basis==="sled" || basis==="carry") ? "Rounds" : "Reps";
 
   const onWeight = v => {
@@ -124,6 +125,7 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
     /* convert what is showing; the exact kilogram value stays put so repeated switches don't drift */
     setDraft(dk, { ...d, u:nu, w: d.kg != null ? fmtNum(fromKg(d.kg, nu)) : (d.w || "") });
   };
+  const onBand = v => { setDraft(dk, { ...d, a:v }); setMsg(null); };
   const onReps = v => { setDraft(dk, { ...d, r:v.replace(/[^0-9]/g,"") }); setErrs(e => ({ ...e, r:null })); setMsg(null); };
 
   const submit = e => {
@@ -136,8 +138,9 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
     const orig = d.orig || { w, u };
     const set = reps ? { w:"", u:"", kg:null, r:String(parseInt(r,10)), at:Date.now() }
                      : { w:orig.w, u:orig.u, kg:d.kg, r:String(parseInt(r,10)), at:Date.now() };
+    if (assist && a) set.a = a;
     const ok = addSet(name, date, set, cal);
-    if (ok){ setDraft(dk, { r:hint || "", u }); setMsg({ ok:true, text:`Set ${sets.length+1} saved.` }); }
+    if (ok){ setDraft(dk, { r:hint || "", u, ...(assist ? { a } : {}) }); setMsg({ ok:true, text:`Set ${sets.length+1} saved.` }); }
     else setMsg({ ok:false, text:"Could not save. Your entry is still here — try again." });
   };
 
@@ -153,7 +156,15 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
       {startFrom==="cal" && !range && (
         <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px" }}>Start 5–10% below your calibration load.</p>
       )}
-      <div style={{ display:"grid", gridTemplateColumns: reps ? "1fr" : "minmax(70px,1fr) 76px minmax(64px,1fr)", gap:8, marginTop:8 }}>
+      <div style={{ display:"grid", gridTemplateColumns: reps ? (assist ? "minmax(0,3fr) minmax(0,2fr)" : "1fr") : "minmax(70px,1fr) 76px minmax(64px,1fr)", gap:8, marginTop:8 }}>
+        {assist && (
+          <label style={fieldLabel}>Band
+            <select value={a} onChange={e=>onBand(e.target.value)} style={{ ...fieldInput, padding:"8px" }}>
+              <option value="">No band (strict)</option>
+              {BANDS.map(b=><option key={b} value={b}>{b}</option>)}
+            </select>
+          </label>
+        )}
         {!reps && (
           <label style={fieldLabel}>Weight
             <input inputMode="decimal" value={w} placeholder="0" onChange={e=>onWeight(e.target.value)}
@@ -178,7 +189,7 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
 
       {last && (
         <p style={{ margin:"12px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
-          Previous: <b style={{ color:T.ink }}>{setText(last, unit, mode)}</b> · {fmtShort(last.date)}{last.count>1 ? ` · ${last.count} sets` : ""}
+          Previous: <b style={{ color:T.ink }}>{setText(last, unit, mode, assist)}</b> · {fmtShort(last.date)}{last.count>1 ? ` · ${last.count} sets` : ""}
           {ctx.openHistory && <>{" · "}<Pressable onClick={()=>ctx.openHistory(name)} ariaLabel={`History for ${name}`}
             style={{ ...textBtn, display:"inline", minHeight:0, padding:0, color:T.ink }}>History</Pressable></>}
         </p>
@@ -187,7 +198,7 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
         <ol style={{ margin:"8px 0 0", paddingLeft:22, fontSize:14, lineHeight:"20px", fontVariantNumeric:"tabular-nums" }}>
           {sets.map((s,i)=>(
             <li key={i} style={{ padding:"2px 0" }}>
-              <span style={{ fontWeight:600 }}>{setText(s, unit, mode)}</span>
+              <span style={{ fontWeight:600 }}>{setText(s, unit, mode, assist)}</span>
               {s.at && isoOf(new Date(s.at)) !== date && <span style={{ color:T.muted }}> · logged {fmtShort(isoOf(new Date(s.at)))}</span>}{" "}
               <Pressable onClick={()=>{ removeSet(name, date, i); setMsg(null); }} ariaLabel={`Remove set ${i+1} of ${name}`}
                 style={{ ...textBtn, minHeight:44, padding:"0 8px", fontSize:14, fontWeight:600, color:T.muted }}>Remove</Pressable>
@@ -205,6 +216,8 @@ function LogForm({ name, mode="load", date, cal, startFrom, hint, basis }){
 
 function Movement({ it, date }){
   const { n, rx, cue, rest, iso:isolation, log, cal, startFrom, basis } = it;
+  const logName = it.logAs || n;                   /* renamed variants keep their logged history */
+  const assist = log==="reps" && (it.assist != null ? !!it.assist : canAssist(logName));
   return (
     <div>
       <h4 style={{ margin:0, fontSize:18, lineHeight:"24px", fontWeight:600, color:T.ink, display:"flex", gap:8, flexWrap:"wrap", alignItems:"center" }}>
@@ -213,11 +226,30 @@ function Movement({ it, date }){
         {cal && <Badge tone="info">Record this</Badge>}
       </h4>
       {rx && <p style={{ margin:"4px 0 0", fontSize:16, lineHeight:"24px", fontVariantNumeric:"tabular-nums" }}>{rx}</p>}
+      {it.pct && date && <TargetLoad name={logName} pct={it.pct} date={date} est={it.est}/>}
       {rest && <RestChip>{rest}</RestChip>}
       {cue && <p style={{ ...noteStyle, margin:"8px 0 0" }}>{cue}</p>}
-      {log && date && <LogForm name={n} mode={log==="reps"?"reps":"load"} date={date} cal={cal}
-        startFrom={startFrom} hint={repsHint(rx)} basis={basis}/>}
+      {log && date && <LogForm name={logName} mode={log==="reps"?"reps":"load"} date={date} cal={cal}
+        startFrom={startFrom} hint={repsHint(rx)} basis={basis} assist={assist}/>}
     </div>
+  );
+}
+
+/* "Target ≈ 185 lb" from the athlete's current e1RM for this exact lift. */
+function TargetLoad({ name, pct, date, est }){
+  const ctx = React.useContext(LogContext);
+  if (!ctx || !ctx.e1rmFor) return null;
+  const e = ctx.e1rmFor(name, date), u = ctx.unit;
+  if (!e) return (
+    <p style={{ margin:"4px 0 0", fontSize:14, lineHeight:"20px", color:T.muted }}>
+      No e1RM yet for this lift. Build to {est==="five" ? "a heavy 5" : "a heavy triple"} at RPE 8 today and log it; target loads follow from there.
+    </p>
+  );
+  const src = { establish:"establish", test:"test", logged:"logged sets", entered:"your entry" }[e.src];
+  return (
+    <p style={{ margin:"4px 0 0", fontSize:14, lineHeight:"20px", color:T.muted, fontVariantNumeric:"tabular-nums" }}>
+      Target <b style={{ color:T.ink, fontSize:16 }}>≈ {fmtNum(roundLoad(fromKg(e.kg*pct/100, u), u))} {u}</b> · e1RM {Math.round(fromKg(e.kg, u))} {u} ({src}, {fmtShort(e.date)})
+    </p>
   );
 }
 

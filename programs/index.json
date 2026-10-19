@@ -1,13 +1,20 @@
 {
- "active": "mountain-athlete-v3",
+ "active": "mountain-athlete-v3-3",
  "travel": "programs/travel.json",
  "programs": [
   {
-   "id": "mountain-athlete-v3",
+   "id": "mountain-athlete-v3-3",
    "name": "Mountain Athlete Strength",
-   "file": "programs/mountain-athlete-v3.json",
+   "file": "programs/mountain-athlete-v3-3.json",
    "status": "active",
-   "dates": "12 weeks · you choose the start date"
+   "dates": "rolling 6-week blocks"
+  },
+  {
+   "id": "mountain-athlete-v3",
+   "name": "Mountain Athlete Strength v3.1",
+   "file": "programs/mountain-athlete-v3.json",
+   "status": "archived",
+   "dates": "12-week cycle"
   },
   {
    "id": "ski-2026",

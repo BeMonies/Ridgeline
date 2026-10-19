@@ -27,9 +27,27 @@ function cleanText(v, max){
 }
 
 /* ── setup: the athlete's private choices, validated and defaulted ── */
+/* Rolling programs: map an absolute program week to its block, block type and week-in-block. */
+function cycleSlot(program, pw){
+  const c = program.cycle;
+  if (!c) return null;
+  const block = Math.floor((pw-1) / c.blockWeeks) + 1;
+  return { block, type:c.pattern[(block-1) % c.pattern.length], bw:((pw-1) % c.blockWeeks) + 1 };
+}
+function dayKey(program, pw, dow){
+  const s = cycleSlot(program, pw);
+  return s ? `${s.type}-W${s.bw}-${dow}` : `W${pw}-${dow}`;
+}
 function legBlasterWeeks(program){
   const o = program && program.options && program.options.legBlaster;
-  return (o && o.weeks) || [];
+  if (!o) return [];
+  if (!program.cycle) return o.weeks || [];
+  const out = [], c = program.cycle;
+  for (let pw = 1; pw <= c.blocks * c.blockWeeks; pw++){
+    const s = cycleSlot(program, pw);
+    if (s.type === o.blockType && o.weeks.includes(s.bw)) out.push(pw);
+  }
+  return out;
 }
 function hasWhen(node, key, value){
   if (!node || typeof node !== "object") return false;
@@ -41,12 +59,13 @@ function hasWhen(node, key, value){
    the reduced Friday accessory rounds. Otherwise the option stays unavailable. */
 function legBlasterAvailable(program, pw){
   if (!legBlasterWeeks(program).includes(pw)) return false;
-  const wed = program.days["W"+pw+"-wed"], fri = program.days["W"+pw+"-fri"];
+  const wed = program.days[dayKey(program, pw, "wed")], fri = program.days[dayKey(program, pw, "fri")];
   return !!wed && !!fri && hasWhen(wed, "lb", true) && hasWhen(fri, "lb", true) && hasWhen(fri, "friPower", "throws");
 }
 
 function normalizeSetup(program, personal){
-  const raw = (personal && personal.setup && personal.setup[program.id]) || {};
+  const all = (personal && personal.setup) || {};
+  const raw = all[program.id] || (program.inherit && all[program.inherit]) || {};
   const defaults = (program.options && program.options.runBaselines) || FALLBACK_BASELINES;
   const rb = raw.runBaselines || {};
   const runBaselines = {}, runIsSet = {};
@@ -57,8 +76,31 @@ function normalizeSetup(program, personal){
   }
   const lbWeeks = (Array.isArray(raw.lbWeeks) ? raw.lbWeeks : [])
     .map(Number).filter(w => legBlasterAvailable(program, w));
+  /* Route classes (v3.3): weekday classes have one default length; weekend classes a window. */
+  const cdef = (program.options && program.options.classes) || null;
+  const classMin = {}, classSet = {}, weekendWin = {}, weekendSet = {};
+  if (cdef){
+    for (const [c, m] of Object.entries(cdef.weekday)){
+      const n = cleanInt((raw.classMin || {})[c], 15, 240);
+      classSet[c] = n !== null; classMin[c] = n !== null ? n : m;
+    }
+    for (const [c, w] of Object.entries(cdef.weekend)){
+      const b = (raw.weekendWin || {})[c] || [], lo = cleanInt(b[0], 30, 360), hi = cleanInt(b[1], 30, 360);
+      weekendSet[c] = lo !== null && hi !== null && lo <= hi; weekendWin[c] = weekendSet[c] ? [lo, hi] : w;
+    }
+  }
+  const allClasses = cdef ? [...Object.keys(cdef.weekday), ...Object.keys(cdef.weekend)] : [];
+  const routes = (Array.isArray(raw.routes) ? raw.routes : []).map(r => ({
+    id: cleanText(String(r && r.id || ""), 24), name: cleanText(r && r.name, 40), min: cleanInt(r && r.min, 10, 400),
+    terrain: ["flat","rolling","hilly"].includes(r && r.terrain) ? r.terrain : "rolling", cls: allClasses.includes(r && r.cls) ? r.cls : null,
+  })).filter(r => r.id && r.name && r.min && r.cls);
+  const skiWeekends = (Array.isArray(raw.skiWeekends) ? raw.skiWeekends : []).map(Number).filter(n => n > 0);
+  const adjust = (raw.adjust && typeof raw.adjust === "object") ? raw.adjust : {};
   return {
-    runBaselines, runIsSet,
+    runBaselines, runIsSet, classMin, classSet, weekendWin, weekendSet, routes,
+    routeFor: (raw.routeFor && typeof raw.routeFor === "object") ? raw.routeFor : {},
+    weather: (raw.weather && typeof raw.weather === "object") ? raw.weather : {},
+    skiWeekends:[...new Set(skiWeekends)], adjust,
     wall: raw.wall !== false,
     powerMode: raw.powerMode === "clean" ? "clean" : "jumps",
     lbWeeks: [...new Set(lbWeeks)].sort((a,b)=>a-b),
@@ -108,17 +150,49 @@ function easyStructure(trtMin, warmMin, coolMin){
   return { warm, main: 0, cool: trtMin*60 - warm };
 }
 
-function resolveRun(run, setup, program, zoneProfile){
-  const base = setup.runBaselines[run.base];
-  const trt = run.pct ? roundHalfUp(run.pct * base) : base;
+const WEEKDAY_ORDER = ["Flat","Short","Medium","Weekday Long"];
+function halfWindow(win, part){
+  const [lo, hi] = win, mid = (lo + hi) / 2;
+  return part === "lower" ? [lo, Math.round(mid)] : part === "upper" ? [Math.round(mid), hi] : win;
+}
+/* TRT for a class-based run: the chosen route's time, else the class default (weekday) or the
+   window midpoint, halves up (weekend). A Peak run after two or more missed long runs is held to
+   the Extended window. */
+function runLength(run, setup, day, vars, ctx){
+  if (run.cls){
+    let cls = run.cls, bumped = false;
+    if (vars.thuBump && !day.deload && run.bumpable){
+      const i = WEEKDAY_ORDER.indexOf(cls);
+      if (i >= 0 && i < WEEKDAY_ORDER.length - 1){ cls = WEEKDAY_ORDER[i+1]; bumped = true; }
+    }
+    const routes = setup.routes.filter(r => r.cls === cls);
+    const route = routes.find(r => r.id === setup.routeFor[day.iso]) || null;
+    return { trt: route ? route.min : setup.classMin[cls], cls, bumped, routes, route, defaultMin: setup.classMin[cls], label:`${cls} class` };
+  }
+  const wk = run.weekend;
+  let cls = wk.cls, win = wk.window, capped = false;
+  if (cls === "Peak" && ctx.longMisses && ctx.longMisses(day.pw) >= 2){ cls = "Extended"; win = setup.weekendWin.Extended; capped = true; }
+  else if (cls && setup.weekendSet[cls]) win = halfWindow(setup.weekendWin[cls], wk.part);
+  const def = Math.floor((win[0] + win[1]) / 2 + 0.5);
+  const weekendClasses = Object.keys(setup.weekendWin);
+  const routes = setup.routes.filter(r => cls ? r.cls === cls : (weekendClasses.includes(r.cls) || r.terrain === "flat"));
+  const route = routes.find(r => r.id === setup.routeFor[day.iso]) || null;
+  const range = win[0] === win[1] ? `about ${win[0]} min` : `${win[0]}–${win[1]} min`;
+  return { trt: route ? route.min : def, cls, capped, routes, route, defaultMin: def, window: win,
+           label: cls ? `${cls} window · ${range}` : `${wk.label || "Easy"} · ${range}` };
+}
+
+function resolveRun(run, setup, program, zoneProfile, len){
+  const base = len ? len.trt : setup.runBaselines[run.base];
+  const trt = (run.pct && !len) ? roundHalfUp(run.pct * base) : base;
   const trtSec = trt * 60;
-  const isSet = setup.runIsSet[run.base];
+  const isSet = len ? true : setup.runIsSet[run.base];
   const segs = [];               /* {n, rx, cue, sec} in running order */
   let usedQuality = false, reps = 0, reduced = false, fellBack = false;
 
   const warmMin = run.warm, coolMin = run.cool;
   if (run.kind === "quality" && run.set){
-    const s = run.set, per = s.workSec + s.recSec;
+    const s = run.set, per = s.setSec ? s.setSec / s.reps : s.workSec + s.recSec;
     const avail = trtSec - (warmMin + coolMin) * 60;
     reps = s.reps;
     while (reps > 1 && reps * per > avail) reps--;
@@ -190,11 +264,16 @@ function dayVars(day, program, setup, ctx){
   const pw = day.pw;
   const lb = setup.lbWeeks.includes(pw) && legBlasterAvailable(program, pw);
   let prior = 0;
+  const sameBlock = w => !program.cycle || cycleSlot(program, w).block === cycleSlot(program, pw).block;
   if (lb) for (const w of legBlasterWeeks(program))
-    if (w < pw && setup.lbWeeks.includes(w) && ctx.lbDone && ctx.lbDone(w)) prior++;
+    if (w < pw && sameBlock(w) && setup.lbWeeks.includes(w) && ctx.lbDone && ctx.lbDone(w)) prior++;
   const exp = Math.min(3, prior + 1);
   const deload = !!day.deload;
-  const uniRounds = setup.uniOverride || (deload ? 2 : 3);
+  const ski = (setup.skiWeekends || []).includes(pw);
+  const adj = (setup.adjust || {})[pw] || {};
+  const postSki = !deload && (setup.skiWeekends || []).includes(pw - 1) && !!adj.mon;
+  const thuBump = ski && !!adj.thu;
+  const uniRounds = setup.uniOverride || (deload ? 2 : postSki ? 2 : 3);
   return {
     pw, deload, lb, wall: setup.wall, powerMode: setup.powerMode,
     friPower: lb ? "throws" : setup.powerMode,
@@ -202,6 +281,7 @@ function dayVars(day, program, setup, ctx){
     uniNote: setup.uniOverride && setup.uniOverride !== (deload ? 2 : 3)
       ? " · your own setting (shared default " + (deload ? 2 : 3) + ")" : "",
     lbExp: exp, lbRx: LB_DOSE[exp].rx, lbDose: LB_DOSE[exp].text,
+    ski, postSki, thuBump,
   };
 }
 
@@ -212,9 +292,24 @@ function resolveDay(day, ctx){
   if (!program || !program.engine || !day) return day;
   const vars = dayVars(day, program, ctx.setup, ctx);
   const out = walk(day, vars);
+  const dow = String(day.key || "").slice(-3);
+  /* Post-ski Monday: same loads, fewer rounds. */
+  if (vars.postSki && dow === "mon")
+    for (const s of out.sections || []) for (const it of s.items) if (it.k === "interval" && it.postSki) it.sets = Math.min(it.sets, it.postSki);
+  if (vars.ski && ["fri","sat","sun"].includes(dow)) out.skiSkip = dow;
+  if (vars.postSki && ["mon","tue"].includes(dow)) out.postSki = true;
+  if (vars.ski && dow === "thu") out.skiThu = true;
+  if ((ctx.setup.skiWeekends || []).includes(day.pw - 1) && dow === "mon" && !day.deload) out.afterSki = true;
   if (day.run){
-    const r = resolveRun(day.run, ctx.setup, program, ctx.zoneProfile);
+    let run = day.run;
+    if (vars.postSki && dow === "tue" && run.kind === "quality" && program.options && program.options.postSkiTuesday){
+      run = program.options.postSkiTuesday;
+      if (run.title) out.title = run.title;
+    }
+    const len = (run.cls || run.weekend) ? runLength(run, ctx.setup, day, vars, ctx) : null;
+    const r = resolveRun(run, ctx.setup, program, ctx.zoneProfile, len);
     Object.assign(out, r);
+    if (len) out.runInfo = len;
     if (r.runExample){
       const own = out.note ? out.note + " " : "";
       out.note = own + "Example length. Set your own in Program setup.";

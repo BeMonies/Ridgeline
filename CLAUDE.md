@@ -8,7 +8,8 @@ Pushing to `main` publishes the site in about a minute. **The repo is public.**
 - `index.html`, `app.js`, `version.json`, `sw.js`, `manifest.webmanifest`, `icons/`, `fonts/`, `assets/` — the shipped site
 - `brand/` — identity kit v1.2 reference (design spec, product requirements, tokens); not shipped to users
 - `programs/index.json` — which program is active, plus the archive and travel file
-- `programs/mountain-athlete-v3.json` — Mountain Athlete Strength, v3.1, 12 weeks (active)
+- `programs/mountain-athlete-v3-3.json` — Mountain Athlete Strength, v3.3, rolling 6-week blocks (active)
+- `programs/mountain-athlete-v3.json` — Mountain Athlete Strength v3.1, 12 weeks (archived; `?p=mountain-athlete-v3`)
 - `programs/ski-2026.json` — Mountain Athlete Hybrid (archived; opened with `?p=ski-2026`)
 - `programs/golden-leaf-2026.json` — archived; opened with `?p=golden-leaf-2026`
 - `programs/travel.json` — 7 travel workouts, not tied to dates
@@ -51,6 +52,28 @@ If you add a file the app needs offline, add it to `SHELL` in `sw.js` and bump `
   `friPower` (`jumps` / `clean` / `throws`), `deload`. `{{name}}` in any string is filled from the
   same variables. Run days carry a `run` spec instead of `parts`; minutes are computed from the
   athlete's own baselines, so run time is never typed into the file.
+- **Rolling programs (`cycle`, v3.3).** Templates are keyed `A-W3-wed` / `B-W3-wed` (block type +
+  week in block). `buildSchedule` repeats A, B, A, B… for `cycle.blocks` blocks from the start date and
+  adds `block`, `blockType`, `bw`, `blockName` to each day. The UI shows "Block 2 · Athletic Strength ·
+  Deload + test", never "Week N".
+- **e1RM and targets.** Anchor items carry `pct`; the app shows the target load from the athlete's
+  current e1RM for that exact lift (`e1rmFor` in `data.jsx`): the best Epley estimate from sets logged
+  on an Establish (week 1) or Test (week 6) day, else the lift's first logged session, unless the
+  athlete entered a newer value in Setup (`personal.e1rm`, private, never exported).
+- **`logAs`** on an item logs it under another movement's name, so a renamed variant keeps its history
+  (e.g. "Pull-Up (strict or banded)" logs as "Strict Pull-Up").
+- **Running by route class (v3.3).** Run specs carry `cls` (weekday: Flat / Short / Medium / Weekday
+  Long) or `weekend` (`cls` Long / Extended / Peak + `window`, optional `part`). TRT = the route the
+  athlete picked for that date from their private route library, else the class default or the window
+  midpoint (halves up). A Peak run after two past long runs not marked complete is held to Extended.
+  Easy runs carry the effort cap: conversational on flats, Z3 on climbs, no planned Z4.
+- **Ski weekends (v3.3).** `setup.skiWeekends` (program weeks) marks Fri–Sun skiing: Friday, Saturday
+  and Sunday show a skipped/ski-day banner but keep their content; Thursday offers a one-class bump;
+  the next Monday offers the post-ski rule (interval `postSki` rounds, tri-set 2 rounds, Tuesday swaps
+  to `options.postSkiTuesday`). Route choice and conditions (weather mode) are stored per planned date.
+- **`inherit`** on a program: start date and setup fall back to that program's personal values.
+- **Pull-up assistance:** sets may carry `a` (band level); empty means strict. History trends strict
+  reps and shows the band ladder separately.
 - **Leg Blasters** are one switch with linked changes (Wednesday WOD, Friday power, Friday
   accessory rounds). `legBlasterAvailable` refuses the option unless all three variants exist.
 - **Personal layer** (`ridgeline.personal.v1` in localStorage, edited on the Setup screen): start
@@ -145,9 +168,13 @@ differs it refreshes by itself on the schedule screen, or shows an "Update" bar 
 localStorage, which is separate for the home-screen app, Safari and each other device.
 
 ## Known state
-- Mountain Athlete Strength (v3.1) is the active program: all 12 weeks are written. Its default
-  start date (2026-10-05) is a placeholder; the athlete sets their own in Setup. The Mountain
-  Athlete Hybrid program is archived and was never edited apart from its status.
+- Mountain Athlete Strength v3.3 is the active program (v3.2 strength system + v3.3 running). v3.2 was
+  never published and was replaced outright.
+  Its default start date (2026-10-05) is a placeholder; it inherits the athlete's v3.1 start date and
+  setup. v3.1 and the Mountain Athlete Hybrid are archived and unchanged apart from their status.
+- Not built from v3.3 §14: interval timers with pause/extend (identity v1.2 rules out timers), logging
+  actual section durations, the optional 5% Peak-window rise between blocks, and "repeat the quality
+  progression next week" after a post-ski Monday (prescriptions follow the calendar week).
 - Load progression is athlete-driven through the log. The weekly sets / reps / RPE tables follow
   the calendar week; the app does not hold a prescription back after a missed session.
 - Older product docs (spec, UX flows, rules) describe the display-only Golden Leaf build. This

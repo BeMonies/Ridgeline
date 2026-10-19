@@ -29,7 +29,7 @@ function WeekStrip({ sched, selected, today, done, onSelect }){
 }
 
 /* Searchable "Jump to date": each result pairs the planned date with the session's own title. */
-function SessionPicker({ sched, current, onPick, label="Jump to date" }){
+function SessionPicker({ sched, current, onPick, label="Jump to date", currentTitle }){
   const [open, setOpen] = React.useState(false);
   const [q, setQ] = React.useState("");
   const [msg, setMsg] = React.useState("");
@@ -69,7 +69,7 @@ function SessionPicker({ sched, current, onPick, label="Jump to date" }){
         style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, width:"100%", minHeight:48,
           textAlign:"left", border:`1px solid ${T.ruleStrong}`, borderRadius: open ? "8px 8px 0 0" : 8, padding:"10px 12px",
           background:T.surface, color:T.ink, fontSize:16, lineHeight:"24px", fontWeight:600, fontFamily:"inherit", cursor:"pointer" }}>
-        <span style={{ minWidth:0, overflowWrap:"anywhere" }}>{fmtPick(current)}{cur ? ` · ${cur.title}` : " · no session published"}</span>
+        <span style={{ minWidth:0, overflowWrap:"anywhere" }}>{fmtPick(current)}{cur ? ` · ${currentTitle || cur.title}` : " · no session published"}</span>
         <span aria-hidden="true" style={{ flex:"0 0 auto" }}>{open ? "▴" : "▾"}</span>
       </button>
       {open && (
@@ -110,6 +110,13 @@ function SessionPicker({ sched, current, onPick, label="Jump to date" }){
 
 /* ══════════════════ HOME ══════════════════ */
 
+/* Rolling programs: "Block 2 · Athletic Strength · Deload + test" (week numbers are never shown as labels). */
+function blockLabel(d, program){
+  if (!d || !d.block || !program || !program.cycle) return "";
+  const role = (program.cycle.roles || {})[String(d.bw)];
+  return `Block ${d.block} · ${d.blockName}${role ? " · " + role : ""}`;
+}
+
 function gymMinutes(d){
   if (d.type !== "gym" || !d.sections) return 0;
   return d.sections.reduce((a, s) => a + (parseInt(String(s.budget || "").match(/^\d+/), 10) || 0), 0);
@@ -118,7 +125,10 @@ function sessionMeta(d){
   if (!d) return "";
   if (d.type==="rest") return "Rest day";
   if (d.type==="race") return "Race day";
-  if (d.type==="run") return d.trt ? `Total run time ${d.trt}` : "Run";
+  if (d.type==="run"){
+    const where = d.runInfo ? (d.runInfo.route ? d.runInfo.route.name : d.runInfo.label) + " · " : "";
+    return d.trt ? `${where}Total run time ${d.trt}` : "Run";
+  }
   const m = gymMinutes(d);
   return m ? `${m} min` : "Strength and conditioning";
 }
@@ -199,6 +209,7 @@ function Home({ program, sched, index, today, sel, setSel, onOpen, onTravel, has
         <section aria-label="Selected session" style={{ padding:20, background:T.surface, border:`1px solid ${T.rule}`, borderRadius:12 }}>
           <p style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600, color:T.muted }}>
             {fmtPick(sel)}{sel===today ? " · Today" : ""}{selDone ? " · ✓ Complete" : ""}
+            {raw && raw.block ? <span style={{ display:"block", fontWeight:400 }}>{blockLabel(raw, program)}</span> : null}
           </p>
           {d ? (
             <>
@@ -320,18 +331,19 @@ function StickyBar({ left, right }){
   );
 }
 
-function SessionHeading({ d, sched, today, onPick, extra }){
+function SessionHeading({ d, sched, today, onPick, extra, program }){
+  const bl = blockLabel(d, program);
   return (
     <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
       <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>
-        {fmtPick(d.iso)}{d.iso===today ? " · Today" : ""}
+        {fmtPick(d.iso)}{d.iso===today ? " · Today" : ""}{bl ? <><br/>{bl}</> : null}
       </p>
       <h1 style={{ margin:"8px 0 0", fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em", color:T.ink }}>{d.title}</h1>
       <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600, color:T.tealDeep }}>
         {sessionMeta(d)}
       </p>
       {extra}
-      <div style={{ marginTop:12 }}><SessionPicker sched={sched} current={d.iso} onPick={onPick} label={null}/></div>
+      <div style={{ marginTop:12 }}><SessionPicker sched={sched} current={d.iso} onPick={onPick} label={null} currentTitle={d.title}/></div>
     </div>
   );
 }
@@ -351,9 +363,10 @@ function DayBadges({ d }){
 
 const pagePad = { padding:"20px var(--gutter, 20px) 40px" };
 
-function GymDay({ d }){
+function GymDay({ d, program }){
   return (
     <main style={pagePad}>
+      <SkiNotes d={d} program={program}/>
       {d.hotel && (
         <p role="note" style={{ background:T.flagWash, color:T.flag, borderRadius:8, padding:12, margin:"0 0 24px", fontSize:14, lineHeight:"20px" }}>
           Hotel-gym equipment only. The anchor lift is deferred to its next home session, not skipped.
@@ -366,9 +379,11 @@ function GymDay({ d }){
   );
 }
 
-function RunDay({ d, warmup }){
+function RunDay({ d, warmup, program }){
   return (
     <main style={pagePad}>
+      <SkiNotes d={d} program={program}/>
+      <RunControls d={d}/>
       {d.note && (
         <p role="note" style={{ background:T.flagWash, color:T.flag, borderRadius:8, padding:12, margin:"0 0 24px", fontSize:14, lineHeight:"20px" }}>{d.note}</p>
       )}
@@ -387,13 +402,160 @@ function RunDay({ d, warmup }){
   );
 }
 
-function BareDay({ d }){
+function BareDay({ d, program }){
   return (
     <main style={pagePad}>
+      <SkiNotes d={d} program={program}/>
       <p style={{ margin:0, fontSize:16, lineHeight:"24px", color:T.muted }}>
         {d.type==="race" ? "Race day." : "No training is scheduled. You can still open any other published session from the schedule."}
       </p>
     </main>
+  );
+}
+
+/* ══════════════════ RUNNING AND SKI CONTROLS (v3.3) ══════════════════
+   Private, per-date choices: route, conditions, ski weekends and post-ski adjustments. */
+
+const banner = { background:T.flagWash, color:T.flag, borderRadius:8, padding:12, margin:"0 0 16px", fontSize:14, lineHeight:"20px" };
+function usePrefs(){ return React.useContext(LogContext) || {}; }
+
+function SkiToggle({ d }){
+  const { prefs, putPrefs } = usePrefs();
+  if (!prefs || !putPrefs || !d.pw) return null;
+  const on = (prefs.skiWeekends || []).includes(d.pw);
+  const set = v => putPrefs(cur => ({ skiWeekends: v ? [...new Set([...(cur.skiWeekends || []), d.pw])] : (cur.skiWeekends || []).filter(x => x !== d.pw) }));
+  return (
+    <Choice checked={on} onChange={set}>Ski weekend (Friday–Sunday skiing)</Choice>
+  );
+}
+function AdjustToggle({ d, field, children }){
+  const { prefs, putPrefs } = usePrefs();
+  if (!prefs || !putPrefs) return null;
+  const on = !!((prefs.adjust || {})[d.pw] || {})[field];
+  return <Choice checked={on} onChange={v => putPrefs(cur => ({ adjust:{ ...(cur.adjust || {}), [d.pw]:{ ...((cur.adjust || {})[d.pw] || {}), [field]:v } } }))}>{children}</Choice>;
+}
+
+function SkiNotes({ d, program }){
+  if (!program || !program.options || !program.options.classes) return null;
+  const dow = String(d.key || "").slice(-3);
+  return (
+    <div style={{ marginBottom:d.skiSkip || d.afterSki || d.skiThu ? 8 : 0 }}>
+      {d.skiSkip === "fri" && <p role="note" style={banner}><b>Skipped for skiing.</b> No make-up; Friday progressions hold until your next Friday.</p>}
+      {d.skiSkip === "sat" && <p role="note" style={banner}><b>Skipped for skiing.</b> Ski days count as aerobic volume. No make-up.</p>}
+      {d.skiSkip === "sun" && <p role="note" style={banner}><b>Ski day.</b> No extra rest day is expected this week.</p>}
+      {["fri","sat","sun"].includes(dow) && !d.deload && <SkiToggle d={d}/>}
+      {d.skiThu && !d.deload && d.runInfo && d.runInfo.cls !== "Weekday Long" && (
+        <AdjustToggle d={d} field="thu">Recovery is good: move this run up one route class{d.runInfo.bumped ? " (on)" : ""}</AdjustToggle>
+      )}
+      {d.afterSki && (
+        <AdjustToggle d={d} field="mon">
+          After the ski weekend my quads and hips are moderately sore or worse: run 3 interval rounds and 2 tri-set rounds today (same loads), and switch Tuesday to the Flat route with strides
+        </AdjustToggle>
+      )}
+      {d.postSki && dow === "tue" && <p role="note" style={banner}><b>Post-ski week:</b> Flat route with strides today.</p>}
+    </div>
+  );
+}
+
+const WEATHER_MODES = [["outdoor","As planned outdoors"],["traction","Plowed road, packed path or Flat route"],["treadmill","Treadmill"],["cross","Cross-training (bike, erg or SkiErg)"]];
+function RunControls({ d }){
+  const { prefs, putPrefs, unit } = usePrefs();
+  if (!d.runInfo || !putPrefs) return null;
+  const info = d.runInfo, hasSprints = /hill sprints/i.test(JSON.stringify(d.parts));
+  const routeId = (prefs.routeFor || {})[d.iso] || "";
+  const mode = (prefs.weather || {})[d.iso] || "outdoor";
+  const putDay = (field, v) => putPrefs(cur => ({ [field]:{ ...(cur[field] || {}), [d.iso]:v } }));
+  const modes = WEATHER_MODES.map(([k, l]) => [k, k === "treadmill" && hasSprints ? "Indoors — Assault Runner or air bike" : l]);
+  const advice = {
+    traction:"Same time on a plowed road, packed path or your Flat-class route, with traction if you need it.",
+    treadmill: hasSprints ? "Hill sprints move to an Assault Runner or air bike: 8 × 10 s max effort, 90 s rest. No all-out sprints on a motorized treadmill."
+                          : "Same structure and time on a treadmill: about 1% incline for easy running, more incline for uphill sets.",
+    cross:"Equal time of easy aerobic work on a bike, erg or SkiErg. It counts as cross-training.",
+  }[mode];
+  return (
+    <section aria-label="Route and conditions" style={{ marginBottom:24, display:"grid", gap:12 }}>
+      {info.capped && <p role="note" style={{ ...banner, margin:0 }}>Held to the Extended window: the last two long runs weren't completed. Peak returns after a normal long run.</p>}
+      {info.bumped && <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.tealDeep, fontWeight:600 }}>Moved up one class for the ski weekend.</p>}
+      {info.routes.length ? (
+        <label style={fieldLabel}>Route · {info.label}
+          <select value={info.route ? routeId : ""} onChange={e=>putDay("routeFor", e.target.value)} style={{ ...fieldInput, padding:"8px" }}>
+            <option value="">Class default · {info.defaultMin} min</option>
+            {info.routes.map(r => <option key={r.id} value={r.id}>{r.name} · {r.min} min</option>)}
+          </select>
+        </label>
+      ) : (
+        <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>
+          {info.label} · default {info.defaultMin} min. Add your routes in Program setup to pick one.
+        </p>
+      )}
+      <label style={fieldLabel}>Conditions
+        <select value={mode} onChange={e=>putDay("weather", e.target.value)} style={{ ...fieldInput, padding:"8px" }}>
+          {modes.map(([k,l]) => <option key={k} value={k}>{l}</option>)}
+        </select>
+      </label>
+      {advice && <p style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600, color:T.tealDeep }}>{advice}</p>}
+    </section>
+  );
+}
+
+/* Setup: weekday class lengths, weekend windows and the private route library. */
+function RouteSetup({ program, raw, put }){
+  const c = program.options.classes, routes = Array.isArray(raw.routes) ? raw.routes : [];
+  const cm = raw.classMin || {}, ww = raw.weekendWin || {};
+  const classes = [...Object.keys(c.weekday), ...Object.keys(c.weekend)];
+  const setRoute = (i, patch) => put({ routes: routes.map((r, j) => j === i ? { ...r, ...patch } : r) });
+  const num = v => v.replace(/[^0-9]/g,"").slice(0,3);
+  return (
+    <SetupBlock title="Running routes">
+      <p style={helpText}>
+        Each run is prescribed by route class. Pick a route on the run screen and its typical time becomes the run's total time; otherwise the class default is used.
+        Easy effort everywhere: conversational on flats, Z3 on climbs, no planned Z4.
+      </p>
+      <p style={{ margin:"0 0 8px", fontSize:16, lineHeight:"24px", fontWeight:600 }}>Weekday classes (minutes)</p>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:16 }}>
+        {Object.entries(c.weekday).map(([k, m]) => (
+          <label key={k} style={fieldLabel}>{k}
+            <input inputMode="numeric" value={cm[k] || ""} placeholder={`${m}`} onChange={e=>put({ classMin:{ ...cm, [k]:num(e.target.value) } })} style={fieldInput}/>
+          </label>
+        ))}
+      </div>
+      <p style={{ margin:"0 0 8px", fontSize:16, lineHeight:"24px", fontWeight:600 }}>Weekend long-run windows (minutes)</p>
+      {Object.entries(c.weekend).map(([k, w]) => {
+        const b = ww[k] || ["",""];
+        return (
+          <div key={k} style={{ marginBottom:12 }}>
+            <p style={{ margin:"0 0 6px", fontSize:14, lineHeight:"20px", fontWeight:600 }}>{k}</p>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+              <input aria-label={`${k} shortest, minutes`} inputMode="numeric" value={b[0]} placeholder={`${w[0]}`} onChange={e=>put({ weekendWin:{ ...ww, [k]:[num(e.target.value), b[1]] } })} style={fieldInput}/>
+              <input aria-label={`${k} longest, minutes`} inputMode="numeric" value={b[1]} placeholder={`${w[1]}`} onChange={e=>put({ weekendWin:{ ...ww, [k]:[b[0], num(e.target.value)] } })} style={fieldInput}/>
+            </div>
+          </div>
+        );
+      })}
+      <p style={{ margin:"16px 0 8px", fontSize:16, lineHeight:"24px", fontWeight:600 }}>Your routes</p>
+      {routes.length === 0 && <p style={{ ...helpText, marginBottom:8 }}>No routes yet.</p>}
+      {routes.map((r, i) => (
+        <div key={r.id} style={{ border:`1px solid ${T.rule}`, borderRadius:12, padding:12, marginBottom:12, display:"grid", gap:8 }}>
+          <label style={fieldLabel}>Name<input value={r.name || ""} maxLength={40} onChange={e=>setRoute(i, { name:e.target.value })} style={fieldInput}/></label>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+            <label style={fieldLabel}>Typical time (min)<input inputMode="numeric" value={r.min || ""} onChange={e=>setRoute(i, { min:num(e.target.value) })} style={fieldInput}/></label>
+            <label style={fieldLabel}>Terrain
+              <select value={r.terrain || "rolling"} onChange={e=>setRoute(i, { terrain:e.target.value })} style={{ ...fieldInput, padding:"8px" }}>
+                <option value="flat">Flat</option><option value="rolling">Rolling</option><option value="hilly">Hilly</option>
+              </select>
+            </label>
+          </div>
+          <label style={fieldLabel}>Class
+            <select value={r.cls || ""} onChange={e=>setRoute(i, { cls:e.target.value })} style={{ ...fieldInput, padding:"8px" }}>
+              {classes.map(k => <option key={k} value={k}>{k}</option>)}
+            </select>
+          </label>
+          <Pressable onClick={()=>put({ routes: routes.filter((_, j) => j !== i) })} style={{ ...textBtn, color:T.alert }}>Remove route</Pressable>
+        </div>
+      ))}
+      <Pressable onClick={()=>put({ routes:[...routes, { id:Date.now().toString(36), name:"", min:"", terrain:"rolling", cls:"Short" }] })}
+        className="rl-btn" style={btnSecondary}>Add a route</Pressable>
+    </SetupBlock>
   );
 }
 
@@ -478,7 +640,7 @@ function HistoryList({ names, onHome, onOpen }){
               className="rl-btn" style={{ ...btnSecondary, display:"block", textAlign:"left", width:"100%", borderRadius:12, padding:"12px 16px", borderColor:T.rule }}>
               <span style={{ display:"block", fontSize:18, lineHeight:"24px", fontWeight:600 }}>{r.meta.name}</span>
               <span style={{ display:"block", fontSize:14, lineHeight:"20px", fontWeight:400, color:T.muted, fontVariantNumeric:"tabular-nums" }}>
-                {setText(r.last.top || r.last.sets[r.last.sets.length-1], unit, r.last.top ? "load" : "reps")} · {fmtShort(r.last.date)} · {r.sessions} {r.sessions===1?"session":"sessions"}
+                {setText(r.last.top || r.last.sets[r.last.sets.length-1], unit, r.last.top ? "load" : "reps", canAssist(r.meta.name))} · {fmtShort(r.last.date)} · {r.sessions} {r.sessions===1?"session":"sessions"}
               </span>
             </Pressable>
           ))}
@@ -526,8 +688,13 @@ function HistoryDetail({ hkey, names, onBack, backLabel="History" }){
   const show = kg => String(Math.round(fromKg(kg, unit)));
   const first = loaded[0], latest = loaded[loaded.length-1];
   const change = loaded.length > 1 ? fromKg(latest.top.kg, unit) - fromKg(first.top.kg, unit) : null;
+  const assistable = !isLoad && canAssist(meta.name);
+  const strictSessions = hist.filter(h => h.strict > 0);
+  const strictTrend = assistable && strictSessions.length > 0;
   const points = isLoad ? loaded.map(h => ({ date:h.date, value:Math.round(fromKg(h.top.kg, unit)*100)/100 }))
+                        : strictTrend ? strictSessions.map(h => ({ date:h.date, value:h.strict }))
                         : hist.map(h => ({ date:h.date, value:h.reps }));
+  const ladder = assistable ? hist.filter(h => h.band) : [];
   const REPS = [3,4,5,6,8,10], RPES = [6,7,8,9];
   return (
     <div>
@@ -541,9 +708,16 @@ function HistoryDetail({ hkey, names, onBack, backLabel="History" }){
           <>
             <section style={{ marginBottom:32 }}>
               <SectionLabel>Progress</SectionLabel>
-              <TimingLine style={{ marginBottom:8 }}>{isLoad ? "Heaviest set each session" : "Most reps in a set each session"}</TimingLine>
+              <TimingLine style={{ marginBottom:8 }}>
+                {isLoad ? "Heaviest set each session" : strictTrend ? "Most strict reps in a set each session" : assistable ? "Most reps in a set each session (with assistance)" : "Most reps in a set each session"}
+              </TimingLine>
               {points.length > 1 ? <TrendChart points={points} unit={isLoad ? unit : "reps"}/>
                 : <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>One session so far. Log it again to see a trend.</p>}
+              {ladder.length > 0 && (
+                <p style={{ margin:"12px 0 0", fontSize:16, lineHeight:"24px" }}>
+                  <b>Band ladder:</b> {ladder.map(h => `${h.band.toLowerCase()} (${fmtShort(h.date)})`).join(" → ")}
+                </p>
+              )}
               {change !== null && (
                 <p style={{ margin:"12px 0 0", fontSize:16, lineHeight:"24px" }}>
                   <b>{change > 0 ? "+" : ""}{fmtNum(change)} {unit}</b> on the heaviest set since {fmtShort(first.date)} · {hist.length} sessions
@@ -601,7 +775,7 @@ function HistoryDetail({ hkey, names, onBack, backLabel="History" }){
                   <div key={h.date} style={{ padding:"12px 0", borderTop: i ? `1px solid ${T.rule}` : "none" }}>
                     <p style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600, color:T.muted }}>{fmtPick(h.date)}</p>
                     <p style={{ margin:"2px 0 0", fontSize:16, lineHeight:"24px", fontVariantNumeric:"tabular-nums" }}>
-                      {h.sets.map(s => setText(s, unit, isLoad ? "load" : "reps")).join("  ·  ")}
+                      {h.sets.map(s => setText(s, unit, isLoad ? "load" : "reps", assistable)).join(" / ")}
                     </p>
                   </div>
                 ))}
@@ -645,10 +819,48 @@ function SetupBlock({ title, children }){
 }
 const helpText = { margin:"0 0 16px", fontSize:14, lineHeight:"20px", color:T.muted };
 
+/* Estimated 1RMs: normally taken from the heavy sets logged on establish and test days.
+   An entry here overrides them until a newer establish or test set is logged. Private, never exported. */
+function E1rmSetup({ program, personal, update }){
+  const { unit, e1rmFor } = React.useContext(LogContext);
+  const own = personal.e1rm || {};
+  const put = (k, v) => update(p => {
+    const e = { ...(p.e1rm || {}) }, n = parseFloat(v);
+    if (v === "" || !(n > 0)) delete e[k];
+    else e[k] = { kg:toKg(n, unit), w:v, u:unit, date:todayIso() };
+    return { ...p, e1rm:e };
+  });
+  const src = { establish:"from your establish set", test:"from your test set", logged:"from your logged sets", entered:"your entry" };
+  return (
+    <SetupBlock title="Estimated 1RMs">
+      <p style={helpText}>
+        Target loads come from the heavy triple you log on each lift's establish and test days. Enter a value only if you want to override it.
+      </p>
+      {program.options.anchors.map(n=>{
+        const k = mkey(n), cur = e1rmFor ? e1rmFor(n, todayIso()) : null, mine = own[k];
+        const shown = mine ? (mine.u === unit ? mine.w : fmtNum(fromKg(mine.kg, unit))) : "";
+        return (
+          <div key={k} style={{ marginBottom:16 }}>
+            <label style={fieldLabel}>
+              <span style={{ fontSize:16, lineHeight:"24px", fontWeight:600 }}>{n}</span>
+              <span style={{ fontSize:14, lineHeight:"20px", fontWeight:400, color:T.muted }}>
+                {cur ? `Now ${Math.round(fromKg(cur.kg, unit))} ${unit}, ${src[cur.src]} (${fmtShort(cur.date)})` : "Not set yet. Log your establish triple."}
+              </span>
+              <input inputMode="decimal" value={shown} placeholder={`Your own e1RM (${unit})`}
+                onChange={e=>put(k, e.target.value.replace(/[^0-9.]/g,""))} style={fieldInput}/>
+            </label>
+          </div>
+        );
+      })}
+    </SetupBlock>
+  );
+}
+
 function Setup({ program, sched, personal, setup, update, onHome }){
   const id = program.id;
-  const raw = (personal.setup && personal.setup[id]) || {};
-  const put = patch => update(p => ({ ...p, setup:{ ...(p.setup||{}), [id]:{ ...((p.setup||{})[id]||{}), ...patch } } }));
+  const own = (s, pid) => (s && (s[pid] || (program.inherit && s[program.inherit]))) || {};
+  const raw = own(personal.setup, id);
+  const put = patch => update(p => ({ ...p, setup:{ ...(p.setup||{}), [id]:{ ...own(p.setup, id), ...patch } } }));
   const zp = personal.zoneProfile || {};
   const putZone = patch => update(p => ({ ...p, zoneProfile:{ ...(p.zoneProfile||{}), ...patch } }));
   const putBound = (z, i, v) => update(p => {
@@ -678,7 +890,10 @@ function Setup({ program, sched, personal, setup, update, onHome }){
   const zErr = z => { const b = bounds[z]; if (!b || b[0]==="" || b[1]==="") return ""; const lo = Number(b[0]), hi = Number(b[1]);
     return (lo < 30 || hi > 230 || lo > hi) ? "Low must be 30 or more, high 230 or less, and low no higher than high." : ""; };
 
-  const lbWeeks = legBlasterWeeks(program).filter(w => legBlasterAvailable(program, w));
+  const lbAll = legBlasterWeeks(program).filter(w => legBlasterAvailable(program, w));
+  const lbWeeks = program.cycle
+    ? lbAll.filter(w => addDays(sched.start, (w-1)*7 + 4) >= todayIso()).slice(0, 6)   /* this and the next eligible blocks */
+    : lbAll;
   const toggleLb = (w, on) => put({ lbWeeks: on ? [...new Set([...setup.lbWeeks, w])] : setup.lbWeeks.filter(x => x !== w) });
   const reset = () => update(p => { const s = { ...(p.setup||{}) }; delete s[id]; return { ...p, setup:s }; });
   const wedOf = w => fmtPick(addDays(sched.start, (w-1)*7 + 2));
@@ -703,7 +918,7 @@ function Setup({ program, sched, personal, setup, update, onHome }){
             <Pressable onClick={resetDate} className="rl-btn" style={btnSecondary}>Use the program's default date</Pressable>}
         </SetupBlock>
 
-        <SetupBlock title="Running">
+        {program.options.classes ? <RouteSetup program={program} raw={raw} put={put}/> : <SetupBlock title="Running">
           <p style={helpText}>
             Set the length of each run from a typical, sustainable training week (leave out race, taper and recovery weeks).
             Warm-up, intervals, recoveries and cooldown are all counted inside each run's total time.
@@ -717,7 +932,7 @@ function Setup({ program, sched, personal, setup, update, onHome }){
           <p aria-live="polite" style={{ margin:0, fontSize:16, lineHeight:"24px" }}>
             Weekly running: <b>{weekly} min</b>{anyExample ? " (includes example lengths)" : ""}
           </p>
-        </SetupBlock>
+        </SetupBlock>}
 
         <SetupBlock title="Heart-rate zones">
           <p style={helpText}>
@@ -762,7 +977,7 @@ function Setup({ program, sched, personal, setup, update, onHome }){
               <p style={helpText}>
                 An optional swap for the Wednesday WOD in the later block. Choose it only if you're comfortable with controlled squats and lunges,
                 you're currently cleared for and tolerating jumping lunges and squat jumps, and you've recovered from Monday and Tuesday.
-                Otherwise keep the normal WOD. The last week of the cycle never includes Leg Blasters.
+                Otherwise keep the normal WOD. {program.cycle ? "Offered only in the build weeks of Athletic Strength blocks, never in a deload week." : "The last week of the cycle never includes Leg Blasters."}
               </p>
               <p style={{ ...helpText, color:T.ink }}>
                 Choosing a week changes all of this together: that Wednesday's WOD becomes a Mini Leg Blaster; that Friday's jumps, bounds or cleans become
@@ -776,6 +991,8 @@ function Setup({ program, sched, personal, setup, update, onHome }){
             </>
           ) : <p style={{ ...helpText, marginBottom:0 }}>This program doesn't offer Leg Blasters.</p>}
         </SetupBlock>
+
+        {(program.options.anchors || []).length > 0 && <E1rmSetup program={program} personal={personal} update={update}/>}
 
         <SetupBlock title="Personal override">
           <Field label="Rounds for both single-leg exercises"
@@ -954,7 +1171,17 @@ function App(){
   const setup = React.useMemo(()=> ready ? normalizeSetup(boot.program, personal) : null, [ready, boot, personal]);
   const resolve = React.useCallback(day=>{
     if (!ready || !day) return day;
-    return resolveDay(day, { program:boot.program, setup, zoneProfile:personal.zoneProfile,
+    /* Consecutive earlier weekend long runs that are past and not marked complete (ski weekends count). */
+    const longMisses = pw => {
+      let n = 0;
+      for (let w = pw - 1; w >= 1; w--){
+        const sat = addDays(sched.start, (w-1)*7 + 5);
+        if (sat >= todayIso() || (log.done || {})[sat]) break;
+        n++;
+      }
+      return n;
+    };
+    return resolveDay(day, { program:boot.program, setup, zoneProfile:personal.zoneProfile, longMisses,
       lbDone: w => setsOf(entryOn(log, "Mini Leg Blaster", addDays(sched.start, (w-1)*7 + 2))).length > 0 });
   },[ready, boot, setup, personal, log, sched]);
 
@@ -967,6 +1194,11 @@ function App(){
   const { index, program, travel } = boot;
   const goHome = ()=>{ setScreen("home"); setSel(null); scrollTop(); };
   const openDay = iso=>{ setSel(iso); setHomeSel(iso); setScreen("day"); scrollTop(); };
+  const putPrefs = fn => updatePersonal(p => {
+    const all = p.setup || {}, cur = all[program.id] || (program.inherit && all[program.inherit]) || {};
+    return { ...p, setup:{ ...all, [program.id]:{ ...cur, ...fn(cur) } } };
+  });
+  const e1rmAt = (name, iso)=> e1rmFor(log, sched, name, iso, (personal.e1rm || {})[mkey(name)]);
   const openHistory = name=>{ setHist({ key:mkey(name), from:screen }); setScreen("historyDetail"); scrollTop(); };
   const d = sel ? resolve(sched.byIso[sel]) : null;
   const w = travelId && travel ? travel.find(x=>x.id===travelId) : null;
@@ -974,7 +1206,8 @@ function App(){
   const prevIso = idx > 0 ? sched.dates[idx-1] : null, nextIso = idx >= 0 && idx < sched.dates.length-1 ? sched.dates[idx+1] : null;
 
   return (
-    <LogContext.Provider value={{ log, addSet, removeSet, setDone, replaceLog, drafts, setDraft, unit, setUnit, today, openHistory }}>
+    <LogContext.Provider value={{ log, addSet, removeSet, setDone, replaceLog, drafts, setDraft, unit, setUnit, today, openHistory, e1rmFor:e1rmAt,
+      prefs:setup, putPrefs: program.options && program.options.classes ? putPrefs : null }}>
       <div className="rl-shell">
         {newBuild && (screen!=="home" || alreadyReloadedFor(newBuild)) && (
           <div role="status" style={{ position:"absolute", left:0, right:0, bottom:0, zIndex:40, background:T.night, color:T.onNight,
@@ -1002,10 +1235,10 @@ function App(){
                     <Pressable onClick={()=>nextIso && openDay(nextIso)} disabled={!nextIso} ariaLabel="Next session"
                       style={{ ...textBtn, textDecoration:"none", fontSize:20, justifyContent:"center", opacity:nextIso?1:.35 }}>›</Pressable>
                   </div>}/>
-                <SessionHeading d={d} sched={sched} today={today} onPick={openDay} extra={<DayBadges d={d}/>}/>
-                {d.type==="gym"  && <GymDay d={d}/>}
-                {d.type==="run"  && <RunDay d={d} warmup={program.runWarmup||[]}/>}
-                {(d.type==="rest"||d.type==="race") && <BareDay d={d}/>}
+                <SessionHeading d={d} sched={sched} today={today} onPick={openDay} program={program} extra={<DayBadges d={d}/>}/>
+                {d.type==="gym"  && <GymDay d={d} program={program}/>}
+                {d.type==="run"  && <RunDay d={d} warmup={program.runWarmup||[]} program={program}/>}
+                {(d.type==="rest"||d.type==="race") && <BareDay d={d} program={program}/>}
               </>
             )}
             {screen==="history" && (

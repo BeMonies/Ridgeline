@@ -37,14 +37,28 @@ function savePersonal(p){
 }
 function startDateFor(program, personal){
   const p = personal || loadPersonal();
-  return (p.startDates && p.startDates[program.id]) || program.startDate;
+  const sd = p.startDates || {};
+  return sd[program.id] || (program.inherit && sd[program.inherit]) || program.startDate;
 }
 
 /* ── schedule: Program Week keys → calendar dates ── */
 function buildSchedule(program, personal){
   const start = startDateFor(program, personal);
   const byIso = {};
-  for (const [key, day] of Object.entries(program.days)){
+  /* Rolling programs store one template per block type ("A-W3-wed") and repeat A, B, A, B… */
+  if (program.cycle){
+    const c = program.cycle, n = c.blockWeeks;
+    for (let b = 1; b <= c.blocks; b++){
+      const type = c.pattern[(b-1) % c.pattern.length];
+      for (let bw = 1; bw <= n; bw++) DOW.forEach((dw, di) => {
+        const key = `${type}-W${bw}-${dw}`, day = program.days[key];
+        if (!day) return;
+        const pw = (b-1)*n + bw, iso = addDays(start, (pw-1)*7 + di);
+        byIso[iso] = { ...day, key, pw, iso, block:b, blockType:type, bw, blockName:(c.names||{})[type] || type };
+      });
+    }
+  }
+  for (const [key, day] of Object.entries(program.cycle ? {} : program.days)){
     const m = key.match(/^W(\d+)-(mon|tue|wed|thu|fri|sat|sun)$/);
     if (!m) continue;
     const pw = Number(m[1]);
@@ -110,10 +124,17 @@ function loadText(set, unit){
   if (set.u === unit || set.kg == null) return `${set.w} ${set.u || unit}`;
   return `${fmtNum(fromKg(set.kg, unit))} ${unit} (entered ${set.w} ${set.u})`;
 }
-function setText(set, unit, mode){
+/* Assistance for bodyweight pulls: stored on the set as `a` ("Medium band"…); empty means strict.
+   Lighter assistance ranks lower, so the band ladder reads as progress toward strict. */
+const BANDS = ["Light band","Medium band","Heavy band","Extra-heavy band","Assist machine"];
+function canAssist(name){ return /\bpull-?ups?\b|\bchin-?ups?\b/i.test(name) && !/scap|apart|pullover|pulldown/i.test(name); }
+function assistRank(a){ if (!a) return 0; const i = BANDS.indexOf(a); return i < 0 ? 1 : i + 1; }
+
+function setText(set, unit, mode, assistable){
   const load = mode==="reps" ? "" : loadText(set, unit);
   const reps = set.r ? `${set.r}${mode==="reps" ? " reps" : ""}` : "";
-  return [load, reps].filter(Boolean).join(" × ");
+  const help = set.a ? set.a.toLowerCase() : (assistable ? "strict" : "");
+  return [[load, reps].filter(Boolean).join(" × "), help].filter(Boolean).join(" · ");
 }
 
 function setsOf(e){
@@ -208,20 +229,45 @@ function e1rmKg(kg, reps){
 function loadAtRpeKg(e1, reps, rpe){ return e1 / (1 + (Number(reps) + (10 - rpe)) / 30); }
 function roundLoad(value, unit){ const step = unit==="kg" ? 2.5 : 5; return Math.round(value/step)*step; }
 
+/* Current e1RM for one lift on a given planned date. Sources, newest wins: a heavy set logged on a
+   block's Establish (week 1) or Test (week 6) day, the first session ever logged for the lift (so a
+   lift picked up mid-block still gets a starting estimate), or a value the athlete entered. */
+function bestE1(sets){
+  let best = null;
+  for (const s of sets){ const e = s.kg != null ? e1rmKg(s.kg, s.r) : null; if (e != null && (best === null || e > best)) best = e; }
+  return best;
+}
+function e1rmFor(log, sched, name, iso, manual){
+  const m = log.entries[mkey(name)] || {};
+  let cur = null;
+  for (const d of Object.keys(m).filter(x => x <= iso).sort()){
+    const day = sched && sched.byIso[d];
+    const marker = !!(day && (day.bw === 1 || day.bw === 6));
+    if (!marker && cur) continue;
+    const best = bestE1(setsOf(m[d]));
+    if (best) cur = { kg:best, date:d, src: marker ? (day.bw === 1 ? "establish" : "test") : "logged" };
+  }
+  if (manual && manual.kg > 0 && (!cur || manual.date >= cur.date)) cur = { kg:manual.kg, date:manual.date, src:"entered" };
+  return cur;
+}
+
 /* One row per planned date with logged sets: the sets, the heaviest set and the best estimate. */
 function movementHistory(log, key){
   const m = log.entries[key] || {};
   return Object.keys(m).sort().map(date => {
     const sets = setsOf(m[date]);
     if (!sets.length) return null;
-    let top = null, e1 = null, reps = 0;
+    let top = null, e1 = null, reps = 0, strict = 0, band = null;
     for (const s of sets){
       if (s.kg != null && (top === null || s.kg > top.kg)) top = s;
       const e = s.kg != null ? e1rmKg(s.kg, s.r) : null;
       if (e != null && (e1 === null || e > e1)) e1 = e;
-      reps = Math.max(reps, parseInt(s.r, 10) || 0);
+      const n = parseInt(s.r, 10) || 0;
+      reps = Math.max(reps, n);
+      if (s.a) { if (band === null || assistRank(s.a) < assistRank(band)) band = s.a; }
+      else strict = Math.max(strict, n);
     }
-    return { date, sets, top, e1, reps };
+    return { date, sets, top, e1, reps, strict, band };   /* band = lightest assistance used that session */
   }).filter(Boolean);
 }
 function historyIndex(log){
@@ -236,7 +282,7 @@ function movementNames(sources){
   const walk = node => {
     if (Array.isArray(node)) node.forEach(walk);
     else if (node && typeof node === "object"){
-      if (typeof node.n === "string"){ const k = mkey(node.n); if (!out[k] || node.log) out[k] = { name:node.n, basis:node.basis || (out[k] && out[k].basis), mode:node.log || (out[k] && out[k].mode) }; }
+      if (typeof node.n === "string"){ const k = mkey(node.logAs || node.n); if (!out[k] || node.log) out[k] = { name:node.n, basis:node.basis || (out[k] && out[k].basis), mode:node.log || (out[k] && out[k].mode) }; }
       Object.values(node).forEach(walk);
     }
   };
