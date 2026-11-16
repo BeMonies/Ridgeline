@@ -57,9 +57,12 @@ If you add a file the app needs offline, add it to `SHELL` in `sw.js` and bump `
   adds `block`, `blockType`, `bw`, `blockName` to each day. The UI shows "Block 2 · Athletic Strength ·
   Deload + test", never "Week N".
 - **e1RM and targets.** Anchor items carry `pct`; the app shows the target load from the athlete's
-  current e1RM for that exact lift (`e1rmFor` in `data.jsx`): the best Epley estimate from sets logged
-  on an Establish (week 1) or Test (week 6) day, else the lift's first logged session, unless the
-  athlete entered a newer value in Setup (`personal.e1rm`, private, never exported).
+  current e1RM for that exact lift (`e1rmFor` in `data.jsx`, plain Epley, sets of 1–12 reps). Worked
+  in date order: the first logged session starts it; any later set with a higher estimate raises it
+  (working sets never lower it); an anchor's Establish (week 1) or Test (week 6) set resets it up or
+  down, but only if it is within 10% of the current value (so a lone back-off set can't drag it down);
+  a Setup entry (`personal.e1rm`, private, never exported) replaces it from its date, and later sets
+  can still raise it. History's "Estimated max" uses the same function, so the two never disagree.
 - **`logAs`** on an item logs it under another movement's name, so a renamed variant keeps its history
   (e.g. "Pull-Up (strict or banded)" logs as "Strict Pull-Up").
 - **Running by route class (v3.3).** Run specs carry `cls` (weekday: Flat / Short / Medium / Weekday
@@ -72,6 +75,12 @@ If you add a file the app needs offline, add it to `SHELL` in `sw.js` and bump `
   the next Monday offers the post-ski rule (interval `postSki` rounds, tri-set 2 rounds, Tuesday swaps
   to `options.postSkiTuesday`). Route choice and conditions (weather mode) are stored per planned date.
 - **`inherit`** on a program: start date and setup fall back to that program's personal values.
+- **WOD results.** A scored `wod` carries `score` (`amrap` → rounds + extra reps; `time` → mm:ss, or
+  rounds + reps if capped; `note` → a short free-text result for EMOMs and intervals) and a stable `wid`
+  (`A-fri-W1`). A Week 5 benchmark reuses its Week 1 `wid`, so the card shows "Compare with" the opening
+  result; the same id returns every 12 weeks. Easy-erg deload pieces and the Mini Leg Blaster are not
+  scored. Results live in the log under `wod <wid>` as `{ res, t }`, one per planned date (saving again
+  replaces it), so backup and restore carry them; History lists them beside exercises.
 - **Pull-up assistance:** sets may carry `a` (band level); empty means strict. History trends strict
   reps and shows the band ladder separately.
 - **Leg Blasters** are one switch with linked changes (Wednesday WOD, Friday power, Friday
@@ -91,6 +100,12 @@ If you add a file the app needs offline, add it to `SHELL` in `sw.js` and bump `
 - Gym section order is fixed. v3 programs: Warm-Up, Max Strength, Strength Conditioning, Finisher,
   Cooldown Mobility, with a minute budget on each (normal sessions total 60). Older programs keep
   Warm-Up, Strength Intensity, Conditioning, Finisher, Mobility.
+- **Budgets must match the work shown.** v3.3 normal weeks are 60 / 60 / 58; Week 6 (deload + test) is
+  45 / 44 / 40. Where settings change the work, the resolver (`retime` in `resolve.jsx`) moves the
+  minutes and rebuilds the clock map: tri-set groups carry `roundMin` (6) for PT rounds and post-ski
+  Mondays, dropped post-ski interval rounds come off at full length, and a `when` variant may carry
+  `dMin` (Leg Blaster Friday: −3 power, −2 finisher). `check.mjs` runs a time model over every gym
+  section and variant and fails if a budget is more than 3 minutes from the prescribed work.
 - Run days: Title + TRT headline, collapsed Running Mobility Warm-Up, then the workout.
 - Rest is stated per section, using Rest After Exercise / Rest After Round / Interval values.
 - Older programs: exactly one isolation movement per session, in the Finisher. v3 drops this

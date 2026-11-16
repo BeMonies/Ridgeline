@@ -277,12 +277,36 @@ function dayVars(day, program, setup, ctx){
   return {
     pw, deload, lb, wall: setup.wall, powerMode: setup.powerMode,
     friPower: lb ? "throws" : setup.powerMode,
-    uniRounds,
+    uniRounds, uniDefault: deload ? 2 : 3,
     uniNote: setup.uniOverride && setup.uniOverride !== (deload ? 2 : 3)
       ? " · your own setting (shared default " + (deload ? 2 : 3) + ")" : "",
     lbExp: exp, lbRx: LB_DOSE[exp].rx, lbDose: LB_DOSE[exp].text,
     ski, postSki, thuBump,
   };
+}
+
+/* Section budgets in a program file are written for the template's own content. When the athlete's
+   settings change how much work is shown, the minutes follow: a tri-set group with `roundMin` adds or
+   drops that many minutes per round away from the shared default (PT rounds, post-ski Monday), an item
+   kept by a `when` variant may carry `dMin` (e.g. the lighter Leg Blaster-week Friday), and dropped
+   interval rounds come off at their full interval length. The clock map is then rebuilt. */
+function clockSec(t){ const [m, s] = String(t).split(":").map(Number); return (m || 0) * 60 + (s || 0); }
+function retime(out, vars, delta){
+  const secs = out.sections || [];
+  if (!secs.length || !secs.every(s => /^\d+ min/.test(String(s.budget || "")))) return;
+  secs.forEach((s, i) => {
+    for (const it of s.items){
+      if (typeof it.dMin === "number") delta[i] += it.dMin;
+      if (it.k === "group" && typeof it.roundMin === "number") delta[i] += (vars.uniRounds - vars.uniDefault) * it.roundMin;
+    }
+  });
+  if (delta.every(d => Math.abs(d) < 0.01)) return;
+  let at = 0;
+  secs.forEach((s, i) => {
+    const m = Math.max(1, Math.round(parseInt(s.budget, 10) + delta[i]));
+    s.budget = `${m} min · ${at}:00–${at + m}:00`;
+    at += m;
+  });
 }
 
 /* day: a schedule entry ({...dayFromProgram, key, pw, iso}).
@@ -294,8 +318,11 @@ function resolveDay(day, ctx){
   const out = walk(day, vars);
   const dow = String(day.key || "").slice(-3);
   /* Post-ski Monday: same loads, fewer rounds. */
+  const delta = (out.sections || []).map(() => 0);
   if (vars.postSki && dow === "mon")
-    for (const s of out.sections || []) for (const it of s.items) if (it.k === "interval" && it.postSki) it.sets = Math.min(it.sets, it.postSki);
+    (out.sections || []).forEach((s, i) => { for (const it of s.items) if (it.k === "interval" && it.postSki && it.postSki < it.sets){
+      delta[i] += (it.postSki - it.sets) * clockSec(it.every) / 60; it.sets = it.postSki; } });
+  retime(out, vars, delta);
   if (vars.ski && ["fri","sat","sun"].includes(dow)) out.skiSkip = dow;
   if (vars.postSki && ["mon","tue"].includes(dow)) out.postSki = true;
   if (vars.ski && dow === "thu") out.skiThu = true;

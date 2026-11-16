@@ -310,7 +310,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -633,7 +634,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -666,7 +668,9 @@
          "rx": "Even minutes · 6 controlled · finish in 25–40 s"
         }
        ],
-       "effort": "Overall RPE 7–8 · hard but repeatable"
+       "effort": "Overall RPE 7–8 · hard but repeatable",
+       "wid": "A-wed-W1",
+       "score": "note"
       },
       {
        "k": "flag",
@@ -1029,7 +1033,9 @@
          "rx": "6"
         }
        ],
-       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows"
+       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
+       "wid": "A-fri-W1",
+       "score": "amrap"
       },
       {
        "k": "flag",
@@ -1278,7 +1284,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -1601,7 +1608,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -1641,7 +1649,9 @@
          "rx": "8 cal"
         }
        ],
-       "effort": "Overall RPE 7–8 · hard but repeatable"
+       "effort": "Overall RPE 7–8 · hard but repeatable",
+       "wid": "A-wed-W2",
+       "score": "amrap"
       },
       {
        "k": "flag",
@@ -1996,7 +2006,9 @@
          "basis": "carry"
         }
        ],
-       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows"
+       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
+       "wid": "A-fri-W2",
+       "score": "note"
       },
       {
        "k": "flag",
@@ -2246,7 +2258,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -2564,7 +2577,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -2599,7 +2613,9 @@
          "basis": "sled"
         }
        ],
-       "effort": "Overall RPE 7–8 · hard but repeatable"
+       "effort": "Overall RPE 7–8 · hard but repeatable",
+       "wid": "A-wed-W3",
+       "score": "note"
       },
       {
        "k": "flag",
@@ -2964,7 +2980,9 @@
          "basis": "sled"
         }
        ],
-       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows"
+       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
+       "wid": "A-fri-W3",
+       "score": "time"
       },
       {
        "k": "flag",
@@ -3214,7 +3232,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -3534,7 +3553,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -3569,7 +3589,9 @@
          "basis": "dumbbell"
         }
        ],
-       "effort": "Overall RPE 7–8 · hard but repeatable"
+       "effort": "Overall RPE 7–8 · hard but repeatable",
+       "wid": "A-wed-W4",
+       "score": "note"
       },
       {
        "k": "flag",
@@ -3922,7 +3944,9 @@
          "rx": "Minute 3 · 10 / 8 cal"
         }
        ],
-       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows"
+       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
+       "wid": "A-fri-W4",
+       "score": "note"
       },
       {
        "k": "flag",
@@ -4171,7 +4195,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -4491,7 +4516,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -4524,7 +4550,9 @@
          "rx": "Even minutes · 6 controlled · finish in 25–40 s"
         }
        ],
-       "effort": "Overall RPE 7–8 · hard but repeatable"
+       "effort": "Overall RPE 7–8 · hard but repeatable",
+       "wid": "A-wed-W1",
+       "score": "note"
       },
       {
        "k": "flag",
@@ -4887,7 +4915,9 @@
          "rx": "6"
         }
        ],
-       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows"
+       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
+       "wid": "A-fri-W1",
+       "score": "amrap"
       },
       {
        "k": "flag",
@@ -5054,12 +5084,12 @@
     },
     {
      "title": "Max Strength",
-     "budget": "20 min · 8:00–28:00",
+     "budget": "14 min · 8:00–22:00",
      "items": [
       {
        "k": "flag",
        "kind": "rule",
-       "text": "Test: ramp to a heavy triple at RPE 8–9 on back squat and log it. No grinding, no missed reps — then one easy back-off set."
+       "text": "Test: ramp to a heavy triple at RPE 8–9 on back squat and log it with the sets below. No grinding, no missed reps. Then one easy back-off set."
       },
       {
        "k": "interval",
@@ -5116,7 +5146,7 @@
     },
     {
      "title": "Strength Conditioning",
-     "budget": "19 min · 28:00–47:00",
+     "budget": "13 min · 22:00–35:00",
      "items": [
       {
        "k": "group",
@@ -5146,7 +5176,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -5162,7 +5193,7 @@
     },
     {
      "title": "Finisher",
-     "budget": "8 min · 47:00–55:00",
+     "budget": "5 min · 35:00–40:00",
      "items": [
       {
        "k": "group",
@@ -5191,7 +5222,7 @@
     },
     {
      "title": "Cooldown Mobility",
-     "budget": "5 min · 55:00–60:00",
+     "budget": "5 min · 40:00–45:00",
      "items": [
       {
        "k": "mv",
@@ -5322,12 +5353,12 @@
     },
     {
      "title": "Max Strength",
-     "budget": "21 min · 7:00–28:00",
+     "budget": "13 min · 7:00–20:00",
      "items": [
       {
        "k": "sub",
        "text": "Power",
-       "budget": "3 min"
+       "budget": "1 min"
       },
       {
        "k": "mv",
@@ -5368,12 +5399,12 @@
       {
        "k": "sub",
        "text": "Hinge + press",
-       "budget": "18 min"
+       "budget": "12 min"
       },
       {
        "k": "flag",
        "kind": "rule",
-       "text": "Test: ramp to a heavy triple at RPE 8–9 on the trap bar deadlift and the bench press and log it. No grinding, no missed reps — then one easy back-off set."
+       "text": "Test: ramp to a heavy triple at RPE 8–9 on the trap bar deadlift and the bench press and log both with the sets below. No grinding, no missed reps. Then one easy back-off set of each."
       },
       {
        "k": "interval",
@@ -5415,7 +5446,7 @@
     },
     {
      "title": "Strength Conditioning",
-     "budget": "18 min · 28:00–46:00",
+     "budget": "12 min · 20:00–32:00",
      "items": [
       {
        "k": "group",
@@ -5445,7 +5476,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -5456,7 +5488,7 @@
     },
     {
      "title": "Finisher",
-     "budget": "9 min · 46:00–55:00",
+     "budget": "7 min · 32:00–39:00",
      "items": [
       {
        "k": "sub",
@@ -5479,7 +5511,7 @@
     },
     {
      "title": "Cooldown Mobility",
-     "budget": "5 min · 55:00–60:00",
+     "budget": "5 min · 39:00–44:00",
      "items": [
       {
        "k": "mv",
@@ -5603,12 +5635,12 @@
     },
     {
      "title": "Max Strength",
-     "budget": "18 min · 10:00–28:00",
+     "budget": "12 min · 10:00–22:00",
      "items": [
       {
        "k": "sub",
        "text": "Power — jumps and bounds",
-       "budget": "8 min",
+       "budget": "4 min",
        "when": {
         "friPower": "jumps"
        }
@@ -5665,7 +5697,7 @@
       {
        "k": "sub",
        "text": "Power — hang power clean (replaces the jumps)",
-       "budget": "8 min",
+       "budget": "4 min",
        "when": {
         "friPower": "clean"
        }
@@ -5700,7 +5732,7 @@
       {
        "k": "sub",
        "text": "Power — upper-body throws (Leg Blaster week)",
-       "budget": "8 min",
+       "budget": "4 min",
        "when": {
         "friPower": "throws"
        }
@@ -5738,12 +5770,19 @@
       {
        "k": "sub",
        "text": "Upper-body strength",
-       "budget": "10 min"
+       "budget": "8 min"
       },
       {
        "k": "flag",
        "kind": "rule",
-       "text": "Test: ramp to a heavy triple at RPE 8–9 on strict press and log it. No grinding, no missed reps — then one easy back-off set."
+       "text": "Test: ramp to a heavy triple at RPE 8–9 on strict press and log it. No grinding, no missed reps. No back-off press sets this week; the round below is the row only."
+      },
+      {
+       "k": "mv",
+       "n": "Strict Press",
+       "rx": "Test triple @ RPE 8–9",
+       "log": "load",
+       "basis": "barbell"
       },
       {
        "k": "interval",
@@ -5775,7 +5814,7 @@
     },
     {
      "title": "Strength Conditioning",
-     "budget": "18 min · 28:00–46:00",
+     "budget": "9 min · 22:00–31:00",
      "items": [
       {
        "k": "sub",
@@ -5798,7 +5837,7 @@
     },
     {
      "title": "Finisher",
-     "budget": "7 min · 46:00–53:00",
+     "budget": "4 min · 31:00–35:00",
      "items": [
       {
        "k": "group",
@@ -5824,7 +5863,7 @@
     },
     {
      "title": "Cooldown Mobility",
-     "budget": "5 min · 53:00–58:00",
+     "budget": "5 min · 35:00–40:00",
      "items": [
       {
        "k": "mv",
@@ -6035,7 +6074,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -6364,7 +6404,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -6402,7 +6443,9 @@
          "rx": "8 cal"
         }
        ],
-       "effort": "Overall RPE 7–8 · hard but repeatable"
+       "effort": "Overall RPE 7–8 · hard but repeatable",
+       "wid": "B-wed-W1",
+       "score": "amrap"
       },
       {
        "k": "flag",
@@ -6776,7 +6819,9 @@
          "rx": "60 s"
         }
        ],
-       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows"
+       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
+       "wid": "B-fri-W1",
+       "score": "time"
       },
       {
        "k": "flag",
@@ -7030,7 +7075,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -7359,7 +7405,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -7394,7 +7441,9 @@
          "basis": "ball"
         }
        ],
-       "effort": "Overall RPE 7–8 · hard but repeatable"
+       "effort": "Overall RPE 7–8 · hard but repeatable",
+       "wid": "B-wed-W2",
+       "score": "note"
       },
       {
        "k": "flag",
@@ -7770,7 +7819,9 @@
          "basis": "sled"
         }
        ],
-       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows"
+       "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
+       "wid": "B-fri-W2",
+       "score": "amrap"
       },
       {
        "k": "flag",
@@ -8025,7 +8076,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -8349,7 +8401,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -8390,7 +8443,9 @@
        "effort": "Overall RPE 7–8 · hard but repeatable",
        "when": {
         "lb": false
-       }
+       },
+       "wid": "B-wed-W3",
+       "score": "note"
       },
       {
        "k": "flag",
@@ -8712,10 +8767,11 @@
       {
        "k": "sub",
        "text": "Power — upper-body throws (Leg Blaster week)",
-       "budget": "8 min",
+       "budget": "5 min",
        "when": {
         "friPower": "throws"
-       }
+       },
+       "dMin": -3
       },
       {
        "k": "mv",
@@ -8831,7 +8887,9 @@
        "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
        "when": {
         "lb": false
-       }
+       },
+       "wid": "B-fri-W3",
+       "score": "note"
       },
       {
        "k": "flag",
@@ -8878,7 +8936,9 @@
        "effort": "RPE 6 · Leg Blaster week",
        "when": {
         "lb": true
-       }
+       },
+       "wid": "B-fri-lb",
+       "score": "note"
       }
      ]
     },
@@ -8930,7 +8990,8 @@
        "rest": "rest 45 s after round",
        "when": {
         "lb": true
-       }
+       },
+       "dMin": -2
       }
      ]
     },
@@ -9144,7 +9205,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -9470,7 +9532,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -9516,7 +9579,9 @@
        "effort": "Overall RPE 7–8 · hard but repeatable",
        "when": {
         "lb": false
-       }
+       },
+       "wid": "B-wed-W4",
+       "score": "amrap"
       },
       {
        "k": "flag",
@@ -9838,10 +9903,11 @@
       {
        "k": "sub",
        "text": "Power — upper-body throws (Leg Blaster week)",
-       "budget": "8 min",
+       "budget": "5 min",
        "when": {
         "friPower": "throws"
-       }
+       },
+       "dMin": -3
       },
       {
        "k": "mv",
@@ -9972,7 +10038,9 @@
        "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
        "when": {
         "lb": false
-       }
+       },
+       "wid": "B-fri-W4",
+       "score": "time"
       },
       {
        "k": "flag",
@@ -10019,7 +10087,9 @@
        "effort": "RPE 6 · Leg Blaster week",
        "when": {
         "lb": true
-       }
+       },
+       "wid": "B-fri-lb",
+       "score": "note"
       }
      ]
     },
@@ -10071,7 +10141,8 @@
        "rest": "rest 45 s after round",
        "when": {
         "lb": true
-       }
+       },
+       "dMin": -2
       }
      ]
     },
@@ -10284,7 +10355,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -10610,7 +10682,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -10654,7 +10727,9 @@
        "effort": "Overall RPE 7–8 · hard but repeatable",
        "when": {
         "lb": false
-       }
+       },
+       "wid": "B-wed-W1",
+       "score": "amrap"
       },
       {
        "k": "flag",
@@ -10984,10 +11059,11 @@
       {
        "k": "sub",
        "text": "Power — upper-body throws (Leg Blaster week)",
-       "budget": "8 min",
+       "budget": "5 min",
        "when": {
         "friPower": "throws"
-       }
+       },
+       "dMin": -3
       },
       {
        "k": "mv",
@@ -11113,7 +11189,9 @@
        "effort": "RPE ~7 · purposeful and repeatable — Saturday's long run follows",
        "when": {
         "lb": false
-       }
+       },
+       "wid": "B-fri-W1",
+       "score": "time"
       },
       {
        "k": "flag",
@@ -11168,7 +11246,9 @@
        "effort": "RPE 6 · Leg Blaster week",
        "when": {
         "lb": true
-       }
+       },
+       "wid": "B-fri-lb",
+       "score": "note"
       }
      ]
     },
@@ -11220,7 +11300,8 @@
        "rest": "rest 45 s after round",
        "when": {
         "lb": true
-       }
+       },
+       "dMin": -2
       }
      ]
     },
@@ -11341,12 +11422,12 @@
     },
     {
      "title": "Max Strength",
-     "budget": "20 min · 8:00–28:00",
+     "budget": "14 min · 8:00–22:00",
      "items": [
       {
        "k": "flag",
        "kind": "rule",
-       "text": "Test: ramp to a heavy triple at RPE 8–9 on front squat and log it. No grinding, no missed reps — then one easy back-off set."
+       "text": "Test: ramp to a heavy triple at RPE 8–9 on front squat and log it with the sets below. No grinding, no missed reps. Then one easy back-off set."
       },
       {
        "k": "interval",
@@ -11408,7 +11489,7 @@
     },
     {
      "title": "Strength Conditioning",
-     "budget": "19 min · 28:00–47:00",
+     "budget": "13 min · 22:00–35:00",
      "items": [
       {
        "k": "group",
@@ -11438,7 +11519,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60–90 s after round"
+       "rest": "rest 60–90 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -11454,7 +11536,7 @@
     },
     {
      "title": "Finisher",
-     "budget": "8 min · 47:00–55:00",
+     "budget": "5 min · 35:00–40:00",
      "items": [
       {
        "k": "group",
@@ -11483,7 +11565,7 @@
     },
     {
      "title": "Cooldown Mobility",
-     "budget": "5 min · 55:00–60:00",
+     "budget": "5 min · 40:00–45:00",
      "items": [
       {
        "k": "mv",
@@ -11614,12 +11696,12 @@
     },
     {
      "title": "Max Strength",
-     "budget": "21 min · 7:00–28:00",
+     "budget": "13 min · 7:00–20:00",
      "items": [
       {
        "k": "sub",
        "text": "Power",
-       "budget": "3 min"
+       "budget": "1 min"
       },
       {
        "k": "mv",
@@ -11660,12 +11742,12 @@
       {
        "k": "sub",
        "text": "Hinge + press",
-       "budget": "18 min"
+       "budget": "12 min"
       },
       {
        "k": "flag",
        "kind": "rule",
-       "text": "Test: ramp to a heavy 5 at RPE 8–9 on the RDL and a heavy triple at RPE 8–9 on the press on the barbell rdl and the incline bench press and log it. No grinding, no missed reps — then one easy back-off set."
+       "text": "Test: ramp to a heavy 5 at RPE 8–9 on the barbell RDL and a heavy triple at RPE 8–9 on the incline bench press, and log both with the sets below. No grinding, no missed reps. Then one easy back-off set of each."
       },
       {
        "k": "interval",
@@ -11713,7 +11795,7 @@
     },
     {
      "title": "Strength Conditioning",
-     "budget": "18 min · 28:00–46:00",
+     "budget": "12 min · 20:00–32:00",
      "items": [
       {
        "k": "group",
@@ -11743,7 +11825,8 @@
         }
        ],
        "meta": "{{uniRounds}} rounds{{uniNote}}",
-       "rest": "rest 60 s after round"
+       "rest": "rest 60 s after round",
+       "roundMin": 6
       },
       {
        "k": "flag",
@@ -11754,7 +11837,7 @@
     },
     {
      "title": "Finisher",
-     "budget": "9 min · 46:00–55:00",
+     "budget": "7 min · 32:00–39:00",
      "items": [
       {
        "k": "sub",
@@ -11777,7 +11860,7 @@
     },
     {
      "title": "Cooldown Mobility",
-     "budget": "5 min · 55:00–60:00",
+     "budget": "5 min · 39:00–44:00",
      "items": [
       {
        "k": "mv",
@@ -11901,12 +11984,12 @@
     },
     {
      "title": "Max Strength",
-     "budget": "18 min · 10:00–28:00",
+     "budget": "12 min · 10:00–22:00",
      "items": [
       {
        "k": "sub",
        "text": "Power — jumps and bounds",
-       "budget": "8 min",
+       "budget": "4 min",
        "when": {
         "friPower": "jumps"
        }
@@ -11964,7 +12047,7 @@
       {
        "k": "sub",
        "text": "Power — hang power clean (replaces the jumps)",
-       "budget": "8 min",
+       "budget": "4 min",
        "when": {
         "friPower": "clean"
        }
@@ -11999,7 +12082,7 @@
       {
        "k": "sub",
        "text": "Power — upper-body throws (Leg Blaster week)",
-       "budget": "8 min",
+       "budget": "4 min",
        "when": {
         "friPower": "throws"
        }
@@ -12037,12 +12120,19 @@
       {
        "k": "sub",
        "text": "Upper-body strength",
-       "budget": "10 min"
+       "budget": "8 min"
       },
       {
        "k": "flag",
        "kind": "rule",
-       "text": "Test: ramp to a heavy triple at RPE 8–9 on push press and log it. No grinding, no missed reps — then one easy back-off set."
+       "text": "Test: ramp to a heavy triple at RPE 8–9 on push press and log it. No grinding, no missed reps. No back-off press sets this week; the round below is the row only."
+      },
+      {
+       "k": "mv",
+       "n": "Push Press",
+       "rx": "Test triple @ RPE 8–9",
+       "log": "load",
+       "basis": "barbell"
       },
       {
        "k": "interval",
@@ -12084,7 +12174,7 @@
     },
     {
      "title": "Strength Conditioning",
-     "budget": "18 min · 28:00–46:00",
+     "budget": "9 min · 22:00–31:00",
      "items": [
       {
        "k": "sub",
@@ -12107,7 +12197,7 @@
     },
     {
      "title": "Finisher",
-     "budget": "7 min · 46:00–53:00",
+     "budget": "4 min · 31:00–35:00",
      "items": [
       {
        "k": "group",
@@ -12133,7 +12223,7 @@
     },
     {
      "title": "Cooldown Mobility",
-     "budget": "5 min · 53:00–58:00",
+     "budget": "5 min · 35:00–40:00",
      "items": [
       {
        "k": "mv",

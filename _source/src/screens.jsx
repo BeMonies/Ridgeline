@@ -150,7 +150,7 @@ function MenuPanel({ program, index, hasTravel, onSetup, onTravel, onHistory, on
     <div role="menu" aria-label="Menu" onKeyDown={e=>{ if (e.key==="Escape"){ e.stopPropagation(); onClose(); } }}
       style={{ position:"absolute", left:0, right:0, top:"100%", zIndex:30, background:T.surface, color:T.ink,
         borderBottom:`1px solid ${T.rule}`, boxShadow:"0 12px 24px rgba(28,38,40,.14)", maxHeight:"calc(100vh - 80px)", overflowY:"auto" }}>
-      <Pressable role="menuitem" autoFocus onClick={()=>{ onClose(false); onHistory(); }} style={{ ...item, borderTop:0 }}>Exercise history</Pressable>
+      <Pressable role="menuitem" autoFocus onClick={()=>{ onClose(false); onHistory(); }} style={{ ...item, borderTop:0 }}>History</Pressable>
       {program.engine && <Pressable role="menuitem" onClick={()=>{ onClose(false); onSetup(); }} style={item}>Program setup</Pressable>}
       {hasTravel && <Pressable role="menuitem" onClick={()=>{ onClose(false); onTravel(); }} style={item}>Travel workouts</Pressable>}
       <div style={{ padding:"16px var(--gutter, 20px)", borderTop:`1px solid ${T.rule}` }}><LogPanel/></div>
@@ -616,22 +616,22 @@ function TravelDetail({ w, onBack, onHome }){
 function HistoryList({ names, onHome, onOpen }){
   const { log, unit } = React.useContext(LogContext);
   const [q, setQ] = React.useState("");
-  const rows = historyIndex(log).map(r => ({ ...r, meta: names[r.key] || { name:titleFromKey(r.key) } }))
+  const rows = [...historyIndex(log), ...wodIndex(log)].map(r => ({ ...r, meta: names[r.key] || { name:titleFromKey(r.key) } }))
     .filter(r => !q.trim() || r.meta.name.toLowerCase().includes(q.trim().toLowerCase()))
     .sort((a,b) => a.meta.name.localeCompare(b.meta.name));
   return (
     <div>
       <StickyBar left={<Pressable onClick={onHome} ariaLabel="Back to schedule" style={textBtn}>← Schedule</Pressable>}/>
       <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
-        <h1 style={{ margin:0, fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>Exercise history</h1>
+        <h1 style={{ margin:0, fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>History</h1>
       </div>
       <main style={pagePad}>
-        <label style={{ ...fieldLabel, marginBottom:16 }}>Search exercises
+        <label style={{ ...fieldLabel, marginBottom:16 }}>Search exercises and WODs
           <input type="search" value={q} onChange={e=>setQ(e.target.value)} style={{ ...fieldInput, fontWeight:400 }}/>
         </label>
         {rows.length===0 && (
           <p style={{ margin:0, fontSize:16, lineHeight:"24px", color:T.muted }}>
-            {q.trim() ? "No logged exercise matches." : "Nothing logged yet. Log a set in any session and it will appear here."}
+            {q.trim() ? "Nothing logged matches." : "Nothing logged yet. Log a set or a WOD result in any session and it will appear here."}
           </p>
         )}
         <div style={{ display:"grid", gap:8 }}>
@@ -640,7 +640,7 @@ function HistoryList({ names, onHome, onOpen }){
               className="rl-btn" style={{ ...btnSecondary, display:"block", textAlign:"left", width:"100%", borderRadius:12, padding:"12px 16px", borderColor:T.rule }}>
               <span style={{ display:"block", fontSize:18, lineHeight:"24px", fontWeight:600 }}>{r.meta.name}</span>
               <span style={{ display:"block", fontSize:14, lineHeight:"20px", fontWeight:400, color:T.muted, fontVariantNumeric:"tabular-nums" }}>
-                {setText(r.last.top || r.last.sets[r.last.sets.length-1], unit, r.last.top ? "load" : "reps", canAssist(r.meta.name))} · {fmtShort(r.last.date)} · {r.sessions} {r.sessions===1?"session":"sessions"}
+                {r.wod ? resultText(r.last.res) : setText(r.last.top || r.last.sets[r.last.sets.length-1], unit, r.last.top ? "load" : "reps", canAssist(r.meta.name))} · {fmtShort(r.last.date)} · {r.sessions} {r.sessions===1?"session":"sessions"}
               </span>
             </Pressable>
           ))}
@@ -675,15 +675,48 @@ function TrendChart({ points, unit }){
 
 const cell = { padding:"8px 6px", textAlign:"right", fontVariantNumeric:"tabular-nums", borderTop:`1px solid ${T.rule}` };
 
+const E1_FROM = { establish:"from your establish set on", test:"from your test set on", logged:"from your sets on", entered:"you entered on" };
+function WodHistory({ hkey, names, onBack, backLabel }){
+  const { log } = React.useContext(LogContext);
+  const meta = names[hkey] || { name:titleFromKey(hkey) };
+  const rows = resultsFor(log, hkey).slice().reverse();
+  return (
+    <div>
+      <StickyBar left={<Pressable onClick={onBack} ariaLabel={`Back to ${backLabel.toLowerCase()}`} style={textBtn}>← {backLabel}</Pressable>}/>
+      <div style={{ padding:"16px var(--gutter, 20px) 0" }}>
+        <p style={{ margin:0, fontSize:14, lineHeight:"20px", fontWeight:600, color:T.tealDeep }}>WOD</p>
+        <h1 style={{ margin:0, fontSize:30, lineHeight:"36px", fontWeight:700, letterSpacing:"-.02em" }}>{meta.name}</h1>
+      </div>
+      <main style={pagePad}>
+        <SectionLabel>Results</SectionLabel>
+        {rows.length===0 ? <p style={{ margin:0, color:T.muted }}>No result logged for this WOD yet.</p> : (
+          <ol style={{ listStyle:"none", margin:0, padding:0 }}>
+            {rows.map(r=>(
+              <li key={r.date} style={{ padding:"12px 0", borderTop:`1px solid ${T.rule}` }}>
+                <p style={{ margin:0, fontSize:14, lineHeight:"20px", color:T.muted }}>{fmtLong(r.date)}</p>
+                <p style={{ margin:"2px 0 0", fontSize:16, lineHeight:"24px", fontWeight:600, fontVariantNumeric:"tabular-nums" }}>{resultText(r.res)}</p>
+              </li>
+            ))}
+          </ol>
+        )}
+      </main>
+    </div>
+  );
+}
+
 function HistoryDetail({ hkey, names, onBack, backLabel="History" }){
-  const { log, unit } = React.useContext(LogContext);
+  const { log, unit, e1rmFor:e1At } = React.useContext(LogContext);
+  if (resultsFor(log, hkey).length || (names[hkey] && names[hkey].mode === "wod"))
+    return <WodHistory hkey={hkey} names={names} onBack={onBack} backLabel={backLabel}/>;
   const meta = names[hkey] || { name:titleFromKey(hkey) };
   const hist = movementHistory(log, hkey);
   const loaded = hist.filter(h => h.top);
   const isLoad = loaded.length > 0;
   const estimable = isLoad && meta.basis !== "sled" && meta.basis !== "carry";
   const withE1 = estimable ? hist.filter(h => h.e1 != null) : [];
-  const current = withE1.length ? withE1[withE1.length-1] : null;
+  /* The same estimate the session targets use, so History and today's target never disagree. */
+  const est = estimable && e1At ? e1At(hkey, todayIso()) : null;
+  const current = est ? { e1:est.kg, date:est.date, src:est.src } : null;
   const best = withE1.reduce((a,h) => (!a || h.e1 > a.e1) ? h : a, null);
   const show = kg => String(Math.round(fromKg(kg, unit)));
   const first = loaded[0], latest = loaded[loaded.length-1];
@@ -729,8 +762,8 @@ function HistoryDetail({ hkey, names, onBack, backLabel="History" }){
               <section style={{ marginBottom:32 }}>
                 <SectionLabel>Estimated loads</SectionLabel>
                 <p style={{ margin:"0 0 12px", fontSize:16, lineHeight:"24px" }}>
-                  Estimated max <b>{show(current.e1)} {unit}</b> from {fmtShort(current.date)}
-                  {best && best.date !== current.date ? <> · best <b>{show(best.e1)} {unit}</b> on {fmtShort(best.date)}</> : null}
+                  Estimated max <b>{show(current.e1)} {unit}</b> {E1_FROM[current.src]} {fmtShort(current.date)}
+                  {best && best.e1 > current.e1 + 0.01 ? <> · best <b>{show(best.e1)} {unit}</b> on {fmtShort(best.date)}</> : null}
                 </p>
                 <table style={{ width:"100%", borderCollapse:"collapse", fontSize:16, lineHeight:"24px" }}>
                   <caption style={{ textAlign:"left", fontSize:14, lineHeight:"20px", color:T.muted, paddingBottom:8 }}>
@@ -834,7 +867,7 @@ function E1rmSetup({ program, personal, update }){
   return (
     <SetupBlock title="Estimated 1RMs">
       <p style={helpText}>
-        Target loads come from the heavy triple you log on each lift's establish and test days. Enter a value only if you want to override it.
+        Each lift's estimate resets from the heavy triple you log on establish and test days, and rises whenever a logged set beats it. Enter a value only to override it.
       </p>
       {program.options.anchors.map(n=>{
         const k = mkey(n), cur = e1rmFor ? e1rmFor(n, todayIso()) : null, mine = own[k];
@@ -1151,12 +1184,13 @@ function App(){
   const removeSet = React.useCallback((name, iso, i)=> commitLog(withoutSet(logRef.current, name, iso, i)),[commitLog]);
   const setDone   = React.useCallback((iso, on)=> commitLog(withDone(logRef.current, iso, on)),[commitLog]);
   const replaceLog= React.useCallback(next=> commitLog(next),[commitLog]);
+  const saveResult= React.useCallback((wid, iso, res)=> commitLog(withResult(logRef.current, wid, iso, res)),[commitLog]);
 
   const updatePersonal = React.useCallback(fn=>{
     setPersonal(prev=>{ const next = fn(prev); savePersonal(next); return next; });
   },[]);
   const setDraft = React.useCallback((key, value)=>{
-    setDrafts(prev=>{ const next = { ...prev, [key]: value }; saveDrafts(next); return next; });
+    setDrafts(prev=>{ const next = { ...prev, [key]: value }; if (value == null) delete next[key]; saveDrafts(next); return next; });
   },[]);
   const unit = personal.unit === "kg" ? "kg" : "lb";
   const setUnit = React.useCallback(u=> updatePersonal(p=>({ ...p, unit:u })),[updatePersonal]);
@@ -1198,7 +1232,8 @@ function App(){
     const all = p.setup || {}, cur = all[program.id] || (program.inherit && all[program.inherit]) || {};
     return { ...p, setup:{ ...all, [program.id]:{ ...cur, ...fn(cur) } } };
   });
-  const e1rmAt = (name, iso)=> e1rmFor(log, sched, name, iso, (personal.e1rm || {})[mkey(name)]);
+  const anchorKeys = new Set(((program.options || {}).anchors || []).map(mkey));
+  const e1rmAt = (name, iso)=> e1rmFor(log, sched, name, iso, (personal.e1rm || {})[mkey(name)], anchorKeys.has(mkey(name)));
   const openHistory = name=>{ setHist({ key:mkey(name), from:screen }); setScreen("historyDetail"); scrollTop(); };
   const d = sel ? resolve(sched.byIso[sel]) : null;
   const w = travelId && travel ? travel.find(x=>x.id===travelId) : null;
@@ -1206,7 +1241,7 @@ function App(){
   const prevIso = idx > 0 ? sched.dates[idx-1] : null, nextIso = idx >= 0 && idx < sched.dates.length-1 ? sched.dates[idx+1] : null;
 
   return (
-    <LogContext.Provider value={{ log, addSet, removeSet, setDone, replaceLog, drafts, setDraft, unit, setUnit, today, openHistory, e1rmFor:e1rmAt,
+    <LogContext.Provider value={{ log, addSet, removeSet, setDone, replaceLog, saveResult, drafts, setDraft, unit, setUnit, today, openHistory, e1rmFor:e1rmAt,
       prefs:setup, putPrefs: program.options && program.options.classes ? putPrefs : null }}>
       <div className="rl-shell">
         {newBuild && (screen!=="home" || alreadyReloadedFor(newBuild)) && (

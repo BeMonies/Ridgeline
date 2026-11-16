@@ -196,6 +196,48 @@ function withDone(log, iso, on){
   return { ...log, done };
 }
 
+/* WOD results. One result per WOD per planned date, stored in the log beside the movements under
+   "wod <wid>" as { res, t }, so backup, restore and the logged-day dots work unchanged. `wid` is
+   fixed in the program file and shared by a benchmark and the week it repeats.
+   res: { kind:"amrap", rd, rp } · { kind:"time", sec } or { kind:"time", cap:true, rd, rp }
+        · { kind:"note" }; any kind may carry `note`; `at` is when it was saved. */
+const wodKey = wid => mkey("WOD " + wid);
+function resultOn(log, wid, iso){ const e = (log.entries[wodKey(wid)] || {})[iso]; return e && e.res ? e.res : null; }
+function withResult(log, wid, iso, res){
+  const k = wodKey(wid), byDate = { ...(log.entries[k] || {}) };
+  if (res) byDate[iso] = { res, t:Date.now() }; else delete byDate[iso];
+  const entries = { ...log.entries };
+  if (Object.keys(byDate).length) entries[k] = byDate; else delete entries[k];
+  return { ...log, entries };
+}
+function resultsFor(log, key){
+  const m = log.entries[key] || {};
+  return Object.keys(m).sort().filter(d => m[d] && m[d].res).map(date => ({ date, res:m[date].res }));
+}
+function lastResultBefore(log, wid, iso){
+  const r = resultsFor(log, wodKey(wid)).filter(x => x.date < iso);
+  return r.length ? r[r.length-1] : null;
+}
+const clockText = sec => `${Math.floor(sec/60)}:${String(sec%60).padStart(2,"0")}`;
+function resultText(res){
+  if (!res) return "";
+  const rr = (rd, rp) => `${rd||0} ${Number(rd)===1?"round":"rounds"}${Number(rp) ? ` + ${rp} ${Number(rp)===1?"rep":"reps"}` : ""}`;
+  const main = res.kind==="amrap" ? rr(res.rd, res.rp)
+             : res.kind==="time" ? (res.cap ? `Capped at ${rr(res.rd, res.rp)}` : clockText(res.sec))
+             : "";
+  return [main, res.note].filter(Boolean).join(" · ");
+}
+function wodIndex(log){
+  return Object.keys(log.entries).map(key => {
+    const r = resultsFor(log, key);
+    return r.length ? { key, sessions:r.length, last:r[r.length-1], wod:true } : null;
+  }).filter(Boolean);
+}
+function wodName(it){
+  const head = String(it.head || "").replace(/^Benchmark · /, "");
+  return `${head} · ${(it.items || []).map(c => c.n).filter(n => n && n !== "Rest").join(", ")}`;
+}
+
 /* Drafts (typed but not yet logged) survive date changes and reloads. */
 function loadDrafts(){ try { return JSON.parse(localStorage.getItem(DRAFT_KEY)) || {}; } catch { return {}; } }
 function saveDrafts(d){ try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch {} }
@@ -229,25 +271,36 @@ function e1rmKg(kg, reps){
 function loadAtRpeKg(e1, reps, rpe){ return e1 / (1 + (Number(reps) + (10 - rpe)) / 30); }
 function roundLoad(value, unit){ const step = unit==="kg" ? 2.5 : 5; return Math.round(value/step)*step; }
 
-/* Current e1RM for one lift on a given planned date. Sources, newest wins: a heavy set logged on a
-   block's Establish (week 1) or Test (week 6) day, the first session ever logged for the lift (so a
-   lift picked up mid-block still gets a starting estimate), or a value the athlete entered. */
+/* Current e1RM for one lift on a given planned date, worked through the log in date order:
+   - the first session logged for the lift gives the starting estimate;
+   - any later set whose estimate beats the current one raises it ("logged"), so the estimate keeps
+     up with you between tests. A lighter set never lowers it: working sets stop short of failure,
+     so Epley reads them low;
+   - an anchor's Establish (block week 1) or Test (week 6) set resets it, up or down, as the spec
+     asks. Only a genuinely heavy set counts (within 10% of the current estimate), so logging just
+     the easy back-off set on a test day doesn't drag the estimate down;
+   - a value the athlete enters in Setup replaces it from that date; later sets can still raise it. */
+const TEST_FLOOR = 0.9;
 function bestE1(sets){
   let best = null;
   for (const s of sets){ const e = s.kg != null ? e1rmKg(s.kg, s.r) : null; if (e != null && (best === null || e > best)) best = e; }
   return best;
 }
-function e1rmFor(log, sched, name, iso, manual){
+function e1rmFor(log, sched, name, iso, manual, anchor){
   const m = log.entries[mkey(name)] || {};
-  let cur = null;
+  const own = manual && manual.kg > 0 && manual.date <= iso ? manual : null;
+  let cur = null, applied = false;
+  const enter = () => { if (own && !applied){ cur = { kg:own.kg, date:own.date, src:"entered" }; applied = true; } };
   for (const d of Object.keys(m).filter(x => x <= iso).sort()){
-    const day = sched && sched.byIso[d];
-    const marker = !!(day && (day.bw === 1 || day.bw === 6));
-    if (!marker && cur) continue;
+    if (own && d > own.date) enter();
     const best = bestE1(setsOf(m[d]));
-    if (best) cur = { kg:best, date:d, src: marker ? (day.bw === 1 ? "establish" : "test") : "logged" };
+    if (!best) continue;
+    const day = sched && sched.byIso[d];
+    const marker = anchor !== false && !!(day && (day.bw === 1 || day.bw === 6));
+    if (!cur || best > cur.kg || (marker && best >= cur.kg * TEST_FLOOR))
+      cur = { kg:best, date:d, src: marker ? (day.bw === 1 ? "establish" : "test") : "logged" };
   }
-  if (manual && manual.kg > 0 && (!cur || manual.date >= cur.date)) cur = { kg:manual.kg, date:manual.date, src:"entered" };
+  enter();
   return cur;
 }
 
@@ -282,6 +335,7 @@ function movementNames(sources){
   const walk = node => {
     if (Array.isArray(node)) node.forEach(walk);
     else if (node && typeof node === "object"){
+      if (node.k === "wod" && node.wid && !out[wodKey(node.wid)]) out[wodKey(node.wid)] = { name:wodName(node), mode:"wod" };
       if (typeof node.n === "string"){ const k = mkey(node.logAs || node.n); if (!out[k] || node.log) out[k] = { name:node.n, basis:node.basis || (out[k] && out[k].basis), mode:node.log || (out[k] && out[k].mode) }; }
       Object.values(node).forEach(walk);
     }

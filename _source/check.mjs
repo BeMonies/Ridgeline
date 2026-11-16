@@ -344,7 +344,7 @@ check("historical programs are preserved", () => {
 
 /* ── training log data model (units, sets, completion, history) ── */
 const D = vm.runInNewContext(read("_source/src/data.jsx") +
-  "\n({ toKg, fromKg, fmtNum, loadText, setText, setsOf, withSet, withoutSet, withDone, lastBefore, entryOn, mkey, emptyLog, startingRange, repsHint, countEntries, e1rmKg, loadAtRpeKg, roundLoad, movementHistory, historyIndex, movementNames, titleFromKey, canAssist, assistRank, BANDS, buildSchedule, e1rmFor, startDateFor })",
+  "\n({ toKg, fromKg, fmtNum, loadText, setText, setsOf, withSet, withoutSet, withDone, lastBefore, entryOn, mkey, emptyLog, startingRange, repsHint, countEntries, e1rmKg, loadAtRpeKg, roundLoad, movementHistory, historyIndex, movementNames, titleFromKey, canAssist, assistRank, BANDS, buildSchedule, e1rmFor, startDateFor, withResult, resultOn, resultsFor, resultText, lastResultBefore, wodIndex })",
   { React:{ createContext:()=>({}) }, localStorage:{ getItem:()=>null, setItem:()=>{} } });
 check("1 lb = 0.45359237 kg exactly; 135 lb shows about 61.23 kg", () => {
   eq(D.toKg(1,"lb"), 0.45359237);
@@ -524,10 +524,92 @@ check("v3.3: Monday warm-up has scap pull-ups every block; week-4 refresh swaps 
   const fin = bw => items(section(day2(pwOf(1,bw),"mon"),"Finisher")).find(i => i.k === "group").items.map(i => i.n);
   eq(fin(1), ["Ring Row","Push-Up"]); eq(fin(3), ["Ring Row","Push-Up"]); eq(fin(4), ["Sled Push","Ring Row"]); eq(fin(5), ["Sled Push","Ring Row"]);
 });
-check("v3.3: normal section budgets are 60 (Mon, Wed) and 58 (Fri)", () => {
+check("v3.3: normal section budgets are 60 (Mon, Wed) and 58 (Fri); the Week 6 deload is 45 / 44 / 40", () => {
   for (const k of Object.keys(P2.days)){ const d = P2.days[k]; if (d.type !== "gym") continue;
     eq(d.sections.map(s => s.title), ["Warm-Up","Max Strength","Strength Conditioning","Finisher","Cooldown Mobility"]);
-    eq(d.sections.map(minutes).reduce((a,b)=>a+b,0), k.endsWith("fri") ? 58 : 60, k); }
+    const want = /-W6-/.test(k) ? { mon:45, wed:44, fri:40 } : { mon:60, wed:60, fri:58 };
+    eq(d.sections.map(minutes).reduce((a,b)=>a+b,0), want[k.slice(-3)], k);
+    clockOk(d, k); }
+});
+function clockOk(d, k){
+  let at = 0;
+  for (const s of d.sections){ const m = minutes(s); eq(s.budget, `${m} min · ${at}:00–${at+m}:00`, `${k} ${s.title} clock`); at += m; }
+}
+const total = d => d.sections.map(minutes).reduce((a,b)=>a+b,0);
+check("v3.3: budgets follow the rounds actually shown (PT rounds, post-ski Monday, Leg Blaster Friday)", () => {
+  const sc = d => section(d, "Strength Conditioning").budget;
+  eq(sc(day2(pwOf(1,6),"mon")), "13 min · 22:00–35:00");
+  const pt = day2(pwOf(1,6),"mon",{ uniOverride:3 }); eq(sc(pt), "19 min · 22:00–41:00"); eq(total(pt), 51); clockOk(pt, "PT mon");
+  eq(total(day2(pwOf(1,6),"wed",{ uniOverride:3 })), 50);
+  eq(total(day2(pwOf(1,2),"mon",{ uniOverride:3 })), 60);                        /* same as the default: unchanged */
+  const ps = day2(pwOf(1,2),"mon",{ skiWeekends:[1], adjust:{ 2:{ mon:true } } });
+  eq(section(ps,"Max Strength").budget, "17 min · 8:00–25:00"); eq(total(ps), 51); clockOk(ps, "post-ski");
+  const lb = day2(pwOf(2,3),"fri",{ lbWeeks:[pwOf(2,3)] }); eq(total(lb), 53); clockOk(lb, "LB fri");
+  eq(total(day2(pwOf(2,3),"fri")), 58);
+});
+check("v3.3: every Week 6 press test has its own log field", () => {
+  for (const b of [1,2]){ const d = day2(pwOf(b,6),"fri"), press = b === 1 ? "Strict Press" : "Push Press";
+    const t = items(d).find(i => i.n === press); ok(t && t.log === "load" && /Test triple/.test(t.rx), `block ${b}`); }
+});
+/* Time model: estimate each section from what it prescribes and compare with its budget, so a budget
+   can't silently drift from the work (this is how the deload mismatch was found). Prep allowances are
+   the spec's: ramp-up/setup ~7 min Monday, ~5 min Wednesday, 1 min Friday; tri-set setup 1 min;
+   WOD transitions 1 min (Friday setup 3 min unless it's easy erg). Reps ~3 s, @3011 tempo 5 s, jumps
+   and throws 6 s with a reset, 10 s to switch sides or exercises; a press test ramp ~4 min; cleans
+   get 2 min of ramp-up before sets every 1:30. */
+const restS = s => { const m = String(s||"").match(/(\d+)(?:\s*[–-]\s*(\d+))?\s*s\b/); return m ? (m[2] ? (+m[1] + +m[2]) / 2 : +m[1]) : 0; };
+function mvSec(it){
+  const rx = String(it.rx || ""), side = /\/\s*side/.test(rx); let m;
+  if (/ramp-up|remaining time|a few easy|specific/.test(rx)) return 0;
+  if (/^Test triple/.test(rx)) return 240;
+  if ((m = rx.match(/(\d+)\s*min\b/))) return +m[1] * 60 + restS(it.rest);
+  const rep = /@\d{4}/.test(rx) ? 5 : /Jump|Bound|Pass|Clean|Push-Up/.test(it.n) && /×/.test(rx) ? 6 : 3;
+  if ((m = rx.match(/^(\d+)\s*×\s*(\d+)/))){
+    const sets = +m[1], work = +m[2] * rep * (side ? 2 : 1) + (side ? 10 : 0);
+    if (/every 1:30/.test(it.cue || "")) return sets * 90 + 120;                     /* cleans: 2 min ramp-up, then sets every 1:30 */
+    if (/90 s apart/.test(it.rest || "")) return (sets - 1) * 90 + work;
+    return sets * work + (sets - 1) * restS(it.rest);
+  }
+  if ((m = rx.match(/^(\d+)\s*s\b/))) return +m[1] * (side ? 2 : 1) + (side ? 10 : 0) + restS(it.rest);
+  if ((m = rx.match(/^(\d+)\s*m\b/))) return (/Sled/.test(it.n) ? 30 : +m[1] * 1.1) * (side ? 2 : 1) + restS(it.rest);
+  if ((m = rx.match(/^(\d+)/))) return +m[1] * rep * (side ? 2 : 1) + (side ? 10 : 0) + restS(it.rest);
+  return 0;
+}
+function itemSec(it){
+  if (it.k === "mv") return mvSec(it);
+  if (it.k === "interval") return it.sets * (+it.every.split(":")[0] * 60 + +it.every.split(":")[1]);
+  if (it.k === "wod"){ const h = it.head; let m;
+    if ((m = h.match(/Every (\d+):(\d+) × (\d+)/))) return (+m[1]*60 + +m[2]) * +m[3];
+    if ((m = h.match(/(\d+) × \(40 s/))) return +m[1] * 60;
+    if ((m = h.match(/(\d+)[- ]min/)) || (m = h.match(/(?:AMRAP|EMOM)\s*(\d+)/))) return +m[1] * 60;
+    return 8 * 60; }                                                                 /* Leg Blaster: the 8-min WOD slot */
+  if (it.k === "group"){
+    if (/between sets/.test(it.rest || "")){ let work = 0, sets = 0;
+      for (const c of it.items){ const m = c.rx.match(/^(\d+)\s*×\s*(\d+)/), side = /side/.test(c.rx);
+        sets += +m[1]; work += +m[1] * (+m[2] * 6 * (side ? 2 : 1) + (side ? 10 : 0)); }
+      return work + (sets - 1) * restS(it.rest); }
+    const r = +((String(it.meta||"").match(/(\d+)\s*(?:easy\s*)?rounds?/) || [,1])[1]);
+    return r * it.items.reduce((a, c) => a + mvSec(c) + 10, 0) + (r - 1) * restS(it.rest);
+  }
+  return 0;
+}
+function prepMin(dow, s){
+  if (s.title === "Max Strength") return { mon:7, wed:5, fri:1 }[dow];
+  if (s.title === "Strength Conditioning") return dow === "fri" ? (/easy/.test(JSON.stringify(s)) ? 1 : 3) : 1;
+  return s.title === "Finisher" && dow === "wed" ? 1 : 0;
+}
+check("v3.3: every gym section's prescribed work fits its budget within 3 minutes, in every variant", () => {
+  const variants = [{}, { uniOverride:3 }, { powerMode:"clean" }, { wall:false }];
+  const bad = [];
+  const test = (d, dow, tag) => { for (const s of d.sections){
+    const work = s.items.reduce((a, it) => a + itemSec(it), 0) / 60, b = minutes(s);
+    const est = s.title === "Warm-Up" ? Math.max(work, b - 0.5) : work + prepMin(dow, s);
+    if (Math.abs(b - est) > 3) bad.push(`${tag} ${s.title}: budget ${b}, work ≈ ${est.toFixed(1)}`); } };
+  for (const b of [1,2]) for (let bw = 1; bw <= 6; bw++) for (const dow of ["mon","wed","fri"])
+    for (const v of variants) test(day2(pwOf(b,bw), dow, v), dow, `${b}/${bw}/${dow} ${JSON.stringify(v)}`);
+  for (const bw of [3,4,5]) for (const dow of ["wed","fri"]) test(day2(pwOf(2,bw), dow, { lbWeeks:[pwOf(2,bw)] }), dow, `LB ${bw} ${dow}`);
+  test(day2(pwOf(1,2),"mon",{ skiWeekends:[1], adjust:{ 2:{ mon:true } } }), "mon", "post-ski");
+  ok(!bad.length, bad.join("\n     "));
 });
 check("v3.3: Leg Blasters only in Athletic Strength weeks 3–5, never in Strength Base or a deload", () => {
   const ok3 = [9,10,11,21,22,23];
@@ -624,21 +706,68 @@ check("v3.3: renamed variants keep their history; settings and start date carry 
   eq(D.startDateFor(P2, { startDates:{ "mountain-athlete-v3":"2026-09-28", [P2.id]:"2026-10-12" } }), "2026-10-12");
   eq(R.normalizeSetup(P2, { setup:{ "mountain-athlete-v3":{ wall:false, uniOverride:"3" } } }).uniOverride, 3);
 });
-check("v3.3: e1RM comes from establish/test sets, a first logged session, or the athlete's newer entry", () => {
+check("v3.3: e1RM starts from the first session, rises with any better set, and resets on establish/test", () => {
   const sets = (w, r) => ({ w:String(w), u:"lb", kg:D.toKg(w,"lb"), r:String(r), at:1 });
   const iso = (pw, dw) => S2.dates.find(x => S2.byIso[x].pw === pw && S2.byIso[x].key.endsWith(dw));
+  const lb = e => Math.round(D.fromKg(e.kg,"lb") * 100) / 100;
   let log = D.emptyLog();
-  log = D.withSet(log, "Back Squat", iso(1,"mon"), sets(250, 3));                         /* establish triple */
-  log = D.withSet(log, "Back Squat", iso(2,"mon"), sets(300, 6));                         /* ordinary day: ignored */
-  const e = D.e1rmFor(log, S2, "Back Squat", iso(3,"mon"));
-  ok(Math.abs(D.fromKg(e.kg,"lb") - 275) < 0.01 && e.src === "establish");
-  log = D.withSet(log, "Back Squat", iso(6,"mon"), sets(270, 3));                         /* test week */
-  eq(D.e1rmFor(log, S2, "Back Squat", iso(7,"mon")).src, "test");
+  log = D.withSet(log, "Back Squat", iso(1,"mon"), sets(250, 3));                         /* establish triple: 275 */
+  let e = D.e1rmFor(log, S2, "Back Squat", iso(2,"mon"), null, true);
+  eq([lb(e), e.src], [275, "establish"]);
+  log = D.withSet(log, "Back Squat", iso(2,"mon"), sets(195, 6));                         /* on target (234): no change */
+  eq(D.e1rmFor(log, S2, "Back Squat", iso(3,"mon"), null, true).src, "establish");
+  log = D.withSet(log, "Back Squat", iso(3,"mon"), sets(250, 5));                         /* beat it (291.67): rises */
+  e = D.e1rmFor(log, S2, "Back Squat", iso(4,"mon"), null, true);
+  eq([lb(e), e.src, e.date], [291.67, "logged", iso(3,"mon")]);
+  eq(lb(D.e1rmFor(log, S2, "Back Squat", iso(3,"mon"), null, true)), 291.67, "a set counts on its own session's later sets");
+  ok(Math.abs(D.fromKg(D.e1rmFor(log, S2, "Back Squat", iso(2,"mon"), null, true).kg,"lb") - 275) < 0.01, "never reaches back in time");
+  const backOff = D.withSet(log, "Back Squat", iso(6,"mon"), sets(175, 5));               /* only the easy back-off on test day */
+  eq(lb(D.e1rmFor(backOff, S2, "Back Squat", iso(7,"mon"), null, true)), 291.67);
+  log = D.withSet(log, "Back Squat", iso(6,"mon"), sets(245, 3));                         /* real test, a little lower: resets */
+  e = D.e1rmFor(log, S2, "Back Squat", iso(7,"mon"), null, true);
+  eq([lb(e), e.src], [269.5, "test"]);
   const fresh = D.withSet(D.emptyLog(), "Front Squat", iso(9,"mon"), sets(185, 5));      /* picked up mid-block */
-  eq(D.e1rmFor(fresh, S2, "Front Squat", iso(9,"mon")).src, "logged");
-  const manual = { kg:D.toKg(320,"lb"), date:"2099-01-01" };
-  eq(D.e1rmFor(log, S2, "Back Squat", iso(7,"mon"), manual).src, "entered");
+  eq(D.e1rmFor(fresh, S2, "Front Squat", iso(9,"mon"), null, true).src, "logged");
+  const manual = { kg:D.toKg(320,"lb"), date:iso(7,"mon") };
+  e = D.e1rmFor(log, S2, "Back Squat", iso(7,"mon"), manual, true); eq([lb(e), e.src], [320, "entered"]);
+  eq(D.e1rmFor(log, S2, "Back Squat", iso(6,"mon"), manual, true).src, "test", "an entry applies from its own date");
+  const after = D.withSet(log, "Back Squat", iso(8,"mon"), sets(300, 5));                 /* 350 beats the entry */
+  eq(D.e1rmFor(after, S2, "Back Squat", iso(8,"mon"), manual, true).src, "logged");
+  let bss = D.withSet(D.emptyLog(), "Bulgarian Split Squat", iso(5,"mon"), sets(60, 8));
+  bss = D.withSet(bss, "Bulgarian Split Squat", iso(6,"mon"), sets(55, 8));               /* not an anchor: deload doesn't reset */
+  eq(D.e1rmFor(bss, S2, "Bulgarian Split Squat", iso(7,"mon"), null, false).date, iso(5,"mon"));
   eq(D.e1rmFor(D.emptyLog(), S2, "Barbell RDL", iso(8,"wed")), null);
+});
+
+check("v3.3: every scored WOD has a result type and a stable id; benchmarks share their opening week's id", () => {
+  for (const k of Object.keys(P2.days)) for (const w of walkItems(P2.days[k].sections || [])){
+    if (w.k !== "wod") continue;
+    if (/easy continuous|Leg Blaster/.test(w.head)) { ok(!w.wid, `${k} ${w.head} should not be scored`); continue; }
+    ok(w.wid && ["amrap","time","note"].includes(w.score), `${k} ${w.head}`);
+    if (/AMRAP/.test(w.head)) eq(w.score, "amrap", k); else if (/cap/.test(w.head)) eq(w.score, "time", k);
+    if (/^Benchmark/.test(w.head)){
+      const open = walkItems(P2.days[k.replace("W5","W1")].sections);
+      const first = [...open].find(x => x.k === "wod" && x.head === w.head.replace("Benchmark · ",""));
+      ok(first && first.wid === w.wid, `${k} benchmark id`);
+    }
+  }
+});
+check("WOD results: one per WOD per date, kept in the log, readable as rounds + reps or a time", () => {
+  let log = D.emptyLog();
+  log = D.withResult(log, "A-fri-W1", "2026-10-16", { kind:"amrap", rd:5, rp:7, at:1 });
+  log = D.withResult(log, "A-fri-W1", "2026-11-13", { kind:"amrap", rd:6, rp:0, note:"light DB", at:2 });
+  log = D.withResult(log, "A-fri-W1", "2026-11-13", { kind:"amrap", rd:6, rp:2, at:3 });          /* saving again replaces */
+  eq(D.resultsFor(log, "wod a fri w1").length, 2);
+  eq(D.resultText(D.resultOn(log, "A-fri-W1", "2026-11-13")), "6 rounds + 2 reps");
+  eq(D.resultText({ kind:"amrap", rd:1, rp:1, note:"scaled" }), "1 round + 1 rep · scaled");
+  eq(D.resultText({ kind:"time", sec:754 }), "12:34");
+  eq(D.resultText({ kind:"time", cap:true, rd:3, rp:12 }), "Capped at 3 rounds + 12 reps");
+  eq(D.resultText({ kind:"note", note:"all rounds, 11 cal" }), "all rounds, 11 cal");
+  eq(D.lastResultBefore(log, "A-fri-W1", "2026-11-13").date, "2026-10-16");
+  eq(D.wodIndex(log).map(r => [r.key, r.sessions]), [["wod a fri w1", 2]]);
+  eq(D.historyIndex(log), [], "results don't appear as exercises");
+  log = D.withResult(log, "A-fri-W1", "2026-10-16", null); log = D.withResult(log, "A-fri-W1", "2026-11-13", null);
+  eq(log.entries, {});
 });
 
 if (failures.length){

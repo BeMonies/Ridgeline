@@ -335,8 +335,105 @@ function Wod({ it, date }){
         <p style={{ margin:0, fontSize:20, lineHeight:"26px", fontWeight:700 }}>{it.head}</p>
         {it.effort && <p style={{ margin:"2px 0 0", fontSize:14, lineHeight:"20px", fontWeight:600 }}>{it.effort}</p>}
       </div>
-      <div style={{ padding:16 }}><ItemList items={it.items} date={date}/></div>
+      <div style={{ padding:16 }}>
+        <ItemList items={it.items} date={date}/>
+        {it.wid && it.score && date && <WodResult wid={it.wid} kind={it.score} date={date} benchmark={/^Benchmark/.test(it.head)}/>}
+      </div>
     </div>
+  );
+}
+
+/* How far you got: rounds + reps for an AMRAP, a time (or rounds + reps at the cap) for a
+   for-time piece, and a short note for EMOMs and intervals. One result per WOD per planned date;
+   saving again replaces it. */
+function WodResult({ wid, kind, date, benchmark }){
+  const ctx = React.useContext(LogContext);
+  const uid = React.useId().replace(/:/g,"");
+  const [msg, setMsg] = React.useState(null);
+  const [err, setErr] = React.useState(null);
+  if (!ctx || !ctx.saveResult) return null;
+  const { log, drafts, setDraft, saveResult, openHistory } = ctx;
+  const saved = resultOn(log, wid, date);
+  const prev = lastResultBefore(log, wid, date);
+  const dk = draftKey("WOD " + wid, date);
+  const d = drafts[dk] || (saved ? {
+    rd: saved.rd != null ? String(saved.rd) : "", rp: saved.rp ? String(saved.rp) : "",
+    mm: saved.sec != null ? String(Math.floor(saved.sec/60)) : "", ss: saved.sec != null ? String(saved.sec%60).padStart(2,"0") : "",
+    cap: !!saved.cap, note: saved.note || "" } : {});
+  const put = patch => { setDraft(dk, { ...d, ...patch }); setErr(null); setMsg(null); };
+  const digits = v => v.replace(/[^0-9]/g,"").slice(0,4);
+  const capped = kind==="time" && !!d.cap;
+
+  const submit = e => {
+    e.preventDefault();
+    const note = String(d.note || "").trim().slice(0,200);
+    const rd = parseInt(d.rd,10) || 0, rp = parseInt(d.rp,10) || 0;
+    let res;
+    if (kind==="amrap" || capped){
+      if (!(rd || rp)) return setErr("Enter the rounds and reps you reached.");
+      res = { kind, rd, rp };
+      if (capped) res.cap = true;
+    } else if (kind==="time"){
+      const mm = parseInt(d.mm,10) || 0, ss = parseInt(d.ss,10) || 0;
+      if (ss > 59) return setErr("Seconds run from 0 to 59.");
+      if (!(mm || ss)) return setErr("Enter your finishing time, or tick Hit the cap.");
+      res = { kind, sec: mm*60 + ss };
+    } else {
+      if (!note) return setErr("Describe how far you got.");
+      res = { kind };
+    }
+    if (note) res.note = note;
+    res.at = Date.now();
+    if (saveResult(wid, date, res)){ setDraft(dk, null); setMsg({ ok:true, text:"Result saved." }); }
+    else setMsg({ ok:false, text:"Could not save. Your entry is still here — try again." });
+  };
+  const remove = () => { if (saveResult(wid, date, null)){ setDraft(dk, null); setMsg({ ok:true, text:"Result removed." }); } };
+
+  const num = (label, key, ph) => (
+    <label style={fieldLabel}>{label}
+      <input inputMode="numeric" value={d[key] || ""} placeholder={ph} onChange={e=>put({ [key]:digits(e.target.value) })}
+        aria-invalid={err ? "true" : undefined} aria-describedby={err ? `${uid}e` : undefined} style={fieldInput}/>
+    </label>
+  );
+  return (
+    <form onSubmit={submit} aria-label="Log WOD result" noValidate style={{ marginTop:20, borderTop:`1px solid ${T.rule}`, paddingTop:12 }}>
+      <h4 style={{ margin:0, fontSize:18, lineHeight:"24px", fontWeight:600 }}>Your result</h4>
+      {(kind==="amrap" || capped) && (
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginTop:8 }}>{num("Rounds","rd","0")}{num("Extra reps","rp","0")}</div>
+      )}
+      {kind==="time" && !capped && (
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginTop:8 }}>{num("Minutes","mm","0")}{num("Seconds","ss","00")}</div>
+      )}
+      {kind==="time" && (
+        <label style={{ display:"flex", alignItems:"center", gap:10, minHeight:44, fontSize:16, lineHeight:"24px", cursor:"pointer" }}>
+          <input type="checkbox" checked={capped} onChange={e=>put({ cap:e.target.checked })} style={{ width:22, height:22, accentColor:T.tealDeep }}/>
+          Hit the cap before finishing
+        </label>
+      )}
+      <label style={{ ...fieldLabel, marginTop:8 }}>{kind==="note" ? "Result" : "Notes (optional)"}
+        <input value={d.note || ""} maxLength={200} onChange={e=>put({ note:e.target.value })}
+          placeholder={kind==="note" ? "e.g. all rounds done, 11–12 cal each bike minute" : "e.g. 14 lb ball, step-ups scaled"}
+          aria-invalid={err && kind==="note" ? "true" : undefined} style={{ ...fieldInput, fontVariantNumeric:"normal" }}/>
+      </label>
+      {err && <p id={`${uid}e`} role="alert" style={{ margin:"6px 0 0", fontSize:14, color:T.alert, fontWeight:600 }}>⚠ {err}</p>}
+      <Pressable as="button" type="submit" className="rl-btn" style={{ ...btnSecondary, width:"100%", marginTop:8 }}>{saved ? "Update result" : "Save result"}</Pressable>
+      {saved && (
+        <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", fontVariantNumeric:"tabular-nums" }}>
+          Saved: <b>{resultText(saved)}</b>{" "}
+          <Pressable onClick={remove} ariaLabel="Remove this WOD result"
+            style={{ ...textBtn, minHeight:44, padding:"0 8px", fontSize:14, fontWeight:600, color:T.muted }}>Remove</Pressable>
+        </p>
+      )}
+      {prev && (
+        <p style={{ margin:"8px 0 0", fontSize:14, lineHeight:"20px", color:T.muted, fontVariantNumeric:"tabular-nums" }}>
+          {benchmark ? "Compare with" : "Last time"}: <b style={{ color:T.ink }}>{resultText(prev.res)}</b> · {fmtShort(prev.date)}
+          {openHistory && <>{" · "}<Pressable onClick={()=>openHistory("WOD " + wid)} ariaLabel="History for this WOD"
+            style={{ ...textBtn, display:"inline", minHeight:0, padding:0, color:T.ink }}>History</Pressable></>}
+        </p>
+      )}
+      <p role="status" aria-live="polite" style={{ margin:msg ? "8px 0 0" : 0, fontSize:14, lineHeight:"20px", fontWeight:600,
+        color: msg ? (msg.ok ? T.success : T.alert) : "inherit" }}>{msg ? (msg.ok ? "✓ " : "⚠ ") + msg.text : ""}</p>
+    </form>
   );
 }
 
